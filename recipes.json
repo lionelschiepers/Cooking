@@ -1,6 +1,26 @@
 {
   "recipes": [
     {
+      "id": "pesto",
+      "title": "Pates Pesto",
+      "type": "markdown",
+      "date": "2025/12/30",
+      "path": "recipes/index.html?md=pates-pesto/recipe.md",
+      "image": "./recipes/pates-pesto/pates-pesto.webp",
+      "tags": ["Pates"],
+      "description": "Pates Pesto"
+    },
+    {
+      "id": "boeuf-koreen",
+      "title": "Boeuf Koréen",
+      "type": "markdown",
+      "date": "2025/12/30",
+      "path": "recipes/index.html?md=boeuf-koreen/recipe.md",
+      "image": "./recipes/boeuf-koreen/boeuf-koreen.webp",
+      "tags": ["Viande"],
+      "description": "Boeuf Koréen (foodbag)"
+    },
+    {
       "id": "risotto-betterave",
       "title": "Risotto à la Betterave",
       "type": "markdown",
