@@ -7,7 +7,9 @@
     "dev": "npm run copy:assets && vite",
     "build": "npm run copy:assets && vite build",
     "preview": "vite preview",
-    "copy:assets": "shx mkdir -p public/recipes && shx cp recipes.json public/ && shx cp -r recipes/*/ public/recipes/ && shx rm -f public/recipes/index.html"
+    "copy:assets": "shx mkdir -p public/recipes && shx cp recipes.json public/ && shx cp -r recipes/*/ public/recipes/ && shx rm -f public/recipes/index.html",
+    "prepare": "husky",
+    "format": "prettier --write ."
   },
   "keywords": [
     "recipes",
@@ -24,6 +26,8 @@
     "vite": "^7.3.1"
   },
   "devDependencies": {
+    "husky": "^9.1.7",
+    "prettier": "^3.8.1",
     "shx": "^0.4.0"
   }
 }
