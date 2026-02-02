@@ -149,23 +149,34 @@ function showLoading() {
 }
 
 /**
+ * Normalizes a string by removing accents/diacritics
+ * @param {string} str - The string to normalize
+ * @returns {string} The normalized string without accents
+ */
+function normalizeString(str) {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+/**
  * Filters recipes based on search query and selected tags
  * @param {string} searchQuery - The search query
  * @param {string} selectedTag - The selected tag
  * @returns {Array} Filtered array of recipes
  */
 function filterRecipes(searchQuery, selectedTag) {
+  const normalizedQuery = searchQuery ? normalizeString(searchQuery.toLowerCase()) : '';
+
   return allRecipes.filter(recipe => {
-    // Text search
-    const matchesSearch = !searchQuery || 
-      recipe.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (recipe.description && recipe.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (recipe.tags && recipe.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())));
-    
+    // Text search (accent-insensitive)
+    const matchesSearch = !searchQuery ||
+      normalizeString(recipe.title.toLowerCase()).includes(normalizedQuery) ||
+      (recipe.description && normalizeString(recipe.description.toLowerCase()).includes(normalizedQuery)) ||
+      (recipe.tags && recipe.tags.some(tag => normalizeString(tag.toLowerCase()).includes(normalizedQuery)));
+
     // Tag filter
-    const matchesTag = !selectedTag || 
+    const matchesTag = !selectedTag ||
       (recipe.tags && recipe.tags.includes(selectedTag));
-    
+
     return matchesSearch && matchesTag;
   });
 }
