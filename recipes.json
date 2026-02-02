@@ -7,8 +7,8 @@
       "date": "2025/12/30",
       "path": "recipes/index.html?md=risotto-betterave/recipe.md",
       "image": "./recipes/risotto-betterave/risotto-betterave.webp",
-      "tags": [],
-      "description": "Risotto à la Betterave (foodbag)"
+      "tags": ["Viande"],
+      "description": "Risotto à la Betterave + aiguillettes de canards (foodbag)"
     },
     {
       "id": "boeuf-bourguignon",
