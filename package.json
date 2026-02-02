@@ -7,7 +7,7 @@
     "dev": "npm run copy:assets && vite",
     "build": "npm run copy:assets && vite build",
     "preview": "vite preview",
-    "copy:assets": "shx mkdir -p public && shx cp recipes.json public/ && shx cp -r recipes/tiramisu recipes/risotto-betterave public/"
+    "copy:assets": "shx mkdir -p public/recipes && shx cp recipes.json public/ && shx cp -r recipes/*/ public/recipes/ && shx rm -f public/recipes/index.html"
   },
   "keywords": [
     "recipes",
