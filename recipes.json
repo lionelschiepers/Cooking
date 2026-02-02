@@ -11,24 +11,24 @@
       "description": "Classic Italian coffee-flavored dessert with layers of mascarpone cream"
     },
     {
-      "id": "salade-grecque",
-      "title": "Salade Grecque",
+      "id": "risotto-betterave",
+      "title": "Risotto à la Betterave",
       "type": "markdown",
       "date": "2025/12/30",
-      "path": "recipes/index.html?md=salade-grecque/recipe.md",
-      "image": "https://placehold.co/400x300/228B22/white?text=Salade+Grecque",
-      "tags": ["Salade"],
-      "description": "Fresh and healthy Greek salad with feta cheese and olives"
+      "path": "recipes/index.html?md=risotto-betterave/recipe.md",
+      "image": "./recipes/risotto-betterave/risotto-betterave.jpg",
+      "tags": [],
+      "description": "Risotto à la Betterave (foodbag)"
     },
     {
-      "id": "boeuf-bourgignon",
-      "title": "Boeuf Bourgignon",
+      "id": "boeuf-bourguignon",
+      "title": "Boeuf Bourguignon",
       "type": "youtube",
       "date": "2025/12/29",
       "url": "https://www.youtube.com/watch?v=F_53yUD3Je4",
       "image": "https://img.youtube.com/vi/F_53yUD3Je4/0.jpg",
       "tags": ["Viande"],
-      "description": "Boeuf Bourgignon"
+      "description": "Boeuf Bourguignon"
     },
     {
       "id": "tomate-bonbon",
@@ -109,16 +109,6 @@
       "image": "https://www.atelierdeschefs.fr/_next/image/?url=https%3A%2F%2Fadc-dev-images-recipes.s3.eu-west-1.amazonaws.com%2Ftataki_8_bd.jpg&w=1920&q=80",
       "tags": ["Viande", "Asiatique"],
       "description": "Tataki de Bœuf"
-    },
-    {
-      "id": "vol-au-vent-colruyt",
-      "title": "Vol-au-Vent",
-      "type": "external",
-      "date": "2025/12/21",
-      "url": "https://www.colruyt.be/fr/recettes/vol-au-vent-1/",
-      "image": "https://fgdjrynm.filerobot.com/recipes/43764cf814d5e1e9c3dde13c43af3419bab206d26ac3439834e1a858448c9d64.jpg?h=1200&w=1200&q=60",
-      "tags": ["Viande"],
-      "description": "Vol-au-Vent"
     },
     {
       "id": "glace-vanille",
