@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe - Les recettes de Lionel & Ophélie</title>
+  <link rel="stylesheet" href="../src/styles.css">
+  <script type="module">
+    import { loadAndDisplayRecipe } from '../src/recipe-loader.js';
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      const recipeContainer = document.getElementById('recipe-content');
+      loadAndDisplayRecipe(recipeContainer);
+    });
+  </script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+  <!-- Header -->
+  <header class="bg-black text-white shadow-lg no-print">
+    <div class="container mx-auto px-4 py-6">
+      <div class="flex items-center justify-between">
+        <a href="../index.html" class="text-white hover:text-amber-400 transition-colors">
+          <span class="text-2xl">←</span> Retour aux recettes
+        </a>
+        <h1 class="text-xl md:text-2xl font-bold">Les recettes de Lionel & Ophélie</h1>
+        <button onclick="window.print()" class="text-white hover:text-amber-400 transition-colors flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          </svg>
+          Imprimer
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+      <!-- Back Button (mobile) -->
+      <div class="mb-6 no-print md:hidden">
+        <a href="../index.html" class="inline-flex items-center text-amber-700 hover:text-amber-900 font-medium">
+          <span class="mr-2">←</span> Retour aux recettes
+        </a>
+      </div>
+
+      <!-- Recipe Content -->
+      <article class="bg-white rounded-lg shadow-lg p-6 md:p-10">
+        <div id="recipe-content">
+          <!-- Recipe content will be loaded here -->
+          <div class="loading">
+            <div class="loading-spinner"></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Back Button (bottom) -->
+      <div class="mt-8 text-center no-print">
+        <a href="../index.html" class="inline-flex items-center px-6 py-3 bg-amber-600 text-white font-medium rounded-lg hover:bg-amber-700 transition-colors">
+          <span class="mr-2">←</span> Retour à toutes les recettes
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-black text-white py-6 mt-auto no-print">
+    <div class="container mx-auto px-4 text-center">
+      <p class="text-gray-400">&copy; 2025 Les recettes de Lionel & Ophélie</p>
+      <p class="text-gray-500 text-sm mt-1">Fait avec ❤️ pour partager notre passion de la cuisine</p>
+    </div>
+  </footer>
+</body>
+</html>

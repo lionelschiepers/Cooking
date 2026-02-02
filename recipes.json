@@ -1,0 +1,124 @@
+{
+  "recipes": [
+    {
+      "id": "tiramisu",
+      "title": "Tiramisu",
+      "type": "markdown",
+      "date": "2025/12/31",
+      "path": "recipes/index.html?md=tiramisu.md",
+      "image": "https://placehold.co/400x300/8B4513/white?text=Tiramisu",
+      "tags": ["dessert", "sweet", "italian", "coffee", "cream"],
+      "description": "Classic Italian coffee-flavored dessert with layers of mascarpone cream"
+    },
+    {
+      "id": "salade-grecque",
+      "title": "Salade Grecque",
+      "type": "markdown",
+      "date": "2025/12/30",
+      "path": "recipes/index.html?md=salade-grecque.md",
+      "image": "https://placehold.co/400x300/228B22/white?text=Salade+Grecque",
+      "tags": ["salad", "vegetarian", "healthy", "greek", "fresh"],
+      "description": "Fresh and healthy Greek salad with feta cheese and olives"
+    },
+    {
+      "id": "tartiflette",
+      "title": "Tartiflette",
+      "type": "youtube",
+      "date": "2025/12/29",
+      "url": "https://www.youtube.com/watch?v=F_53yUD3Je4",
+      "image": "https://img.youtube.com/vi/F_53yUD3Je4/0.jpg",
+      "tags": ["french", "cheese", "potato", "hearty", "winter"],
+      "description": "Classic French dish with potatoes, reblochon cheese, and bacon"
+    },
+    {
+      "id": "poulet-curry",
+      "title": "Poulet au Curry",
+      "type": "youtube",
+      "date": "2025/12/28",
+      "url": "https://www.youtube.com/watch?v=UMBw5_pzcQI",
+      "image": "https://img.youtube.com/vi/UMBw5_pzcQI/0.jpg",
+      "tags": ["chicken", "indian", "spicy", "curry", "rice"],
+      "description": "Flavorful Indian-style chicken curry with aromatic spices"
+    },
+    {
+      "id": "soupe-oignon",
+      "title": "Soupe à l'Oignon",
+      "type": "youtube",
+      "date": "2025/12/27",
+      "url": "https://www.youtube.com/watch?v=DN4T2M84UbI",
+      "image": "https://img.youtube.com/vi/DN4T2M84UbI/0.jpg",
+      "tags": ["soup", "french", "onion", "cheese", "winter"],
+      "description": "Traditional French onion soup with gratinéed cheese"
+    },
+    {
+      "id": "ratatouille",
+      "title": "Ratatouille",
+      "type": "youtube",
+      "date": "2025/12/26",
+      "url": "https://www.youtube.com/watch?v=I4Szo0odIDo",
+      "image": "https://img.youtube.com/vi/I4Szo0odIDo/0.jpg",
+      "tags": ["vegetable", "provencal", "healthy", "french", "summer"],
+      "description": "Colorful Provençal vegetable stew with zucchini, eggplant, and peppers"
+    },
+    {
+      "id": "boeuf-bourguignon",
+      "title": "Bœuf Bourguignon",
+      "type": "youtube",
+      "date": "2025/12/25",
+      "url": "https://www.youtube.com/watch?v=MdjABUNOx4A",
+      "image": "https://img.youtube.com/vi/MdjABUNOx4A/0.jpg",
+      "tags": ["beef", "french", "wine", "hearty", "winter"],
+      "description": "Classic French beef stew braised in red wine with mushrooms"
+    },
+    {
+      "id": "tarte-tatin",
+      "title": "Tarte Tatin",
+      "type": "youtube",
+      "date": "2025/12/24",
+      "url": "https://www.youtube.com/watch?v=yg7U199gbxo",
+      "image": "https://img.youtube.com/vi/yg7U199gbxo/0.jpg",
+      "tags": ["dessert", "apple", "french", "sweet", "pastry"],
+      "description": "Famous French upside-down caramelized apple tart"
+    },
+    {
+      "id": "mousse-chocolat",
+      "title": "Mousse au Chocolat",
+      "type": "youtube",
+      "date": "2025/12/23",
+      "url": "https://www.youtube.com/watch?v=xqsojPVS7v8",
+      "image": "https://img.youtube.com/vi/xqsojPVS7v8/0.jpg",
+      "tags": ["dessert", "chocolate", "french", "sweet", "cream"],
+      "description": "Rich and airy French chocolate mousse"
+    },
+    {
+      "id": "tataki-boeuf",
+      "title": "Tataki de Bœuf",
+      "type": "external",
+      "date": "2025/12/22",
+      "url": "https://www.atelierdeschefs.fr/recettes/29252/tataki-de-boeuf/",
+      "image": "https://www.atelierdeschefs.fr/_next/image/?url=https%3A%2F%2Fadc-dev-images-recipes.s3.eu-west-1.amazonaws.com%2Ftataki_8_bd.jpg&w=1920&q=80",
+      "tags": ["beef", "japanese", "rare", "sauce", "elegant"],
+      "description": "Japanese-style seared beef with ponzu sauce"
+    },
+    {
+      "id": "vol-au-vent",
+      "title": "Vol-au-Vent",
+      "type": "external",
+      "date": "2025/12/21",
+      "url": "https://www.colruyt.be/fr/recettes/vol-au-vent-1/",
+      "image": "https://fgdjrynm.filerobot.com/recipes/43764cf814d5e1e9c3dde13c43af3419bab206d26ac3439834e1a858448c9d64.jpg?h=1200&w=1200&q=60",
+      "tags": ["chicken", "french", "pastry", "cream", "traditional"],
+      "description": "Classic Belgian puff pastry filled with chicken and mushrooms in cream sauce"
+    },
+    {
+      "id": "glace-vanille",
+      "title": "Glace Vanille",
+      "type": "external",
+      "date": "2025/12/20",
+      "url": "https://empreintesucree.fr/glace-vanille/",
+      "image": "https://empreintesucree.fr/wp-content/uploads/2016/05/1-glace-vanille-patisserie-empreinte-sucree-1.jpg.webp",
+      "tags": ["dessert", "ice-cream", "vanilla", "sweet", "summer"],
+      "description": "Creamy homemade vanilla ice cream with real vanilla beans"
+    }
+  ]
+}

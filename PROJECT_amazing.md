@@ -29,6 +29,7 @@ The name of the site is 'Les recettes de Lionel & Ophélie'
 - Use `.prose` class with custom CSS or @tailwindcss/typography plugin
 - Ensure proper styling for: unordered lists (bullets), ordered lists (numbers), headings hierarchy, bold/italic text, blockquotes, code blocks, tables, and links
 - Test that markdown elements display with proper indentation and visual hierarchy
+- **Centralized Rendering**: Use a single dynamic viewer page (`recipes/index.html`) that loads markdown files via query parameter (`?md=filename.md`) rather than creating separate HTML pages for each recipe
 
 ### Printing
 - **print friendly** - The markdown pages must be printable with an optimized layout.
@@ -55,33 +56,91 @@ The name of the site is 'Les recettes de Lionel & Ophélie'
 ## 📂 Project Structure
 ```
 /index.html              # Home page
-/recipes/               # Recipe sub-folders
-  index.html             # Recipe page that load the specified markdown document specified in the 'md' query string parameter
-  /recipe-a/
+/recipes.json           # Recipe index with URLs, titles, tags, images (⚠️ ONLY ONE - in project root)
+/recipes/               # Markdown recipe source files
+  /recipe-name/
     recipe.md            # Markdown content
-/recipes.json           # Recipe index with URLs, titles, tags, images
+/recipes/                # Dynamic markdown viewer
+  index.html             # Single viewer page for all markdown recipes
+/src/                    # Source code
+  styles.css             # Tailwind + custom styles
+  main.js                # Home page logic
+  markdown-renderer.js   # Centralized markdown rendering
+  recipe-loader.js       # Recipe page loader
+/.gitignore              # Must include 'dist/' to prevent duplicate recipes.json
 ```
+
+### ⚠️ Important: Single recipes.json Rule
+- There must be **ONLY ONE** `recipes.json` file in the entire project
+- This file lives in the **project root** (not in subdirectories)
+- The `dist/` folder (build output) must be added to `.gitignore`
+- Build tools (Vite) will copy recipes.json to `dist/` during build, but this should NOT be committed to git
+- Having multiple recipes.json files causes confusion and data inconsistency
+
+## Recipe Types & URL Structure
+
+### 1. YouTube Videos
+- `type`: "youtube"
+- `url`: Full YouTube URL
+- Opens in new tab
+
+### 2. External Links
+- `type`: "external"
+- `url`: Full external URL
+- Opens in new tab
+- **⚠️ Image Considerations**: External link recipes need an `image` field with a direct URL to an image
+  - Use **https://placehold.co** for placeholder images (format: `https://placehold.co/400x300/BACKGROUND_COLOR/TEXT_COLOR?text=RECIPE+NAME`)
+  - Alternatively, save images locally in `/public/images/` folder for better reliability
+  - Always test that external images load correctly (some networks may block external image URLs)
+
+### 3. Markdown Pages (⚠️ IMPORTANT)
+- `type`: "markdown"
+- `path`: Must use the dynamic viewer format
+- **Format**: `recipes/index.html?md=RECIPE-NAME.md`
+- **Examples**:
+  - `recipes/index.html?md=tiramisu.md`
+  - `recipes/index.html?md=salade-grecque.md`
+  - `recipes/index.html?md=poulet-curry.md`
 
 ## Recipe index
 Example format for a recipe:
-```
+```json
 {
-  "id": "greek-salad",
-  "title": "Greek Salad",
+  "id": "tiramisu",
+  "title": "Tiramisu",
   "type": "markdown",
   "date": "2025/12/31",
-  "path": "./recipes/index.html?md=greek-salad%2Frecipe.md",
-  "image": "https://placehold.co/400x300/green/white?text=Greek+Salad",
-  "tags": ["vegetable", "salad", "healthy", "quick"],
-  "description": "Fresh and healthy Mediterranean salad"
+  "path": "recipes/index.html?md=tiramisu.md",
+  "image": "https://placehold.co/400x300/8B4513/white?text=Tiramisu",
+  "tags": ["dessert", "sweet", "italian", "coffee", "cream"],
+  "description": "Classic Italian coffee-flavored dessert"
 }
-  ```
+```
 ## 🖼️ Images
+
+### Placeholder Images (External Recipes)
 - Use **https://placehold.co** for placeholder icons when no image available
+- Format: `https://placehold.co/400x300/BACKGROUND_COLOR/TEXT_COLOR?text=RECIPE+NAME`
+- Examples:
+  - `https://placehold.co/400x300/8B0000/white?text=Tataki+de+Boeuf` (dark red)
+  - `https://placehold.co/400x300/DAA520/white?text=Vol-au-Vent` (golden)
+  - `https://placehold.co/400x300/FFF8DC/8B4513?text=Glace+Vanille` (cream with brown text)
+- **Note**: External placeholder services may be blocked by some networks or ad blockers. For production, consider hosting images locally.
+
+### YouTube Thumbnails (Auto-fetched)
+- Format: `https://img.youtube.com/vi/VIDEO_ID/0.jpg`
+- These are automatically fetched from YouTube's thumbnail service
+- Most reliable as they come from YouTube's CDN
+
+### Local Images (Recommended for Production)
+- Save images to `/public/images/` folder
+- Reference with relative paths: `./images/recipe-name.jpg`
+- More reliable than external services
+- Works offline and won't be blocked by networks
 
 ## 🎯 Requirements
 1. ✅ Use a centralized logic for the markdown rendering. The recipe pages must be as simple as possible
-2. ✅ For each recipe, reuse the shared ./recipes/index.html to load recipe.md placed in a specific folder. For example ./recipes/recipe-a/recipe.md. Make sure the relative path a correct for the mark down document because index.html is placed in the parent folder.
+2. ✅ For markdown recipes, use the dynamic viewer URL format: `recipes/index.html?md=RECIPE-NAME.md`. The recipe.md files are stored in `recipes/[recipe-name]/recipe.md`
 3. ✅ Create a sample recipe. 
 
     For youtube use those videos:
@@ -103,8 +162,36 @@ Example format for a recipe:
 7. ✅ Use context7 for the documentation
 8. ✅ Reference the most up to date packages
 9. ✅ Create README.md that describes this project
-10. ✅ Update the packages to their latest version
-11. ✅ **Use Tailwind CSS via PostCSS/Vite plugin - NEVER use the CDN in production**
+10. ✅ **Maintain exactly ONE recipes.json file** - Located in project root, add `dist/` to `.gitignore` to prevent build output from creating duplicates
+11. ✅ Update the packages to their latest version
+12. ✅ **Use Tailwind CSS via PostCSS/Vite plugin - NEVER use the CDN in production**
+
+## 🔧 Troubleshooting
+
+### Images Not Displaying
+If recipe images are not showing:
+1. **Check browser console** for 404 or CORS errors
+2. **Test image URL directly** in browser to verify it loads
+3. **Check network tab** to see if requests are being blocked
+4. **Common causes**:
+   - Ad blockers blocking `placehold.co` or `img.youtube.com`
+   - Corporate firewalls restricting external image URLs
+   - CORS policy issues with external domains
+5. **Solution**: Use local images in `/public/images/` folder instead of external URLs
+
+### Markdown Not Rendering
+If markdown recipes show raw text instead of formatted content:
+1. Verify the `path` field uses the correct format: `recipes/index.html?md=recipe-name.md`
+2. Check that the `.md` file exists in the expected location
+3. Ensure the `recipes/index.html` viewer page is properly configured
+
+### Duplicate recipes.json Files
+If you find multiple `recipes.json` files in the project:
+1. **Check git status**: Run `git ls-files | grep recipes.json` to see tracked files
+2. **Remove duplicates**: Delete any recipes.json files outside the project root
+3. **Update .gitignore**: Ensure `dist/` is in `.gitignore` to prevent build output from being committed
+4. **Clean build**: Run `rm -rf dist/` and rebuild with `npm run build`
+5. **Best practice**: Only the source `recipes.json` in the project root should exist in the repository
 
 ---
 *Let's build something amazing!* 🌟

@@ -1,0 +1,29 @@
+{
+  "name": "les-recettes-de-lionel-et-ophelie",
+  "version": "1.0.0",
+  "description": "A stunning static website to store and showcase cooking recipes",
+  "type": "module",
+  "scripts": {
+    "dev": "npm run copy:assets && vite",
+    "build": "npm run copy:assets && vite build",
+    "preview": "vite preview",
+    "copy:assets": "shx mkdir -p public && shx cp recipes.json public/ && shx cp -r recipes/tiramisu recipes/salade-grecque public/"
+  },
+  "keywords": [
+    "recipes",
+    "cooking",
+    "vite",
+    "tailwindcss"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.18",
+    "marked": "^17.0.1",
+    "tailwindcss": "^4.1.18",
+    "vite": "^7.3.1"
+  },
+  "devDependencies": {
+    "shx": "^0.4.0"
+  }
+}
