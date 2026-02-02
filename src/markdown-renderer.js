@@ -101,25 +101,10 @@ export function extractFrontmatter(markdown) {
   };
 }
 
-/**
- * Sanitizes HTML content (basic implementation)
- * @param {string} html - The HTML to sanitize
- * @returns {string} The sanitized HTML
- */
-export function sanitizeHtml(html) {
-  // Basic sanitization - remove script tags and event handlers
-  return html
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-    .replace(/on\w+="[^"]*"/gi, '')
-    .replace(/on\w+='[^']*'/gi, '')
-    .replace(/javascript:/gi, '');
-}
-
 export default {
   renderMarkdown,
   renderMarkdownWithProse,
   createLoadingSpinner,
   createErrorMessage,
-  extractFrontmatter,
-  sanitizeHtml
+  extractFrontmatter
 };

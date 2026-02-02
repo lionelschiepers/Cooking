@@ -318,6 +318,30 @@ body {
   }
 }
 
+/* ===== SKELETON LOADING CARDS ===== */
+.skeleton-card {
+  pointer-events: none;
+}
+
+.skeleton-image {
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-title,
+.skeleton-description,
+.skeleton-tag {
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 /* ===== LOADING & ERROR STATES ===== */
 .loading {
   display: flex;
@@ -342,26 +366,99 @@ body {
 
 .error-message {
   background-color: #fef2f2;
-  border: 1px solid #ef4444;
-  color: #dc2626;
+  border: 1px solid #dc2626;
+  color: #991b1b;
   padding: 1rem;
   border-radius: 0.5rem;
   text-align: center;
+  font-weight: 500;
 }
 
 /* ===== TAG STYLES ===== */
 .tag {
   display: inline-block;
   background-color: #fef3c7;
-  color: #92400e;
+  color: #78350f;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
   margin-right: 0.5rem;
   margin-bottom: 0.5rem;
+  border: 1px solid #fbbf24;
 }
 
 .tag:hover {
   background-color: #fde68a;
+}
+
+/* ===== ACCESSIBILITY IMPROVEMENTS ===== */
+/* Focus visible styles for keyboard navigation */
+:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+/* Skip link for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Screen reader only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .recipe-card {
+    border: 2px solid #000;
+  }
+  
+  .tag {
+    border: 2px solid #78350f;
+  }
+  
+  input, select {
+    border: 2px solid #000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-image,
+  .skeleton-title,
+  .skeleton-description,
+  .skeleton-tag {
+    animation: none;
+    background: #e5e7eb;
+  }
+  
+  .recipe-card,
+  .recipe-card img {
+    transition: none;
+  }
+  
+  .loading-spinner {
+    animation: none;
+  }
 }
