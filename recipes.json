@@ -1,22 +1,12 @@
 {
   "recipes": [
     {
-      "id": "tiramisu",
-      "title": "Tiramisu",
-      "type": "markdown",
-      "date": "2025/12/31",
-      "path": "recipes/index.html?md=tiramisu/recipe.md",
-      "image": "https://placehold.co/400x300/8B4513/white?text=Tiramisu",
-      "tags": ["dessert"],
-      "description": "Classic Italian coffee-flavored dessert with layers of mascarpone cream"
-    },
-    {
       "id": "risotto-betterave",
       "title": "Risotto à la Betterave",
       "type": "markdown",
       "date": "2025/12/30",
       "path": "recipes/index.html?md=risotto-betterave/recipe.md",
-      "image": "./recipes/risotto-betterave/risotto-betterave.jpg",
+      "image": "./recipes/risotto-betterave/risotto-betterave.webp",
       "tags": [],
       "description": "Risotto à la Betterave (foodbag)"
     },

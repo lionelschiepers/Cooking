@@ -53,10 +53,10 @@ function createRecipeCard(recipe) {
     <article class="recipe-card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer" 
              onclick="window.open('${linkUrl}', '${linkTarget}')">
       <div class="relative h-48 overflow-hidden">
-        <img src="${image}" 
-             alt="${title}" 
-             class="w-full h-full object-cover"
-             onerror="this.src='https://placehold.co/400x300/8B4513/white?text=No+Image'">
+         <img src="${image}" 
+              alt="${title}" 
+              class="w-full h-full object-cover object-center"
+              onerror="this.src='https://placehold.co/400x300/8B4513/white?text=No+Image'">
         <div class="absolute top-2 right-2">
           ${getTypeIcon(type)}
         </div>
