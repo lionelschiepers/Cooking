@@ -71,6 +71,16 @@
       "description": "Pickles d'Oignons Rouges"
     },
     {
+      "id": "curry-japonais",
+      "title": "Curry Japonais",
+      "type": "youtube",
+      "date": "2025/12/29",
+      "url": "https://www.youtube.com/watch?v=shVBoWQQpW0",
+      "image": "https://img.youtube.com/vi/shVBoWQQpW0/0.jpg",
+      "tags": ["Viande", "Asiatique"],
+      "description": "Curry Japonais"
+    },
+    {
       "id": "tomate-bonbon",
       "title": "Tomates Bonbons",
       "type": "youtube",
