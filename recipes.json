@@ -41,6 +41,36 @@
       "description": "Boeuf Bourguignon"
     },
     {
+      "id": "chili-concarne",
+      "title": "Chili Con Carne",
+      "type": "youtube",
+      "date": "2025/12/29",
+      "url": "https://www.youtube.com/watch?v=7kdHoPTj1LA",
+      "image": "https://img.youtube.com/vi/7kdHoPTj1LA/0.jpg",
+      "tags": ["Viande"],
+      "description": "Chili Con Carne volcanique"
+    },
+    {
+      "id": "marinade-boeuf",
+      "title": "Marinade pour Boeuf",
+      "type": "youtube",
+      "date": "2025/12/29",
+      "url": "https://www.youtube.com/watch?v=GScE_E6BkEU",
+      "image": "https://img.youtube.com/vi/GScE_E6BkEU/0.jpg",
+      "tags": ["Viande"],
+      "description": "Marinade pour Boeuf"
+    },
+    {
+      "id": "pickles-oignons-rouges",
+      "title": "Pickles d'Oignons Rouges",
+      "type": "youtube",
+      "date": "2025/12/29",
+      "url": "https://www.youtube.com/watch?v=u6TPJckf7D0",
+      "image": "https://img.youtube.com/vi/u6TPJckf7D0/0.jpg",
+      "tags": ["Accompagnement"],
+      "description": "Pickles d'Oignons Rouges"
+    },
+    {
       "id": "tomate-bonbon",
       "title": "Tomates Bonbons",
       "type": "youtube",
