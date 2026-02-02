@@ -55,23 +55,34 @@ body {
 .search-filter-bar {
   display: flex;
   gap: 1rem;
-  align-items: center;
+  align-items: end;
   flex-wrap: wrap;
+  justify-content: space-between;
 }
 
-.search-filter-bar > * {
+.search-filter-bar > *:not(:last-child) {
   flex: 1;
   min-width: 200px;
+}
+
+.search-filter-bar > *:last-child {
+  margin-left: auto;
 }
 
 @media (max-width: 768px) {
   .search-filter-bar {
     flex-direction: column;
+    align-items: stretch;
   }
-  
-  .search-filter-bar > * {
+
+  .search-filter-bar > *:not(:last-child) {
     width: 100%;
     min-width: unset;
+  }
+
+  .search-filter-bar > *:last-child {
+    align-self: flex-end;
+    margin-left: 0;
   }
 }
 

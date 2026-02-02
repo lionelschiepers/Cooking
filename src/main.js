@@ -6,6 +6,7 @@
 // State management
 let allRecipes = [];
 let filteredRecipes = [];
+let currentSort = 'date-desc';
 
 /**
  * Fetches recipes from the recipes.json file
@@ -293,6 +294,29 @@ function filterRecipes(searchQuery, selectedTag) {
 }
 
 /**
+ * Sorts recipes based on the specified sort option
+ * @param {Array} recipes - Array of recipe objects to sort
+ * @param {string} sortOption - The sort option (date-desc, date-asc, title-asc, title-desc)
+ * @returns {Array} Sorted array of recipes
+ */
+function sortRecipes(recipes, sortOption) {
+  const sorted = [...recipes];
+
+  switch (sortOption) {
+    case 'date-desc':
+      return sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
+    case 'date-asc':
+      return sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
+    case 'title-asc':
+      return sorted.sort((a, b) => a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' }));
+    case 'title-desc':
+      return sorted.sort((a, b) => b.title.localeCompare(a.title, 'fr', { sensitivity: 'base' }));
+    default:
+      return sorted;
+  }
+}
+
+/**
  * Gets unique tags from all recipes
  * @returns {Array} Array of unique tags
  */
@@ -330,17 +354,31 @@ function populateTagFilter() {
 }
 
 /**
- * Handles search input changes
+ * Handles search input changes and applies current sort
  */
 function handleSearch() {
   const searchInput = document.getElementById('search-input');
   const tagSelect = document.getElementById('tag-filter');
-  
+  const sortSelect = document.getElementById('sort-select');
+
   const searchQuery = searchInput ? searchInput.value.trim() : '';
   const selectedTag = tagSelect ? tagSelect.value : '';
-  
-  filteredRecipes = filterRecipes(searchQuery, selectedTag);
+  const sortOption = sortSelect ? sortSelect.value : currentSort;
+
+  const filtered = filterRecipes(searchQuery, selectedTag);
+  filteredRecipes = sortRecipes(filtered, sortOption);
   renderRecipeGrid(filteredRecipes);
+}
+
+/**
+ * Handles sort selection changes
+ */
+function handleSort() {
+  const sortSelect = document.getElementById('sort-select');
+  if (!sortSelect) return;
+
+  currentSort = sortSelect.value;
+  handleSearch();
 }
 
 /**
@@ -352,11 +390,17 @@ function setupEventListeners() {
   if (searchInput) {
     searchInput.addEventListener('input', debounce(handleSearch, 300));
   }
-  
+
   // Tag filter
   const tagSelect = document.getElementById('tag-filter');
   if (tagSelect) {
     tagSelect.addEventListener('change', handleSearch);
+  }
+
+  // Sort dropdown
+  const sortSelect = document.getElementById('sort-select');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', handleSort);
   }
 }
 
@@ -383,17 +427,23 @@ function debounce(func, wait) {
  */
 async function init() {
   showLoading();
-  
+
   // Fetch recipes
   allRecipes = await fetchRecipes();
-  filteredRecipes = [...allRecipes];
-  
+
+  // Get initial sort option from dropdown
+  const sortSelect = document.getElementById('sort-select');
+  currentSort = sortSelect ? sortSelect.value : 'date-desc';
+
+  // Apply initial sort
+  filteredRecipes = sortRecipes([...allRecipes], currentSort);
+
   // Populate tag filter
   populateTagFilter();
-  
+
   // Render recipes
   renderRecipeGrid(filteredRecipes);
-  
+
   // Setup event listeners
   setupEventListeners();
 }

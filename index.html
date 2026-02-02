@@ -42,14 +42,30 @@
         <!-- Tag Filter -->
         <div class="flex-1 min-w-[200px]">
           <label for="tag-filter" class="block text-sm font-semibold text-gray-800 mb-1">Filtrer par catégorie</label>
-          <select 
-            id="tag-filter" 
+          <select
+            id="tag-filter"
             class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none bg-white"
             aria-describedby="filter-help"
           >
             <option value="">Toutes les catégories</option>
           </select>
           <span id="filter-help" class="sr-only">Sélectionnez une catégorie pour filtrer les recettes</span>
+        </div>
+
+        <!-- Sort Dropdown -->
+        <div class="flex-none w-40">
+          <label for="sort-select" class="block text-sm font-semibold text-gray-800 mb-1">Trier les recettes</label>
+          <select
+            id="sort-select"
+            class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none bg-white"
+            aria-label="Trier les recettes"
+          >
+            <option value="title-asc" selected>A-Z</option>
+            <option value="title-desc">Z-A</option>
+            <option value="date-desc">Date ↓</option>
+            <option value="date-asc">Date ↑</option>
+          </select>
+          <span id="sort-help" class="sr-only">Sélectionnez un ordre de tri pour les recettes</span>
         </div>
       </div>
       
