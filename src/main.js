@@ -16,7 +16,9 @@ async function fetchRecipes() {
   try {
     const response = await fetch('./recipes.json');
     if (!response.ok) {
-      throw new Error(`Failed to fetch recipes: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch recipes: ${response.status} ${response.statusText}`,
+      );
     }
     const data = await response.json();
     return data.recipes || [];
@@ -46,12 +48,17 @@ function createRecipeCard(recipe) {
   }
 
   // Create tags HTML with proper ARIA labels
-  const tagsHtml = tags && tags.length > 0
-    ? tags.slice(0, 3).map(tag => `<span class="tag" role="listitem">${tag}</span>`).join('')
-    : '';
+  const tagsHtml =
+    tags && tags.length > 0
+      ? tags
+          .slice(0, 3)
+          .map((tag) => `<span class="tag" role="listitem">${tag}</span>`)
+          .join('')
+      : '';
 
   // Determine external link attributes
-  const externalAttrs = linkTarget === '_blank' ? 'rel="noopener noreferrer"' : '';
+  const externalAttrs =
+    linkTarget === '_blank' ? 'rel="noopener noreferrer"' : '';
 
   return `
     <article class="recipe-card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer group"
@@ -95,9 +102,12 @@ function createRecipeCard(recipe) {
  */
 function getTypeIcon(type) {
   const icons = {
-    'youtube': '<span class="bg-red-600 text-white px-2 py-1 rounded text-xs font-medium">YouTube</span>',
-    'external': '<span class="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">Web</span>',
-    'markdown': '<span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-medium">Recette</span>'
+    youtube:
+      '<span class="bg-red-600 text-white px-2 py-1 rounded text-xs font-medium">YouTube</span>',
+    external:
+      '<span class="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">Web</span>',
+    markdown:
+      '<span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-medium">Recette</span>',
   };
   return icons[type] || '';
 }
@@ -109,15 +119,15 @@ function getTypeIcon(type) {
 function renderRecipeGrid(recipes) {
   const gridContainer = document.getElementById('recipe-grid');
   const resultsCount = document.getElementById('results-count');
-  
+
   if (!gridContainer) return;
-  
+
   if (recipes.length === 0) {
     const searchInput = document.getElementById('search-input');
     const tagSelect = document.getElementById('tag-filter');
     const searchValue = searchInput ? searchInput.value.trim() : '';
     const tagValue = tagSelect ? tagSelect.value : '';
-    
+
     let suggestionHtml = '';
     if (searchValue || tagValue) {
       const allTags = getUniqueTags();
@@ -126,12 +136,16 @@ function renderRecipeGrid(recipes) {
         <div class="mt-6">
           <p class="text-gray-600 mb-3">Essayez avec :</p>
           <div class="flex flex-wrap justify-center gap-2">
-            ${randomTags.map(tag => `
+            ${randomTags
+              .map(
+                (tag) => `
               <button onclick="clearFiltersAndSelectTag('${tag}')" 
                       class="px-4 py-2 bg-amber-100 text-amber-800 rounded-full text-sm font-medium hover:bg-amber-200 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">
                 ${tag}
               </button>
-            `).join('')}
+            `,
+              )
+              .join('')}
             <button onclick="clearAllFilters()" 
                     class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
               Voir toutes les recettes
@@ -140,15 +154,17 @@ function renderRecipeGrid(recipes) {
         </div>
       `;
     }
-    
+
     gridContainer.innerHTML = `
       <div class="col-span-full flex flex-col items-center justify-center py-16 px-4" role="status" aria-live="polite">
         <div class="text-6xl mb-4">🔍</div>
         <h3 class="text-xl font-semibold text-gray-800 mb-2">Aucune recette trouvée</h3>
         <p class="text-gray-600 text-center max-w-md mb-4">
-          ${searchValue || tagValue 
-            ? 'Aucune recette ne correspond à vos critères de recherche.' 
-            : 'Il n\'y a pas encore de recettes disponibles.'}
+          ${
+            searchValue || tagValue
+              ? 'Aucune recette ne correspond à vos critères de recherche.'
+              : "Il n'y a pas encore de recettes disponibles."
+          }
         </p>
         ${suggestionHtml}
       </div>
@@ -158,10 +174,12 @@ function renderRecipeGrid(recipes) {
     }
     return;
   }
-  
-  const recipesHtml = recipes.map(recipe => createRecipeCard(recipe)).join('');
+
+  const recipesHtml = recipes
+    .map((recipe) => createRecipeCard(recipe))
+    .join('');
   gridContainer.innerHTML = recipesHtml;
-  
+
   if (resultsCount) {
     const countText = `${recipes.length} recette${recipes.length !== 1 ? 's' : ''} trouvée${recipes.length !== 1 ? 's' : ''}`;
     resultsCount.textContent = countText;
@@ -176,10 +194,10 @@ function renderRecipeGrid(recipes) {
 function clearFiltersAndSelectTag(tag) {
   const searchInput = document.getElementById('search-input');
   const tagSelect = document.getElementById('tag-filter');
-  
+
   if (searchInput) searchInput.value = '';
   if (tagSelect) tagSelect.value = tag;
-  
+
   handleSearch();
 }
 
@@ -189,10 +207,10 @@ function clearFiltersAndSelectTag(tag) {
 function clearAllFilters() {
   const searchInput = document.getElementById('search-input');
   const tagSelect = document.getElementById('tag-filter');
-  
+
   if (searchInput) searchInput.value = '';
   if (tagSelect) tagSelect.value = '';
-  
+
   handleSearch();
 }
 
@@ -251,7 +269,10 @@ function showLoading() {
   const resultsCount = document.getElementById('results-count');
   if (gridContainer) {
     // Show 8 skeleton cards to fill the grid
-    const skeletonCards = Array(8).fill(null).map(() => createSkeletonCard()).join('');
+    const skeletonCards = Array(8)
+      .fill(null)
+      .map(() => createSkeletonCard())
+      .join('');
     gridContainer.innerHTML = skeletonCards;
   }
   if (resultsCount) {
@@ -276,18 +297,27 @@ function normalizeString(str) {
  * @returns {Array} Filtered array of recipes
  */
 function filterRecipes(searchQuery, selectedTag) {
-  const normalizedQuery = searchQuery ? normalizeString(searchQuery.toLowerCase()) : '';
+  const normalizedQuery = searchQuery
+    ? normalizeString(searchQuery.toLowerCase())
+    : '';
 
-  return allRecipes.filter(recipe => {
+  return allRecipes.filter((recipe) => {
     // Text search (accent-insensitive)
-    const matchesSearch = !searchQuery ||
+    const matchesSearch =
+      !searchQuery ||
       normalizeString(recipe.title.toLowerCase()).includes(normalizedQuery) ||
-      (recipe.description && normalizeString(recipe.description.toLowerCase()).includes(normalizedQuery)) ||
-      (recipe.tags && recipe.tags.some(tag => normalizeString(tag.toLowerCase()).includes(normalizedQuery)));
+      (recipe.description &&
+        normalizeString(recipe.description.toLowerCase()).includes(
+          normalizedQuery,
+        )) ||
+      (recipe.tags &&
+        recipe.tags.some((tag) =>
+          normalizeString(tag.toLowerCase()).includes(normalizedQuery),
+        ));
 
     // Tag filter
-    const matchesTag = !selectedTag ||
-      (recipe.tags && recipe.tags.includes(selectedTag));
+    const matchesTag =
+      !selectedTag || (recipe.tags && recipe.tags.includes(selectedTag));
 
     return matchesSearch && matchesTag;
   });
@@ -308,9 +338,13 @@ function sortRecipes(recipes, sortOption) {
     case 'date-asc':
       return sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
     case 'title-asc':
-      return sorted.sort((a, b) => a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' }));
+      return sorted.sort((a, b) =>
+        a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' }),
+      );
     case 'title-desc':
-      return sorted.sort((a, b) => b.title.localeCompare(a.title, 'fr', { sensitivity: 'base' }));
+      return sorted.sort((a, b) =>
+        b.title.localeCompare(a.title, 'fr', { sensitivity: 'base' }),
+      );
     default:
       return sorted;
   }
@@ -322,9 +356,9 @@ function sortRecipes(recipes, sortOption) {
  */
 function getUniqueTags() {
   const tagsSet = new Set();
-  allRecipes.forEach(recipe => {
+  allRecipes.forEach((recipe) => {
     if (recipe.tags) {
-      recipe.tags.forEach(tag => tagsSet.add(tag));
+      recipe.tags.forEach((tag) => tagsSet.add(tag));
     }
   });
   return Array.from(tagsSet).sort();
@@ -336,16 +370,16 @@ function getUniqueTags() {
 function populateTagFilter() {
   const tagSelect = document.getElementById('tag-filter');
   if (!tagSelect) return;
-  
+
   const tags = getUniqueTags();
-  
+
   // Clear existing options except the first one
   while (tagSelect.options.length > 1) {
     tagSelect.remove(1);
   }
-  
+
   // Add tag options
-  tags.forEach(tag => {
+  tags.forEach((tag) => {
     const option = document.createElement('option');
     option.value = tag;
     option.textContent = tag.charAt(0).toUpperCase() + tag.slice(1);

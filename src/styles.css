@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Custom styles for the cooking recipes website */
 
@@ -312,7 +312,7 @@ body {
   }
 
   .prose a[href]:after {
-    content: " (" attr(href) ")";
+    content: ' (' attr(href) ')';
     font-size: 10pt;
     color: #666;
   }
@@ -349,8 +349,12 @@ body {
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* ===== LOADING & ERROR STATES ===== */
@@ -371,8 +375,12 @@ body {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error-message {
@@ -444,12 +452,13 @@ body {
   .recipe-card {
     border: 2px solid #000;
   }
-  
+
   .tag {
     border: 2px solid #78350f;
   }
-  
-  input, select {
+
+  input,
+  select {
     border: 2px solid #000;
   }
 }
@@ -463,12 +472,12 @@ body {
     animation: none;
     background: #e5e7eb;
   }
-  
+
   .recipe-card,
   .recipe-card img {
     transition: none;
   }
-  
+
   .loading-spinner {
     animation: none;
   }

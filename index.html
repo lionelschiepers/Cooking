@@ -1,92 +1,131 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Les recettes de Lionel & Ophélie</title>
-  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-  <link rel="preconnect" href="https://img.youtube.com" crossorigin>
-  <link rel="stylesheet" href="./src/styles.css">
-  <script type="module" src="./src/main.js"></script>
-</head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
-  <!-- Skip to main content link for accessibility -->
-  <a href="#main-content" class="skip-link">Aller au contenu principal</a>
-  
-  <!-- Header -->
-  <header class="bg-black text-white shadow-lg" role="banner">
-    <div class="container mx-auto px-4 py-6">
-      <h1 class="text-3xl md:text-4xl font-bold text-center">🍳 Les recettes de Lionel & Ophélie</h1>
-      <p class="text-center text-gray-300 mt-2">Découvrez nos recettes favorites</p>
-    </div>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Les recettes de Lionel & Ophélie</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="preconnect" href="https://img.youtube.com" crossorigin />
+    <link rel="stylesheet" href="./src/styles.css" />
+    <script type="module" src="./src/main.js"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
 
-  <!-- Main Content -->
-  <main id="main-content" class="flex-grow container mx-auto px-4 py-8" role="main" tabindex="-1">
-  <!-- Search & Filter Bar -->
-    <section class="mb-8" aria-label="Recherche et filtres">
-      <div class="search-filter-bar bg-white p-4 rounded-lg shadow-md">
-        <!-- Search Input -->
-        <div class="flex-1 min-w-[200px]">
-          <label for="search-input" class="block text-sm font-semibold text-gray-800 mb-1">Rechercher une recette</label>
-          <input 
-            type="text" 
-            id="search-input" 
-            placeholder="Rechercher une recette..."
-            class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
-            aria-describedby="search-help"
-          >
-          <span id="search-help" class="sr-only">Tapez pour rechercher parmi les recettes par titre, description ou tag</span>
-        </div>
-        
-        <!-- Tag Filter -->
-        <div class="flex-1 min-w-[200px]">
-          <label for="tag-filter" class="block text-sm font-semibold text-gray-800 mb-1">Filtrer par catégorie</label>
-          <select
-            id="tag-filter"
-            class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none bg-white"
-            aria-describedby="filter-help"
-          >
-            <option value="">Toutes les catégories</option>
-          </select>
-          <span id="filter-help" class="sr-only">Sélectionnez une catégorie pour filtrer les recettes</span>
-        </div>
-
-        <!-- Sort Dropdown -->
-        <div class="flex-none w-40">
-          <label for="sort-select" class="block text-sm font-semibold text-gray-800 mb-1">Trier les recettes</label>
-          <select
-            id="sort-select"
-            class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none bg-white"
-            aria-label="Trier les recettes"
-          >
-            <option value="title-asc" selected>A-Z</option>
-            <option value="title-desc">Z-A</option>
-            <option value="date-desc">Date ↓</option>
-            <option value="date-asc">Date ↑</option>
-          </select>
-          <span id="sort-help" class="sr-only">Sélectionnez un ordre de tri pour les recettes</span>
-        </div>
+    <!-- Header -->
+    <header class="bg-black text-white shadow-lg" role="banner">
+      <div class="container mx-auto px-4 py-6">
+        <h1 class="text-3xl md:text-4xl font-bold text-center">
+          🍳 Les recettes de Lionel & Ophélie
+        </h1>
+        <p class="text-center text-gray-300 mt-2">
+          Découvrez nos recettes favorites
+        </p>
       </div>
-      
-      <!-- Results Count -->
-      <p id="results-count" class="text-gray-700 mt-2 text-sm font-medium" aria-live="polite" aria-atomic="true">Chargement des recettes...</p>
-    </section>
+    </header>
 
-    <!-- Recipe Grid -->
-    <section>
-      <div id="recipe-grid" class="recipe-grid">
-        <!-- Recipes will be loaded here by JavaScript -->
+    <!-- Main Content -->
+    <main
+      id="main-content"
+      class="flex-grow container mx-auto px-4 py-8"
+      role="main"
+      tabindex="-1"
+    >
+      <!-- Search & Filter Bar -->
+      <section class="mb-8" aria-label="Recherche et filtres">
+        <div class="search-filter-bar bg-white p-4 rounded-lg shadow-md">
+          <!-- Search Input -->
+          <div class="flex-1 min-w-[200px]">
+            <label
+              for="search-input"
+              class="block text-sm font-semibold text-gray-800 mb-1"
+              >Rechercher une recette</label
+            >
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Rechercher une recette..."
+              class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
+              aria-describedby="search-help"
+            />
+            <span id="search-help" class="sr-only"
+              >Tapez pour rechercher parmi les recettes par titre, description
+              ou tag</span
+            >
+          </div>
+
+          <!-- Tag Filter -->
+          <div class="flex-1 min-w-[200px]">
+            <label
+              for="tag-filter"
+              class="block text-sm font-semibold text-gray-800 mb-1"
+              >Filtrer par catégorie</label
+            >
+            <select
+              id="tag-filter"
+              class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none bg-white"
+              aria-describedby="filter-help"
+            >
+              <option value="">Toutes les catégories</option>
+            </select>
+            <span id="filter-help" class="sr-only"
+              >Sélectionnez une catégorie pour filtrer les recettes</span
+            >
+          </div>
+
+          <!-- Sort Dropdown -->
+          <div class="flex-none w-40">
+            <label
+              for="sort-select"
+              class="block text-sm font-semibold text-gray-800 mb-1"
+              >Trier les recettes</label
+            >
+            <select
+              id="sort-select"
+              class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none bg-white"
+              aria-label="Trier les recettes"
+            >
+              <option value="title-asc" selected>A-Z</option>
+              <option value="title-desc">Z-A</option>
+              <option value="date-desc">Date ↓</option>
+              <option value="date-asc">Date ↑</option>
+            </select>
+            <span id="sort-help" class="sr-only"
+              >Sélectionnez un ordre de tri pour les recettes</span
+            >
+          </div>
+        </div>
+
+        <!-- Results Count -->
+        <p
+          id="results-count"
+          class="text-gray-700 mt-2 text-sm font-medium"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          Chargement des recettes...
+        </p>
+      </section>
+
+      <!-- Recipe Grid -->
+      <section>
+        <div id="recipe-grid" class="recipe-grid">
+          <!-- Recipes will be loaded here by JavaScript -->
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white py-6 mt-auto">
+      <div class="container mx-auto px-4 text-center">
+        <p class="text-gray-400">
+          &copy; 2026 Les recettes de Lionel & Ophélie
+        </p>
+        <p class="text-gray-500 text-sm mt-1">
+          Fait avec ❤️ pour partager notre passion de la cuisine
+        </p>
       </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="bg-black text-white py-6 mt-auto">
-    <div class="container mx-auto px-4 text-center">
-      <p class="text-gray-400">&copy; 2026 Les recettes de Lionel & Ophélie</p>
-      <p class="text-gray-500 text-sm mt-1">Fait avec ❤️ pour partager notre passion de la cuisine</p>
-    </div>
-  </footer>
-</body>
+    </footer>
+  </body>
 </html>

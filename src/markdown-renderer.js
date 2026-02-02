@@ -7,11 +7,11 @@ import { marked } from 'marked';
 
 // Configure marked options
 marked.setOptions({
-  gfm: true,  // GitHub Flavored Markdown
-  breaks: true,  // Convert line breaks to <br>
-  headerIds: true,  // Generate IDs for headers
-  mangle: false,  // Don't escape HTML
-  sanitize: false  // Allow HTML (be careful with user content)
+  gfm: true, // GitHub Flavored Markdown
+  breaks: true, // Convert line breaks to <br>
+  headerIds: true, // Generate IDs for headers
+  mangle: false, // Don't escape HTML
+  sanitize: false, // Allow HTML (be careful with user content)
 });
 
 /**
@@ -23,7 +23,7 @@ export function renderMarkdown(markdown) {
   if (!markdown || typeof markdown !== 'string') {
     return '<p class="error-message">No content to display</p>';
   }
-  
+
   try {
     return marked.parse(markdown);
   } catch (error) {
@@ -71,21 +71,21 @@ export function createErrorMessage(message) {
 export function extractFrontmatter(markdown) {
   const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
   const match = markdown.match(frontmatterRegex);
-  
+
   if (!match) {
     return {
       metadata: {},
-      content: markdown
+      content: markdown,
     };
   }
-  
+
   const frontmatterText = match[1];
   const content = match[2];
-  
+
   // Parse simple key: value pairs
   const metadata = {};
   const lines = frontmatterText.split('\n');
-  
+
   for (const line of lines) {
     const colonIndex = line.indexOf(':');
     if (colonIndex > 0) {
@@ -94,10 +94,10 @@ export function extractFrontmatter(markdown) {
       metadata[key] = value;
     }
   }
-  
+
   return {
     metadata,
-    content
+    content,
   };
 }
 
@@ -106,5 +106,5 @@ export default {
   renderMarkdownWithProse,
   createLoadingSpinner,
   createErrorMessage,
-  extractFrontmatter
+  extractFrontmatter,
 };
