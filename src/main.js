@@ -81,8 +81,8 @@ function createRecipeCard(recipe) {
 function getTypeIcon(type) {
   const icons = {
     'youtube': '<span class="bg-red-600 text-white px-2 py-1 rounded text-xs font-medium">YouTube</span>',
-    'external': '<span class="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">External</span>',
-    'markdown': '<span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-medium">Recipe</span>'
+    'external': '<span class="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">Web</span>',
+    'markdown': '<span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-medium">Recette</span>'
   };
   return icons[type] || '';
 }

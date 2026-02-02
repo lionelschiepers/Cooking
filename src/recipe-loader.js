@@ -11,40 +11,38 @@ import {
  */
 
 /**
- * Gets the recipe filename from the URL query parameter
- * @returns {string|null} The recipe filename or null if not found
+ * Gets the recipe path from the URL
+ * Supports new format (?md=recipename/recipe.md)
+ * @returns {string|null} The recipe path or null if not found
  */
 export function getRecipeFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
-  const recipeFile = urlParams.get('md');
-  return recipeFile ? decodeURIComponent(recipeFile) : null;
+  const recipePath = urlParams.get('md');
+  return recipePath ? decodeURIComponent(recipePath) : null;
 }
 
 /**
  * Loads a markdown recipe file
- * @param {string} filename - The recipe filename (e.g., "tiramisu.md")
+ * @param {string} recipePath - The recipe path (e.g., "tiramisu/recipe.md")
  * @returns {Promise<string>} The markdown content
  */
-export async function loadRecipeFile(filename) {
-  if (!filename) {
+export async function loadRecipeFile(recipePath) {
+  if (!recipePath) {
     throw new Error('No recipe file specified');
   }
   
-  // Clean the filename to prevent directory traversal
-  const cleanFilename = filename.replace(/[^a-zA-Z0-9-_.]/g, '');
+  // Clean the path to prevent directory traversal but allow forward slashes
+  const cleanPath = recipePath.replace(/[^a-zA-Z0-9-_./]/g, '');
   
-  if (!cleanFilename.endsWith('.md')) {
-    throw new Error('Invalid file type. Only .md files are allowed');
+  if (!cleanPath.endsWith('/recipe.md')) {
+    throw new Error('Invalid file path. Expected format: recipename/recipe.md');
   }
   
-  // Extract recipe name from filename (e.g., "tiramisu.md" -> "tiramisu")
-  const recipeName = cleanFilename.replace('.md', '');
-  
-  // Build the path: recipes/[recipe-name]/recipe.md
-  const filePath = `./${recipeName}/recipe.md`;
+  // Extract recipe name from path (e.g., "tiramisu/recipe.md" -> "tiramisu")
+  const recipeName = cleanPath.replace('/recipe.md', '');
   
   try {
-    const response = await fetch(filePath);
+    const response = await fetch(cleanPath);
     
     if (!response.ok) {
       if (response.status === 404) {

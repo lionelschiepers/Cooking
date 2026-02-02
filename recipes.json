@@ -5,7 +5,7 @@
       "title": "Tiramisu",
       "type": "markdown",
       "date": "2025/12/31",
-      "path": "recipes/index.html?md=tiramisu.md",
+      "path": "recipes/index.html?md=tiramisu/recipe.md",
       "image": "https://placehold.co/400x300/8B4513/white?text=Tiramisu",
       "tags": ["dessert", "sweet", "italian", "coffee", "cream"],
       "description": "Classic Italian coffee-flavored dessert with layers of mascarpone cream"
@@ -15,7 +15,7 @@
       "title": "Salade Grecque",
       "type": "markdown",
       "date": "2025/12/30",
-      "path": "recipes/index.html?md=salade-grecque.md",
+      "path": "recipes/index.html?md=salade-grecque/recipe.md",
       "image": "https://placehold.co/400x300/228B22/white?text=Salade+Grecque",
       "tags": ["salad", "vegetarian", "healthy", "greek", "fresh"],
       "description": "Fresh and healthy Greek salad with feta cheese and olives"
