@@ -40,10 +40,17 @@ The name of the site is 'Les recettes de Lionel & Ophélie'
 
 ## 🛠️ Tech Stack
 - ⚡ **Vite 7+** - Lightning-fast builds and minification
-- 🎨 **TailwindCSS 4.1+** - Beautiful, responsive styling
+- 🎨 **TailwindCSS 4.1+** - Beautiful, responsive styling via PostCSS/Vite plugin (⚠️ **NEVER use CDN in production**)
 - **Marked** - Use npm marked 17+ for markdown rendering 
 - 📦 **GitHub Actions** - Automated deployment
 - 🌐 **GitHub Pages** - Free hosting with relative paths
+
+### Important Note on Tailwind CSS
+**DO NOT use cdn.tailwindcss.com in production!** The Tailwind CSS CDN is designed for development purposes only and is not intended for production. Instead:
+- Install Tailwind CSS via npm: `npm install tailwindcss @tailwindcss/vite`
+- Use the Vite plugin in `vite.config.js`
+- Import the CSS file in your HTML: `<link rel="stylesheet" href="./src/style.css">`
+- This ensures optimized, production-ready CSS with proper purging and smaller bundle sizes
 
 ## 📂 Project Structure
 ```
@@ -87,9 +94,9 @@ Example format for a recipe:
   - https://www.youtube.com/watch?v=xqsojPVS7v8
       
     For external links use those links:
-  - https://www.atelierdeschefs.fr/recettes/29252/tataki-de-boeuf/
-  - https://www.colruyt.be/fr/recettes/vol-au-vent-1/
-  - https://empreintesucree.fr/glace-vanille/
+  - https://www.atelierdeschefs.fr/recettes/29252/tataki-de-boeuf/ (https://www.atelierdeschefs.fr/_next/image/?url=https%3A%2F%2Fadc-dev-images-recipes.s3.eu-west-1.amazonaws.com%2Ftataki_8_bd.jpg&w=1920&q=80 for image)
+  - https://www.colruyt.be/fr/recettes/vol-au-vent-1/ (https://fgdjrynm.filerobot.com/recipes/43764cf814d5e1e9c3dde13c43af3419bab206d26ac3439834e1a858448c9d64.jpg?h=1200&w=1200&q=60 for image)
+  - https://empreintesucree.fr/glace-vanille/ (https://empreintesucree.fr/wp-content/uploads/2016/05/1-glace-vanille-patisserie-empreinte-sucree-1.jpg.webp for image)
 4. ✅ Home page displays recipe as clickable icon
 5. ✅ Click navigates to dedicated recipe page
 6. ✅ All paths must be relative for GitHub Pages compatibility
@@ -97,6 +104,7 @@ Example format for a recipe:
 8. ✅ Reference the most up to date packages
 9. ✅ Create README.md that describes this project
 10. ✅ Update the packages to their latest version
+11. ✅ **Use Tailwind CSS via PostCSS/Vite plugin - NEVER use the CDN in production**
 
 ---
 *Let's build something amazing!* 🌟
