@@ -21,24 +21,24 @@
       "description": "Fresh and healthy Greek salad with feta cheese and olives"
     },
     {
-      "id": "tartiflette",
-      "title": "Tartiflette",
+      "id": "boeuf-bourgignon",
+      "title": "Boeuf Bourgignon",
       "type": "youtube",
       "date": "2025/12/29",
       "url": "https://www.youtube.com/watch?v=F_53yUD3Je4",
       "image": "https://img.youtube.com/vi/F_53yUD3Je4/0.jpg",
-      "tags": ["french", "cheese", "potato", "hearty", "winter"],
-      "description": "Classic French dish with potatoes, reblochon cheese, and bacon"
+      "tags": ["Viande"],
+      "description": "Boeuf Bourgignon"
     },
     {
-      "id": "poulet-curry",
-      "title": "Poulet au Curry",
+      "id": "tomate-bonbon",
+      "title": "Tomates Bonbons",
       "type": "youtube",
       "date": "2025/12/28",
       "url": "https://www.youtube.com/watch?v=UMBw5_pzcQI",
       "image": "https://img.youtube.com/vi/UMBw5_pzcQI/0.jpg",
-      "tags": ["chicken", "indian", "spicy", "curry", "rice"],
-      "description": "Flavorful Indian-style chicken curry with aromatic spices"
+      "tags": ["Apéro"],
+      "description": "Délicieuse tomates bonbons"
     },
     {
       "id": "soupe-oignon",
@@ -51,14 +51,14 @@
       "description": "Traditional French onion soup with gratinéed cheese"
     },
     {
-      "id": "ratatouille",
-      "title": "Ratatouille",
+      "id": "boeuf-asiatique",
+      "title": "Boeuf tendre asiatique",
       "type": "youtube",
       "date": "2025/12/26",
       "url": "https://www.youtube.com/watch?v=I4Szo0odIDo",
       "image": "https://img.youtube.com/vi/I4Szo0odIDo/0.jpg",
-      "tags": ["vegetable", "provencal", "healthy", "french", "summer"],
-      "description": "Colorful Provençal vegetable stew with zucchini, eggplant, and peppers"
+      "tags": ["Boeuf", "Asiatique", "Astuce"],
+      "description": "Comment avoir une viande tendre comme au restaurant asiatique"
     },
     {
       "id": "boeuf-bourguignon",
@@ -69,6 +69,16 @@
       "image": "https://img.youtube.com/vi/MdjABUNOx4A/0.jpg",
       "tags": ["beef", "french", "wine", "hearty", "winter"],
       "description": "Classic French beef stew braised in red wine with mushrooms"
+    },
+    {
+      "id": "nouilles-chinoises",
+      "title": "Nouilles Chinoises Sautées",
+      "type": "youtube",
+      "date": "2025/12/25",
+      "url": "https://www.youtube.com/watch?v=opqf5H-Fogw",
+      "image": "https://img.youtube.com/vi/opqf5H-Fogw/0.jpg",
+      "tags": ["boeuf", "asian"],
+      "description": "Nouilles Chinoises Sautées au Bœuf et Légumes"
     },
     {
       "id": "tarte-tatin",
