@@ -16,7 +16,7 @@ import {
  * @returns {string|null} The recipe path or null if not found
  */
 export function getRecipeFromUrl() {
-  const urlParams = new URLSearchParams(window.location.search);
+  const urlParams = new URLSearchParams(globalThis.location.search);
   const recipePath = urlParams.get('md');
   return recipePath ? decodeURIComponent(recipePath) : null;
 }

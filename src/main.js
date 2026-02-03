@@ -60,6 +60,13 @@ function createRecipeCard(recipe) {
   const externalAttrs =
     linkTarget === '_blank' ? 'rel="noopener noreferrer"' : '';
 
+  let actionLabel = 'Voir la recette';
+  if (type === 'youtube') {
+    actionLabel = 'Ouvrir la vidéo YouTube';
+  } else if (type === 'external') {
+    actionLabel = 'Ouvrir la recette externe';
+  }
+
   return `
     <article class="recipe-card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer group"
              role="article"
@@ -68,7 +75,7 @@ function createRecipeCard(recipe) {
          target="${linkTarget}"
          ${externalAttrs}
          class="block no-underline text-inherit focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-inset"
-         aria-label="${title} - ${type === 'youtube' ? 'Ouvrir la vidéo YouTube' : type === 'external' ? 'Ouvrir la recette externe' : 'Voir la recette'}">
+         aria-label="${title} - ${actionLabel}">
         <div class="relative h-48 overflow-hidden">
           <img src="${image}"
                alt=""
@@ -113,26 +120,18 @@ function getTypeIcon(type) {
 }
 
 /**
- * Renders the recipe grid
- * @param {Array} recipes - Array of recipe objects to render
+ * Renders the "no results" state
+ * @param {HTMLElement} gridContainer - The grid container element
+ * @param {HTMLElement} resultsCount - The results count element
+ * @param {string} searchValue - The current search value
+ * @param {string} tagValue - The current tag filter value
  */
-function renderRecipeGrid(recipes) {
-  const gridContainer = document.getElementById('recipe-grid');
-  const resultsCount = document.getElementById('results-count');
-
-  if (!gridContainer) return;
-
-  if (recipes.length === 0) {
-    const searchInput = document.getElementById('search-input');
-    const tagSelect = document.getElementById('tag-filter');
-    const searchValue = searchInput ? searchInput.value.trim() : '';
-    const tagValue = tagSelect ? tagSelect.value : '';
-
-    let suggestionHtml = '';
-    if (searchValue || tagValue) {
-      const allTags = getUniqueTags();
-      const randomTags = allTags.sort(() => 0.5 - Math.random()).slice(0, 3);
-      suggestionHtml = `
+function renderNoResults(gridContainer, resultsCount, searchValue, tagValue) {
+  let suggestionHtml = '';
+  if (searchValue || tagValue) {
+    const allTags = getUniqueTags();
+    const randomTags = [...allTags].sort(() => 0.5 - Math.random()).slice(0, 3);
+    suggestionHtml = `
         <div class="mt-6">
           <p class="text-gray-600 mb-3">Essayez avec :</p>
           <div class="flex flex-wrap justify-center gap-2">
@@ -153,9 +152,9 @@ function renderRecipeGrid(recipes) {
           </div>
         </div>
       `;
-    }
+  }
 
-    gridContainer.innerHTML = `
+  gridContainer.innerHTML = `
       <div class="col-span-full flex flex-col items-center justify-center py-16 px-4" role="status" aria-live="polite">
         <div class="text-6xl mb-4">🔍</div>
         <h3 class="text-xl font-semibold text-gray-800 mb-2">Aucune recette trouvée</h3>
@@ -169,9 +168,28 @@ function renderRecipeGrid(recipes) {
         ${suggestionHtml}
       </div>
     `;
-    if (resultsCount) {
-      resultsCount.textContent = '0 recette trouvée';
-    }
+  if (resultsCount) {
+    resultsCount.textContent = '0 recette trouvée';
+  }
+}
+
+/**
+ * Renders the recipe grid
+ * @param {Array} recipes - Array of recipe objects to render
+ */
+function renderRecipeGrid(recipes) {
+  const gridContainer = document.getElementById('recipe-grid');
+  const resultsCount = document.getElementById('results-count');
+
+  if (!gridContainer) return;
+
+  if (recipes.length === 0) {
+    const searchInput = document.getElementById('search-input');
+    const tagSelect = document.getElementById('tag-filter');
+    const searchValue = searchInput ? searchInput.value.trim() : '';
+    const tagValue = tagSelect ? tagSelect.value : '';
+
+    renderNoResults(gridContainer, resultsCount, searchValue, tagValue);
     return;
   }
 
@@ -269,7 +287,7 @@ function showLoading() {
   const resultsCount = document.getElementById('results-count');
   if (gridContainer) {
     // Show 8 skeleton cards to fill the grid
-    const skeletonCards = Array(8)
+    const skeletonCards = new Array(8)
       .fill(null)
       .map(() => createSkeletonCard())
       .join('');
@@ -306,18 +324,15 @@ function filterRecipes(searchQuery, selectedTag) {
     const matchesSearch =
       !searchQuery ||
       normalizeString(recipe.title.toLowerCase()).includes(normalizedQuery) ||
-      (recipe.description &&
-        normalizeString(recipe.description.toLowerCase()).includes(
-          normalizedQuery,
-        )) ||
-      (recipe.tags &&
-        recipe.tags.some((tag) =>
-          normalizeString(tag.toLowerCase()).includes(normalizedQuery),
-        ));
+      normalizeString(recipe.description?.toLowerCase() ?? '').includes(
+        normalizedQuery,
+      ) ||
+      recipe.tags?.some((tag) =>
+        normalizeString(tag.toLowerCase()).includes(normalizedQuery),
+      );
 
     // Tag filter
-    const matchesTag =
-      !selectedTag || (recipe.tags && recipe.tags.includes(selectedTag));
+    const matchesTag = !selectedTag || recipe.tags?.includes(selectedTag);
 
     return matchesSearch && matchesTag;
   });
@@ -361,7 +376,7 @@ function getUniqueTags() {
       recipe.tags.forEach((tag) => tagsSet.add(tag));
     }
   });
-  return Array.from(tagsSet).sort();
+  return Array.from(tagsSet).sort((a, b) => a.localeCompare(b));
 }
 
 /**
