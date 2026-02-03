@@ -91,7 +91,7 @@
       "description": "Délicieuse tomates bonbons"
     },
     {
-      "id": "chimicurri ",
+      "id": "chimicurri",
       "title": "Sauce Chimicurri",
       "type": "youtube",
       "date": "2025/12/27",
@@ -99,6 +99,16 @@
       "image": "https://img.youtube.com/vi/DN4T2M84UbI/0.jpg",
       "tags": ["Sauce"],
       "description": "Sauce Chimicurri de François-Régis Gaudry"
+    },
+    {
+      "id": "bolognaise",
+      "title": "Pâtes Bolognaise",
+      "type": "youtube",
+      "date": "2025/12/27",
+      "url": "https://www.youtube.com/watch?v=xDB2dpCMrWo",
+      "image": "https://img.youtube.com/vi/xDB2dpCMrWo/0.jpg",
+      "tags": ["Viande", "Pates"],
+      "description": "Pâtes Bolognaise ou Ragu"
     },
     {
       "id": "boeuf-asiatique",
