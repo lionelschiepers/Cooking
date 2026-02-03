@@ -349,6 +349,66 @@
       "image": "./recipes/carbonade-joue-porc/carbonade-joue-porc.webp",
       "tags": ["Viande"],
       "description": "Carbonade de Joue de Porc"
+    },
+    {
+      "id": "lentilles",
+      "title": "Lentilles",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=lentilles/recipe.md",
+      "image": "./recipes/lentilles/lentilles.webp",
+      "tags": ["Accompagnement"],
+      "description": "Lentilles"
+    },
+    {
+      "id": "pates-duo",
+      "title": "Duo de pâtes",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=pates-duo/recipe.md",
+      "image": "./recipes/pates-duo/pates-duo.webp",
+      "tags": ["Pates"],
+      "description": "Duo de pâtes (pesto et ragù)"
+    },
+    {
+      "id": "pates-saumon",
+      "title": "Pates Saumon",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=pates-saumon/recipe.md",
+      "image": "./recipes/pates-saumon/pates-saumon.webp",
+      "tags": ["Pates", "Poisson"],
+      "description": "Pates Saumon"
+    },
+    {
+      "id": "saint-jacques",
+      "title": "Saint Jacques",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=saint-jacques/recipe.md",
+      "image": "./recipes/saint-jacques/saint-jacques.webp",
+      "tags": ["Poisson", "Entrée"],
+      "description": "Saint Jacques"
+    },
+    {
+      "id": "chili-con-carne-md",
+      "title": "Chili Con Carne",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=chili-con-carne/recipe.md",
+      "image": "./recipes/chili-con-carne/chili-con-carne.webp",
+      "tags": ["Viande"],
+      "description": "Chili Con Carne"
+    },
+    {
+      "id": "tartare-boeuf-md",
+      "title": "Tartare Boeuf",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=tartare-boeuf/recipe.md",
+      "image": "./recipes/tartare-boeuf/tartare-boeuf.webp",
+      "tags": ["Viande"],
+      "description": "Tartare Boeuf"
     }
   ]
 }
