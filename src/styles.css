@@ -86,8 +86,14 @@ body {
   }
 
   .search-filter-bar > *:last-child {
-    align-self: flex-end;
+    width: 100%;
+    align-self: auto;
     margin-left: 0;
+  }
+
+  .search-filter-bar > .w-32 {
+    width: 100% !important;
+    flex: 0 0 auto !important;
   }
 }
 
