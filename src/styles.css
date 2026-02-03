@@ -99,7 +99,7 @@ body {
 
 @media (max-width: 768px) {
   .search-filter-bar label {
-    text-align: right !important;
+    text-align: left !important;
   }
 }
 

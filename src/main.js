@@ -483,4 +483,10 @@ async function init() {
 }
 
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+  // Attach functions to window object for inline onclick handlers
+  window.clearFiltersAndSelectTag = clearFiltersAndSelectTag;
+  window.clearAllFilters = clearAllFilters;
+
+  init();
+});
