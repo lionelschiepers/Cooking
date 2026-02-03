@@ -1,7 +1,7 @@
 {
   "recipes": [
     {
-      "id": "pesto",
+      "id": "pates-pesto",
       "title": "Pates Pesto",
       "type": "markdown",
       "date": "2025/12/30",
@@ -179,6 +179,176 @@
       "image": "https://empreintesucree.fr/wp-content/uploads/2016/05/1-glace-vanille-patisserie-empreinte-sucree-1.jpg.webp",
       "tags": ["Dessert"],
       "description": "Glace Vanille"
+    },
+    {
+      "id": "accras-morue",
+      "title": "Accras de Morue",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=accras-morue/recipe.md",
+      "image": "./recipes/accras-morue/accras-morue.webp",
+      "tags": ["Poisson", "Apéro"],
+      "description": "Accras de Morue"
+    },
+    {
+      "id": "flammekueche",
+      "title": "Flammekueche",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=flammekueche/recipe.md",
+      "image": "./recipes/flammekueche/flammekueche.webp",
+      "tags": ["Pizza"],
+      "description": "Flammekueche"
+    },
+    {
+      "id": "asperges-blanches",
+      "title": "Asperges Blanches",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=asperges-blanches/recipe.md",
+      "image": "./recipes/asperges-blanches/asperges-blanches.webp",
+      "tags": ["Entrée"],
+      "description": "Asperges Blanches"
+    },
+    {
+      "id": "chicons",
+      "title": "Chicons",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=chicons/recipe.md",
+      "image": "./recipes/chicons/chicons.webp",
+      "tags": ["Accompagnement"],
+      "description": "Chicons"
+    },
+    {
+      "id": "pdt-eventail",
+      "title": "Pommes de Terre en Éventail",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=pdt-eventail/recipe.md",
+      "image": "./recipes/pdt-eventail/pdt-eventail.webp",
+      "tags": ["Accompagnement"],
+      "description": "Pommes de Terre en Éventail"
+    },
+    {
+      "id": "scampis-ail",
+      "title": "Scampis à l'Ail",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=scampis-ail/recipe.md",
+      "image": "./recipes/scampis-ail/scampis-ail.webp",
+      "tags": ["Entrée", "Poisson"],
+      "description": "Scampis à l'Ail"
+    },
+    {
+      "id": "pates-pesto2",
+      "title": "Pâtes au Pesto",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=pates-pesto2/recipe.md",
+      "image": "./recipes/pates-pesto2/pates-pesto.webp",
+      "tags": ["Pates"],
+      "description": "Pâtes au Pesto"
+    },
+    {
+      "id": "duxelle-champignons",
+      "title": "Duxelle de Champignons",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=duxelle-champignons/recipe.md",
+      "image": "./recipes/duxelle-champignons/duxelle-champignons.webp",
+      "tags": ["Accompagnement"],
+      "description": "Duxelle de Champignons"
+    },
+    {
+      "id": "salade-liegeoise",
+      "title": "Salade Liégeoise",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=salade-liegeoise/recipe.md",
+      "image": "./recipes/salade-liegeoise/salade-liegeoise.webp",
+      "tags": ["Salade", "Entrée"],
+      "description": "Salade Liégeoise"
+    },
+    {
+      "id": "tomate-pesto",
+      "title": "Tomates au Pesto",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=tomate-pesto/recipe.md",
+      "image": "./recipes/tomate-pesto/tomate-pesto.webp",
+      "tags": ["Entrée", "Accompagnement"],
+      "description": "Tomates au Pesto"
+    },
+    {
+      "id": "oeuf-meurette",
+      "title": "Œufs Meurette",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=oeuf-meurette/recipe.md",
+      "image": "./recipes/oeuf-meurette/oeuf-meurette.webp",
+      "tags": ["Entrée"],
+      "description": "Œufs Meurette"
+    },
+    {
+      "id": "pates-saucisses-fenouil",
+      "title": "Pâtes Saucisses Fenouil",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=pates-saucisses-fenouil/recipe.md",
+      "image": "./recipes/pates-saucisses-fenouil/pates-saucisses-fenouil.webp",
+      "tags": ["Pates", "Viande"],
+      "description": "Pâtes aux Saucisses et Fenouil"
+    },
+    {
+      "id": "pad-thai",
+      "title": "Pad Thai",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=pad-thai/recipe.md",
+      "image": "./recipes/pad-thai/pad-thai.webp",
+      "tags": ["Asiatique", "Viande"],
+      "description": "Pad Thai"
+    },
+    {
+      "id": "nems",
+      "title": "Nems",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=nems/recipe.md",
+      "image": "./recipes/nems/nems.webp",
+      "tags": ["Asiatique", "Entrée"],
+      "description": "Nems"
+    },
+    {
+      "id": "feuillete-poulet-gingembre",
+      "title": "Feuilleté Poulet Gingembre",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=feuillete-poulet-gingembre/recipe.md",
+      "image": "./recipes/feuillete-poulet-gingembre/feuillete-poulet-gingembre.webp",
+      "tags": ["Viande", "Entrée"],
+      "description": "Feuilleté Poulet Gingembre"
+    },
+    {
+      "id": "poulet-indien",
+      "title": "Poulet Indien",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=poulet-indien/recipe.md",
+      "image": "./recipes/poulet-indien/poulet-indien.webp",
+      "tags": ["Viande", "Asiatique"],
+      "description": "Poulet Indien"
+    },
+    {
+      "id": "carbonade-joue-porc",
+      "title": "Carbonade de Joue de Porc",
+      "type": "markdown",
+      "date": "2026/02/03",
+      "path": "recipes/index.html?md=carbonade-joue-porc/recipe.md",
+      "image": "./recipes/carbonade-joue-porc/carbonade-joue-porc.webp",
+      "tags": ["Viande"],
+      "description": "Carbonade de Joue de Porc"
     }
   ]
 }
