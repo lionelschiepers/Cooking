@@ -1,5 +1,5 @@
 ---
-title: Pâtes Pesto
+title: Pâtes au pesto
 ---
 
 ![Pâtes Pesto](./pates-pesto/pates-pesto.webp)
