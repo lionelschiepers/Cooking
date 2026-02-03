@@ -131,7 +131,7 @@ Then add to `recipes.json`:
   "title": "Recipe Name",
   "type": "markdown",
   "date": "2025/12/31",
-  "path": "recipes/index.html?md=recipe-name.md",
+  "path": "recipes/index.html?md=recipe-name/recipe.md",
   "image": "https://placehold.co/400x300/HEX/TEXT?text=Recipe+Name",
   "tags": ["tag1", "tag2"],
   "description": "Brief description"
@@ -197,7 +197,7 @@ This project is configured for automatic deployment to GitHub Pages via GitHub A
 - For production, consider hosting images locally in `/public/images/`
 - YouTube thumbnails are generally reliable
 
-## 🐛 Troubleshooting
+## 📜 Troubleshooting
 
 ### Images Not Displaying
 1. Check browser console for 404 or CORS errors
@@ -206,7 +206,7 @@ This project is configured for automatic deployment to GitHub Pages via GitHub A
 4. Solution: Use local images in `/public/images/` folder
 
 ### Markdown Not Rendering
-1. Verify the `path` field uses the correct format: `recipes/index.html?md=recipe-name.md`
+1. Verify the `path` field uses the correct format: `recipes/index.html?md=recipe-name/recipe.md`
 2. Check that the `.md` file exists in the expected location
 3. Ensure the file has proper markdown syntax
 
