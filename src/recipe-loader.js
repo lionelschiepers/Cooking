@@ -32,14 +32,14 @@ export async function loadRecipeFile(recipePath) {
   }
 
   // Clean the path to prevent directory traversal but allow forward slashes
-  const cleanPath = recipePath.replace(/[^a-zA-Z0-9-_./]/g, '');
+  const cleanPath = recipePath.replaceAll(/[^a-zA-Z0-9-_./]/g, '');
 
   if (!cleanPath.endsWith('/recipe.md')) {
     throw new Error('Invalid file path. Expected format: recipename/recipe.md');
   }
 
   // Extract recipe name from path (e.g., "tiramisu/recipe.md" -> "tiramisu")
-  const recipeName = cleanPath.replace('/recipe.md', '');
+  const recipeName = cleanPath.replaceAll('/recipe.md', '');
 
   try {
     const response = await fetch(cleanPath);

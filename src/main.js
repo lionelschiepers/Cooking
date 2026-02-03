@@ -199,7 +199,7 @@ function renderRecipeGrid(recipes) {
   gridContainer.innerHTML = recipesHtml;
 
   if (resultsCount) {
-    const countText = `${recipes.length} recette${recipes.length !== 1 ? 's' : ''} trouvée${recipes.length !== 1 ? 's' : ''}`;
+    const countText = `${recipes.length} recette${recipes.length > 1 ? 's' : ''} trouvée${recipes.length > 1 ? 's' : ''}`;
     resultsCount.textContent = countText;
     resultsCount.setAttribute('aria-live', 'polite');
   }
@@ -305,7 +305,7 @@ function showLoading() {
  * @returns {string} The normalized string without accents
  */
 function normalizeString(str) {
-  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  return str.normalize('NFD').replaceAll(/[\u0300-\u036f]/g, '');
 }
 
 /**
@@ -499,9 +499,9 @@ async function init() {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  // Attach functions to window object for inline onclick handlers
-  window.clearFiltersAndSelectTag = clearFiltersAndSelectTag;
-  window.clearAllFilters = clearAllFilters;
+  // Attach functions to globalThis object for inline onclick handlers
+  globalThis.clearFiltersAndSelectTag = clearFiltersAndSelectTag;
+  globalThis.clearAllFilters = clearAllFilters;
 
   init();
 });

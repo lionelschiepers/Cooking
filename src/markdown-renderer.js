@@ -70,7 +70,7 @@ export function createErrorMessage(message) {
  */
 export function extractFrontmatter(markdown) {
   const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
-  const match = markdown.match(frontmatterRegex);
+  const match = frontmatterRegex.exec(markdown);
 
   if (!match) {
     return {
