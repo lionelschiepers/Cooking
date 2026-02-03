@@ -65,6 +65,11 @@ body {
   min-width: 200px;
 }
 
+.search-filter-bar > *:not(:last-child).w-32 {
+  flex: 0 0 200px;
+  min-width: 200px;
+}
+
 .search-filter-bar > *:last-child {
   margin-left: auto;
 }
