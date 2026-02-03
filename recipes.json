@@ -282,13 +282,13 @@
     },
     {
       "id": "oeuf-meurette",
-      "title": "Œufs Meurette",
+      "title": "Oeufs Meurette",
       "type": "markdown",
       "date": "2026/02/03",
       "path": "recipes/index.html?md=oeuf-meurette/recipe.md",
       "image": "./recipes/oeuf-meurette/oeuf-meurette.webp",
       "tags": ["Entrée"],
-      "description": "Œufs Meurette"
+      "description": "Oeufs Meurette"
     },
     {
       "id": "pates-saucisses-fenouil",
