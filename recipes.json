@@ -1,6 +1,16 @@
 {
   "recipes": [
     {
+      "id": "tenders",
+      "title": "Meilleurs Tenders de Poulet",
+      "type": "youtube",
+      "date": "2026/02/08",
+      "url": "https://www.youtube.com/watch?v=6q7UFPFzgHU",
+      "image": "https://www.youtube.com/watch?v=6q7UFPFzgHU/0.jpg",
+      "tags": ["Poulet", "Apéro"],
+      "description": "Tenders de poulet"
+    },
+    {
       "id": "pates-pesto",
       "title": "Pates Pesto",
       "type": "markdown",
