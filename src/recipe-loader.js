@@ -64,13 +64,13 @@ export function updateOpenGraphMeta({
     let absoluteImageUrl;
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
       absoluteImageUrl = imageUrl;
-    } else if (imageUrl.startsWith('./') && imageBasePath) {
-      // Resolve relative path from recipe folder
+    } else if (imageUrl.startsWith('./')) {
+      // Resolve relative path from current page location
+      // Current page is at /Cooking/recipes/index.html
+      // Image path is relative to the recipe folder (e.g., ./orzo-vert-maquereau/image.webp)
       const relativePath = imageUrl.replace(/^\.\//, '');
-      absoluteImageUrl = new URL(
-        `${imageBasePath}/${relativePath}`,
-        window.location.origin,
-      ).href;
+      const baseUrl = window.location.href.replace(/\/[^\/]*$/, '/');
+      absoluteImageUrl = new URL(relativePath, baseUrl).href;
     } else if (imageUrl.startsWith('/')) {
       absoluteImageUrl = new URL(imageUrl, window.location.origin).href;
     } else {
