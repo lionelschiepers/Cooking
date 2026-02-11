@@ -235,6 +235,21 @@ function generateRecipeHtml(mdFilePath, outputDir) {
   // Remove any remaining template syntax
   html = html.replace(/\{\{[^\}]+\}\}/g, '');
 
+  // Replace CSS path with hashed version from Vite build
+  const distStylesDir = path.join(__dirname, 'dist', 'assets');
+  if (fs.existsSync(distStylesDir)) {
+    const stylesFiles = fs
+      .readdirSync(distStylesDir)
+      .filter((f) => f.startsWith('styles-') && f.endsWith('.css'));
+    if (stylesFiles.length > 0) {
+      const hashedCssPath = `/assets/${stylesFiles[0]}`;
+      html = html.replace(
+        /href="\/Cooking\/src\/styles\.css"/g,
+        `href="${hashedCssPath}"`,
+      );
+    }
+  }
+
   // Create output directory for this recipe
   const recipeName = path.basename(mdFilePath, '.md');
   const recipeOutputDir = path.join(outputDir, recipeName);

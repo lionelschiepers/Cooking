@@ -215,6 +215,9 @@ function generateRecipeHtml(mdFilePath, outputDir) {
   // Remove any remaining template syntax
   html = html.replace(/\{\{[^\}]+\}\}/g, '');
 
+  // Replace CSS path - for dev, use /src/styles.css directly
+  // (Vite handles this in development mode)
+
   // Create output directory for this recipe
   const recipeName = path.basename(mdFilePath, '.md');
   const recipeOutputDir = path.join(outputDir, recipeName);
