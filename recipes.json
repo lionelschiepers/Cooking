@@ -7,10 +7,7 @@
       "date": "2026/02/11",
       "path": "recipes/orzo-vert-maquereau/",
       "image": "./recipes/orzo-vert-maquereau/orzo-vert-maquereau-1.webp",
-      "tags": [
-        "Poisson",
-        "Pates"
-      ],
+      "tags": ["Poisson", "Pates"],
       "description": "Orzo vert au maquereau"
     },
     {
@@ -20,10 +17,7 @@
       "date": "2026/02/08",
       "url": "https://www.youtube.com/watch?v=6q7UFPFzgHU",
       "image": "https://img.youtube.com/vi/6q7UFPFzgHU/0.jpg",
-      "tags": [
-        "Poulet",
-        "Apéro"
-      ],
+      "tags": ["Poulet", "Apéro"],
       "description": "Tenders de poulet"
     },
     {
@@ -33,10 +27,7 @@
       "date": "2026/02/03",
       "path": "recipes/accras-morue/",
       "image": "./recipes/accras-morue/accras-morue.webp",
-      "tags": [
-        "Poisson",
-        "Apéro"
-      ],
+      "tags": ["Poisson", "Apéro"],
       "description": "Accras de Morue"
     },
     {
@@ -46,9 +37,7 @@
       "date": "2026/02/03",
       "path": "recipes/flammekueche/",
       "image": "./recipes/flammekueche/flammekueche.webp",
-      "tags": [
-        "Pizza"
-      ],
+      "tags": ["Pizza"],
       "description": "Flammekueche"
     },
     {
@@ -58,9 +47,7 @@
       "date": "2026/02/03",
       "path": "recipes/asperges-blanches/",
       "image": "./recipes/asperges-blanches/asperges-blanches.webp",
-      "tags": [
-        "Entrée"
-      ],
+      "tags": ["Entrée"],
       "description": "Asperges Blanches"
     },
     {
@@ -70,9 +57,7 @@
       "date": "2026/02/03",
       "path": "recipes/chicons/",
       "image": "./recipes/chicons/chicons.webp",
-      "tags": [
-        "Accompagnement"
-      ],
+      "tags": ["Accompagnement"],
       "description": "Chicons"
     },
     {
@@ -82,9 +67,7 @@
       "date": "2026/02/03",
       "path": "recipes/pdt-eventail/",
       "image": "./recipes/pdt-eventail/pdt-eventail.webp",
-      "tags": [
-        "Accompagnement"
-      ],
+      "tags": ["Accompagnement"],
       "description": "Pommes de Terre en Éventail"
     },
     {
@@ -94,10 +77,7 @@
       "date": "2026/02/03",
       "path": "recipes/scampis-ail/",
       "image": "./recipes/scampis-ail/scampis-ail.webp",
-      "tags": [
-        "Entrée",
-        "Poisson"
-      ],
+      "tags": ["Entrée", "Poisson"],
       "description": "Scampis à l'Ail"
     },
     {
@@ -107,9 +87,7 @@
       "date": "2026/02/03",
       "path": "recipes/pates-pesto2/",
       "image": "./recipes/pates-pesto2/pates-pesto.webp",
-      "tags": [
-        "Pates"
-      ],
+      "tags": ["Pates"],
       "description": "Pâtes au Pesto"
     },
     {
@@ -119,9 +97,7 @@
       "date": "2026/02/03",
       "path": "recipes/duxelle-champignons/",
       "image": "./recipes/duxelle-champignons/duxelle-champignons.webp",
-      "tags": [
-        "Accompagnement"
-      ],
+      "tags": ["Accompagnement"],
       "description": "Duxelle de Champignons"
     },
     {
@@ -131,10 +107,7 @@
       "date": "2026/02/03",
       "path": "recipes/salade-liegeoise/",
       "image": "./recipes/salade-liegeoise/salade-liegeoise.webp",
-      "tags": [
-        "Salade",
-        "Entrée"
-      ],
+      "tags": ["Salade", "Entrée"],
       "description": "Salade Liégeoise"
     },
     {
@@ -144,10 +117,7 @@
       "date": "2026/02/03",
       "path": "recipes/tomate-pesto/",
       "image": "./recipes/tomate-pesto/tomate-pesto.webp",
-      "tags": [
-        "Entrée",
-        "Accompagnement"
-      ],
+      "tags": ["Entrée", "Accompagnement"],
       "description": "Tomates au Pesto"
     },
     {
@@ -157,9 +127,7 @@
       "date": "2026/02/03",
       "path": "recipes/oeuf-meurette/",
       "image": "./recipes/oeuf-meurette/oeuf-meurette.webp",
-      "tags": [
-        "Entrée"
-      ],
+      "tags": ["Entrée"],
       "description": "Oeufs Meurette"
     },
     {
@@ -169,10 +137,7 @@
       "date": "2026/02/03",
       "path": "recipes/pates-saucisses-fenouil/",
       "image": "./recipes/pates-saucisses-fenouil/pates-saucisses-fenouil.webp",
-      "tags": [
-        "Pates",
-        "Viande"
-      ],
+      "tags": ["Pates", "Viande"],
       "description": "Pâtes aux Saucisses et Fenouil"
     },
     {
@@ -182,10 +147,7 @@
       "date": "2026/02/03",
       "path": "recipes/pad-thai/",
       "image": "./recipes/pad-thai/pad-thai.webp",
-      "tags": [
-        "Asiatique",
-        "Viande"
-      ],
+      "tags": ["Asiatique", "Viande"],
       "description": "Pad Thai"
     },
     {
@@ -195,10 +157,7 @@
       "date": "2026/02/03",
       "path": "recipes/nems/",
       "image": "./recipes/nems/nems.webp",
-      "tags": [
-        "Asiatique",
-        "Entrée"
-      ],
+      "tags": ["Asiatique", "Entrée"],
       "description": "Nems"
     },
     {
@@ -208,10 +167,7 @@
       "date": "2026/02/03",
       "path": "recipes/feuillete-poulet-gingembre/",
       "image": "./recipes/feuillete-poulet-gingembre/feuillete-poulet-gingembre.webp",
-      "tags": [
-        "Viande",
-        "Entrée"
-      ],
+      "tags": ["Viande", "Entrée"],
       "description": "Feuilleté Poulet Gingembre"
     },
     {
@@ -221,10 +177,7 @@
       "date": "2026/02/03",
       "path": "recipes/poulet-indien/",
       "image": "./recipes/poulet-indien/poulet-indien.webp",
-      "tags": [
-        "Viande",
-        "Asiatique"
-      ],
+      "tags": ["Viande", "Asiatique"],
       "description": "Poulet Indien"
     },
     {
@@ -234,9 +187,7 @@
       "date": "2026/02/03",
       "path": "recipes/carbonade-joue-porc/",
       "image": "./recipes/carbonade-joue-porc/carbonade-joue-porc.webp",
-      "tags": [
-        "Viande"
-      ],
+      "tags": ["Viande"],
       "description": "Carbonade de Joue de Porc"
     },
     {
@@ -246,9 +197,7 @@
       "date": "2026/02/03",
       "path": "recipes/lentilles/",
       "image": "./recipes/lentilles/lentilles.webp",
-      "tags": [
-        "Accompagnement"
-      ],
+      "tags": ["Accompagnement"],
       "description": "Lentilles"
     },
     {
@@ -258,9 +207,7 @@
       "date": "2026/02/03",
       "path": "recipes/pates-duo/",
       "image": "./recipes/pates-duo/pates-duo.webp",
-      "tags": [
-        "Pates"
-      ],
+      "tags": ["Pates"],
       "description": "Duo de pâtes (pesto et ragù)"
     },
     {
@@ -270,10 +217,7 @@
       "date": "2026/02/03",
       "path": "recipes/pates-saumon/",
       "image": "./recipes/pates-saumon/pates-saumon.webp",
-      "tags": [
-        "Pates",
-        "Poisson"
-      ],
+      "tags": ["Pates", "Poisson"],
       "description": "Pates Saumon"
     },
     {
@@ -283,10 +227,7 @@
       "date": "2026/02/03",
       "path": "recipes/saint-jacques/",
       "image": "./recipes/saint-jacques/saint-jacques.webp",
-      "tags": [
-        "Poisson",
-        "Entrée"
-      ],
+      "tags": ["Poisson", "Entrée"],
       "description": "Saint Jacques"
     },
     {
@@ -296,9 +237,7 @@
       "date": "2026/02/03",
       "path": "recipes/chili-con-carne/",
       "image": "./recipes/chili-con-carne/chili-con-carne.webp",
-      "tags": [
-        "Viande"
-      ],
+      "tags": ["Viande"],
       "description": "Chili Con Carne"
     },
     {
@@ -308,9 +247,7 @@
       "date": "2026/02/03",
       "path": "recipes/tartare-boeuf/",
       "image": "./recipes/tartare-boeuf/tartare-boeuf.webp",
-      "tags": [
-        "Viande"
-      ],
+      "tags": ["Viande"],
       "description": "Tartare Boeuf"
     },
     {
@@ -320,9 +257,7 @@
       "date": "2025/12/30",
       "path": "recipes/pates-pesto/",
       "image": "./recipes/pates-pesto/pates-pesto.webp",
-      "tags": [
-        "Pates"
-      ],
+      "tags": ["Pates"],
       "description": "Pates Pesto"
     },
     {
@@ -332,9 +267,7 @@
       "date": "2025/12/30",
       "path": "recipes/boeuf-koreen/",
       "image": "./recipes/boeuf-koreen/boeuf-koreen.webp",
-      "tags": [
-        "Viande"
-      ],
+      "tags": ["Viande"],
       "description": "Boeuf Koréen (foodbag)"
     },
     {
@@ -344,9 +277,7 @@
       "date": "2025/12/30",
       "path": "recipes/risotto-betterave/",
       "image": "./recipes/risotto-betterave/risotto-betterave.webp",
-      "tags": [
-        "Viande"
-      ],
+      "tags": ["Viande"],
       "description": "Risotto à la Betterave + aiguillettes de canards (foodbag)"
     },
     {
@@ -356,9 +287,7 @@
       "date": "2025/12/29",
       "url": "https://www.youtube.com/watch?v=F_53yUD3Je4",
       "image": "https://img.youtube.com/vi/F_53yUD3Je4/0.jpg",
-      "tags": [
-        "Viande"
-      ],
+      "tags": ["Viande"],
       "description": "Boeuf Bourguignon"
     },
     {
@@ -368,9 +297,7 @@
       "date": "2025/12/29",
       "url": "https://www.youtube.com/watch?v=7kdHoPTj1LA",
       "image": "https://img.youtube.com/vi/7kdHoPTj1LA/0.jpg",
-      "tags": [
-        "Viande"
-      ],
+      "tags": ["Viande"],
       "description": "Chili Con Carne volcanique"
     },
     {
@@ -380,9 +307,7 @@
       "date": "2025/12/29",
       "url": "https://www.youtube.com/watch?v=GScE_E6BkEU",
       "image": "https://img.youtube.com/vi/GScE_E6BkEU/0.jpg",
-      "tags": [
-        "Viande"
-      ],
+      "tags": ["Viande"],
       "description": "Marinade pour Boeuf"
     },
     {
@@ -392,9 +317,7 @@
       "date": "2025/12/29",
       "url": "https://www.youtube.com/watch?v=u6TPJckf7D0",
       "image": "https://img.youtube.com/vi/u6TPJckf7D0/0.jpg",
-      "tags": [
-        "Accompagnement"
-      ],
+      "tags": ["Accompagnement"],
       "description": "Pickles d'Oignons Rouges"
     },
     {
@@ -404,10 +327,7 @@
       "date": "2025/12/29",
       "url": "https://www.youtube.com/watch?v=shVBoWQQpW0",
       "image": "https://img.youtube.com/vi/shVBoWQQpW0/0.jpg",
-      "tags": [
-        "Viande",
-        "Asiatique"
-      ],
+      "tags": ["Viande", "Asiatique"],
       "description": "Curry Japonais"
     },
     {
@@ -417,9 +337,7 @@
       "date": "2025/12/28",
       "url": "https://www.youtube.com/watch?v=UMBw5_pzcQI",
       "image": "https://img.youtube.com/vi/UMBw5_pzcQI/0.jpg",
-      "tags": [
-        "Apéro"
-      ],
+      "tags": ["Apéro"],
       "description": "Délicieuse tomates bonbons"
     },
     {
@@ -429,9 +347,7 @@
       "date": "2025/12/27",
       "url": "https://www.youtube.com/watch?v=DN4T2M84UbI",
       "image": "https://img.youtube.com/vi/DN4T2M84UbI/0.jpg",
-      "tags": [
-        "Sauce"
-      ],
+      "tags": ["Sauce"],
       "description": "Sauce Chimicurri de François-Régis Gaudry"
     },
     {
@@ -441,10 +357,7 @@
       "date": "2025/12/27",
       "url": "https://www.youtube.com/watch?v=xDB2dpCMrWo",
       "image": "https://img.youtube.com/vi/xDB2dpCMrWo/0.jpg",
-      "tags": [
-        "Viande",
-        "Pates"
-      ],
+      "tags": ["Viande", "Pates"],
       "description": "Pâtes Bolognaise ou Ragu"
     },
     {
@@ -454,11 +367,7 @@
       "date": "2025/12/26",
       "url": "https://www.youtube.com/watch?v=I4Szo0odIDo",
       "image": "https://img.youtube.com/vi/I4Szo0odIDo/0.jpg",
-      "tags": [
-        "Viande",
-        "Asiatique",
-        "Astuce"
-      ],
+      "tags": ["Viande", "Asiatique", "Astuce"],
       "description": "Comment avoir une viande tendre comme au restaurant asiatique"
     },
     {
@@ -468,9 +377,7 @@
       "date": "2025/12/25",
       "url": "https://www.youtube.com/watch?v=MdjABUNOx4A",
       "image": "https://img.youtube.com/vi/MdjABUNOx4A/0.jpg",
-      "tags": [
-        "Viande"
-      ],
+      "tags": ["Viande"],
       "description": "Pita maison"
     },
     {
@@ -480,10 +387,7 @@
       "date": "2025/12/25",
       "url": "https://www.youtube.com/watch?v=opqf5H-Fogw",
       "image": "https://img.youtube.com/vi/opqf5H-Fogw/0.jpg",
-      "tags": [
-        "Viande",
-        "Asiatique"
-      ],
+      "tags": ["Viande", "Asiatique"],
       "description": "Nouilles Chinoises Sautées au Bœuf et Légumes"
     },
     {
@@ -493,9 +397,7 @@
       "date": "2025/12/24",
       "url": "https://www.youtube.com/watch?v=yg7U199gbxo",
       "image": "https://img.youtube.com/vi/yg7U199gbxo/0.jpg",
-      "tags": [
-        "Viande"
-      ],
+      "tags": ["Viande"],
       "description": "Vol-au-Vent avec boulettes de viande"
     },
     {
@@ -505,9 +407,7 @@
       "date": "2025/12/23",
       "url": "https://www.youtube.com/watch?v=xqsojPVS7v8",
       "image": "https://img.youtube.com/vi/xqsojPVS7v8/0.jpg",
-      "tags": [
-        "Viande"
-      ],
+      "tags": ["Viande"],
       "description": "Tartare de Bœuf coupé au couteau"
     },
     {
@@ -517,10 +417,7 @@
       "date": "2025/12/22",
       "url": "https://www.atelierdeschefs.fr/recettes/29252/tataki-de-boeuf/",
       "image": "https://www.atelierdeschefs.fr/_next/image/?url=https%3A%2F%2Fadc-dev-images-recipes.s3.eu-west-1.amazonaws.com%2Ftataki_8_bd.jpg&w=1920&q=80",
-      "tags": [
-        "Viande",
-        "Asiatique"
-      ],
+      "tags": ["Viande", "Asiatique"],
       "description": "Tataki de Bœuf"
     },
     {
@@ -530,9 +427,7 @@
       "date": "2025/12/20",
       "url": "https://empreintesucree.fr/glace-vanille/",
       "image": "https://empreintesucree.fr/wp-content/uploads/2016/05/1-glace-vanille-patisserie-empreinte-sucree-1.jpg.webp",
-      "tags": [
-        "Dessert"
-      ],
+      "tags": ["Dessert"],
       "description": "Glace Vanille"
     }
   ]
