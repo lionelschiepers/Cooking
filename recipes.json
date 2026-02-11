@@ -8,7 +8,7 @@
       "path": "recipes/orzo-vert-maquereau/",
       "image": "./recipes/orzo-vert-maquereau/orzo-vert-maquereau-1.webp",
       "tags": ["Poisson", "Pates"],
-      "description": "Orzo vert au maquereau"
+      "description": "Orzo vert au maquereau (Foodbag)"
     },
     {
       "id": "tenders",
@@ -261,14 +261,14 @@
       "description": "Pates Pesto"
     },
     {
-      "id": "boeuf-koreen",
-      "title": "Boeuf Koréen",
+      "id": "porc-coreen",
+      "title": "Porc Coréen",
       "type": "markdown",
       "date": "2025/12/30",
-      "path": "recipes/boeuf-koreen/",
-      "image": "./recipes/boeuf-koreen/boeuf-koreen.webp",
+      "path": "recipes/porc-coreen/",
+      "image": "./recipes/porc-coreen/porc-coreen.webp",
       "tags": ["Viande"],
-      "description": "Boeuf Koréen (foodbag)"
+      "description": "Porc Coréen (foodbag)"
     },
     {
       "id": "risotto-betterave",

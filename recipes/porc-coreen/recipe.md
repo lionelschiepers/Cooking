@@ -1,8 +1,8 @@
 ---
-title: Boeuf Koréen
+title: Porc Coréen
 ---
 
-![Boeuf Koreen](./boeuf-koreen.webp)
+![Boeuf Koreen](./porc-coreen.webp)
 
 ## Ingrédients
 
