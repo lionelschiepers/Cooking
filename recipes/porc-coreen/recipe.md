@@ -1,5 +1,7 @@
 ---
 title: Porc Coréen
+author: Lionel Schiepers, Ophélie De Loz
+keywords: Lionel Schiepers, Ophélie De Loz, cooking, recipe, porc coreen, food, cuisine
 ---
 
 ![Boeuf Koreen](./porc-coreen.webp)

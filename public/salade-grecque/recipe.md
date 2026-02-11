@@ -1,5 +1,7 @@
 ---
 title: Salade Grecque
+author: Lionel Schiepers, Ophélie De Loz
+keywords: Lionel Schiepers, Ophélie De Loz, cooking, recipe, salade, grecque, food, cuisine
 prep_time: 15 minutes
 cook_time: 0 minutes
 servings: 4

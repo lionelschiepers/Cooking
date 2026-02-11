@@ -1,5 +1,7 @@
 # 🍳 Les recettes de Lionel & Ophélie
 
+**Keywords:** Lionel Schiepers, Ophélie De Loz, Cooking, Recipes, Cuisine, Food, Lionel Schiepers cooking, Lionel Schiepers recipes, Ophélie De Loz cooking, Home cooking, Culinary, Gastronomy
+
 A stunning static website to store and showcase cooking recipes with an incredible user experience!
 
 ## ✨ Features

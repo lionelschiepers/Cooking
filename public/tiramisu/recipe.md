@@ -1,5 +1,7 @@
 ---
 title: Tiramisu
+author: Lionel Schiepers, Ophélie De Loz
+keywords: Lionel Schiepers, Ophélie De Loz, cooking, recipe, tiramisu, dessert, food, cuisine
 prep_time: 30 minutes
 cook_time: 0 minutes (refrigeration: 4 hours)
 servings: 8-10

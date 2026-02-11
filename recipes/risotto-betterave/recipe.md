@@ -1,5 +1,7 @@
 ---
 title: Risotto Betterave
+author: Lionel Schiepers, Ophélie De Loz
+keywords: Lionel Schiepers, Ophélie De Loz, cooking, recipe, risotto, betterave, food, cuisine
 ---
 
 ![Risotto Betterave](./risotto-betterave.webp)

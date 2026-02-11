@@ -1,5 +1,7 @@
 ---
 title: Orzo Vert au Maquereau
+author: Lionel Schiepers, Ophélie De Loz
+keywords: Lionel Schiepers, Ophélie De Loz, cooking, recipe, orzo, maquereau, food, cuisine
 ---
 
 ![orzo vert maquereau](./orzo-vert-maquereau-1.webp)
