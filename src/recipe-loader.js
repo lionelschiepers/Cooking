@@ -11,6 +11,82 @@ import {
  */
 
 /**
+ * Extracts the first image URL from markdown content
+ * @param {string} markdown - The markdown content
+ * @returns {string|null} The first image URL or null
+ */
+export function extractFirstImage(markdown) {
+  if (!markdown) return null;
+
+  // Match markdown image syntax: ![alt](url)
+  const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/;
+  const match = imageRegex.exec(markdown);
+
+  if (match && match[2]) {
+    return match[2];
+  }
+
+  return null;
+}
+
+/**
+ * Updates Open Graph meta tags for social sharing
+ * @param {Object} params - The parameters for OG tags
+ * @param {string} params.title - The page title
+ * @param {string} params.description - The page description
+ * @param {string} params.imageUrl - The image URL
+ * @param {string} params.imageBasePath - The base path for resolving relative image URLs
+ * @param {string} params.url - The canonical URL
+ */
+export function updateOpenGraphMeta({
+  title,
+  description,
+  imageUrl,
+  imageBasePath,
+  url,
+}) {
+  // Update og:title
+  let ogTitle = document.querySelector('meta[property="og:title"]');
+  if (ogTitle && title) {
+    ogTitle.setAttribute('content', title);
+  }
+
+  // Update og:description
+  let ogDescription = document.querySelector('meta[property="og:description"]');
+  if (ogDescription && description) {
+    ogDescription.setAttribute('content', description);
+  }
+
+  // Update og:image
+  let ogImage = document.querySelector('meta[property="og:image"]');
+  if (ogImage && imageUrl) {
+    // Make sure the URL is absolute
+    let absoluteImageUrl;
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      absoluteImageUrl = imageUrl;
+    } else if (imageUrl.startsWith('./') && imageBasePath) {
+      // Resolve relative path from recipe folder
+      const relativePath = imageUrl.replace(/^\.\//, '');
+      absoluteImageUrl = new URL(
+        `${imageBasePath}/${relativePath}`,
+        window.location.origin,
+      ).href;
+    } else if (imageUrl.startsWith('/')) {
+      absoluteImageUrl = new URL(imageUrl, window.location.origin).href;
+    } else {
+      absoluteImageUrl = new URL(imageUrl, window.location.origin).href;
+    }
+    ogImage.setAttribute('content', absoluteImageUrl);
+  }
+
+  // Update og:url
+  let ogUrl = document.querySelector('meta[property="og:url"]');
+  if (ogUrl && url) {
+    ogUrl.setAttribute('content', url);
+  }
+}
+
+/**
  * Gets the recipe path from the URL
  * Supports new format (?md=recipename/recipe.md)
  * @returns {string|null} The recipe path or null if not found
@@ -117,6 +193,25 @@ export function renderRecipeToContainer(markdown, container) {
     if (metadata.title) {
       document.title = `${metadata.title} - Les recettes de Lionel & Ophélie`;
     }
+
+    // Extract first image and update Open Graph meta tags
+    const firstImage = extractFirstImage(content);
+    const recipeName = metadata.title || 'Recette';
+    const description =
+      metadata.description || `Découvrez notre recette de ${recipeName}`;
+    const currentUrl = window.location.href;
+
+    // Get recipe folder from URL to resolve relative image paths
+    const recipeFile = getRecipeFromUrl();
+    const recipeFolder = recipeFile ? recipeFile.replace('/recipe.md', '') : '';
+
+    updateOpenGraphMeta({
+      title: `${recipeName} - Les recettes de Lionel & Ophélie`,
+      description: description,
+      imageUrl: firstImage,
+      imageBasePath: recipeFolder,
+      url: currentUrl,
+    });
   } catch (error) {
     console.error('Error rendering recipe:', error);
     container.innerHTML = createErrorMessage(
@@ -178,4 +273,6 @@ export default {
   showLoading,
   showError,
   loadAndDisplayRecipe,
+  extractFirstImage,
+  updateOpenGraphMeta,
 };
