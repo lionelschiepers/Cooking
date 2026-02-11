@@ -30,6 +30,45 @@ export function extractFirstImage(markdown) {
 }
 
 /**
+ * Gets the absolute URL for an image
+ * @param {string} imageUrl - The image URL (can be relative or absolute)
+ * @returns {string|null} The absolute image URL
+ */
+function getAbsoluteImageUrl(imageUrl) {
+  if (!imageUrl) return null;
+
+  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+    return imageUrl;
+  } else if (imageUrl.startsWith('./')) {
+    const relativePath = imageUrl.replace(/^\.\//, '');
+    const baseUrl = window.location.href.replace(/\/[^\/]*$/, '/');
+    return new URL(relativePath, baseUrl).href;
+  } else if (imageUrl.startsWith('/')) {
+    return new URL(imageUrl, window.location.origin).href;
+  } else {
+    return new URL(imageUrl, window.location.origin).href;
+  }
+}
+
+/**
+ * Loads an image and gets its dimensions
+ * @param {string} imageUrl - The image URL
+ * @returns {Promise<{width: number, height: number} | null>} The image dimensions
+ */
+function getImageDimensions(imageUrl) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    };
+    img.onerror = () => {
+      resolve(null);
+    };
+    img.src = imageUrl;
+  });
+}
+
+/**
  * Updates Open Graph meta tags for social sharing
  * @param {Object} params - The parameters for OG tags
  * @param {string} params.title - The page title
@@ -38,7 +77,7 @@ export function extractFirstImage(markdown) {
  * @param {string} params.imageBasePath - The base path for resolving relative image URLs
  * @param {string} params.url - The canonical URL
  */
-export function updateOpenGraphMeta({
+export async function updateOpenGraphMeta({
   title,
   description,
   imageUrl,
@@ -57,26 +96,31 @@ export function updateOpenGraphMeta({
     ogDescription.setAttribute('content', description);
   }
 
-  // Update og:image
+  // Update og:image and get dimensions
   let ogImage = document.querySelector('meta[property="og:image"]');
+  let ogImageWidth = document.querySelector('meta[property="og:image:width"]');
+  let ogImageHeight = document.querySelector(
+    'meta[property="og:image:height"]',
+  );
+
   if (ogImage && imageUrl) {
-    // Make sure the URL is absolute
-    let absoluteImageUrl;
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-      absoluteImageUrl = imageUrl;
-    } else if (imageUrl.startsWith('./')) {
-      // Resolve relative path from current page location
-      // Current page is at /Cooking/recipes/index.html
-      // Image path is relative to the recipe folder (e.g., ./orzo-vert-maquereau/image.webp)
-      const relativePath = imageUrl.replace(/^\.\//, '');
-      const baseUrl = window.location.href.replace(/\/[^\/]*$/, '/');
-      absoluteImageUrl = new URL(relativePath, baseUrl).href;
-    } else if (imageUrl.startsWith('/')) {
-      absoluteImageUrl = new URL(imageUrl, window.location.origin).href;
-    } else {
-      absoluteImageUrl = new URL(imageUrl, window.location.origin).href;
-    }
+    const absoluteImageUrl = getAbsoluteImageUrl(imageUrl);
     ogImage.setAttribute('content', absoluteImageUrl);
+
+    // Load image to get dimensions
+    try {
+      const dimensions = await getImageDimensions(absoluteImageUrl);
+      if (dimensions) {
+        if (ogImageWidth) {
+          ogImageWidth.setAttribute('content', dimensions.width.toString());
+        }
+        if (ogImageHeight) {
+          ogImageHeight.setAttribute('content', dimensions.height.toString());
+        }
+      }
+    } catch (error) {
+      console.error('Failed to get image dimensions:', error);
+    }
   }
 
   // Update og:url
@@ -142,7 +186,7 @@ export async function loadRecipeFile(recipePath) {
  * @param {string} markdown - The markdown content
  * @param {HTMLElement} container - The container element to render into
  */
-export function renderRecipeToContainer(markdown, container) {
+export async function renderRecipeToContainer(markdown, container) {
   if (!container) {
     console.error('Container element not found');
     return;
@@ -205,7 +249,7 @@ export function renderRecipeToContainer(markdown, container) {
     const recipeFile = getRecipeFromUrl();
     const recipeFolder = recipeFile ? recipeFile.replace('/recipe.md', '') : '';
 
-    updateOpenGraphMeta({
+    await updateOpenGraphMeta({
       title: `${recipeName} - Les recettes de Lionel & Ophélie`,
       description: description,
       imageUrl: firstImage,
