@@ -235,18 +235,28 @@ function generateRecipeHtml(mdFilePath, outputDir) {
   // Remove any remaining template syntax
   html = html.replace(/\{\{[^\}]+\}\}/g, '');
 
-  // Replace CSS path with hashed version from Vite build
+  // Replace CSS path with hashed version from Vite build and make it relative
   const distStylesDir = path.join(__dirname, 'dist', 'assets');
   if (fs.existsSync(distStylesDir)) {
     const stylesFiles = fs
       .readdirSync(distStylesDir)
       .filter((f) => f.startsWith('styles-') && f.endsWith('.css'));
     if (stylesFiles.length > 0) {
-      const hashedCssPath = `/assets/${stylesFiles[0]}`;
+      const hashedCssPath = `../../assets/${stylesFiles[0]}`;
       html = html.replace(
         /href="\/Cooking\/src\/styles\.css"/g,
         `href="${hashedCssPath}"`,
       );
+      html = html.replace(
+        /href="\/Cooking\/favicon\.svg"/g,
+        `href="../../favicon.svg"`,
+      );
+      html = html.replace(
+        /href="\/assets\/styles-[a-zA-Z0-9]+\.css"/g,
+        `href="${hashedCssPath}"`,
+      );
+      // Make navigation links relative
+      html = html.replace(/href="\/Cooking\/"/g, `href="../../"`);
     }
   }
 
