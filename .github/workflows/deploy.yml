@@ -37,7 +37,7 @@ jobs:
         run: npm run build:recipes
 
       - name: Build main site
-        run: npm run copy:assets && vite build
+        run: npx vite build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
