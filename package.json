@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npm run generate:recipes && npm run build:recipes:dev && npm run copy:assets && vite",
-    "build": "npm run generate:recipes && npm run build:recipes && npm run copy:assets && vite build",
+    "build": "npm run generate:recipes && npm run copy:assets && vite build && npm run build:recipes",
     "preview": "vite preview",
     "copy:assets": "shx mkdir -p public/recipes && shx cp recipes.json public/ && shx cp -r recipes/*/ public/recipes/ && shx rm -f public/recipes/index.html",
     "generate:recipes": "node generate-recipes.js",
