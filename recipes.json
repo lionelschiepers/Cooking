@@ -419,6 +419,16 @@
       "image": "./recipes/tartare-boeuf/tartare-boeuf.webp",
       "tags": ["Viande"],
       "description": "Tartare Boeuf"
+    },
+    {
+      "id": "orzo-vert-maquereau",
+      "title": "Orzo Vert au Maquereau",
+      "type": "markdown",
+      "date": "2026/02/11",
+      "path": "recipes/index.html?md=orzo-vert-maquereau/recipe.md",
+      "image": "./recipes/orzo-vert-maquereau/orzo-vert-maquereau-1.webp",
+      "tags": ["Poisson", "Pates"],
+      "description": "Orzo vert au maquereau"
     }
   ]
 }
