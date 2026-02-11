@@ -14,15 +14,15 @@ Un petit teaser.
 
 
 ### Pour le croustillant  au ponko:
-- 25 gr de ponkon fin (ou mixé)
-- 1 citron vert
+- 25 gr de ponko fin (ou mixé)
+- 1 citron jaune
 - 1 gousse d'ail
 - Poivre noir
 - Sel
 
 ### Recette :
  - Faire chauffer une huile neutre dans une poele.
- - Faire revenir le ponkon dans la poele chaude
+ - Faire revenir le ponko dans la poêle chaude
  - Ajouter l'ail, zester le citron, le poivre noir et le sel.
- - Stopper la préparation quand elle a une belle coloration comme sur la photo. Laissez refroidire.
+ - Stopper la préparation quand elle a une belle coloration comme sur la photo. Laissez refroidir.
 
