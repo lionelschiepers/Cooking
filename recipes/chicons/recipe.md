@@ -2,4 +2,4 @@
 title: Salade de chicons
 ---
 
-![chicons](./chicons/chicons.webp)
+![chicons](./chicons.webp)

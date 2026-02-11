@@ -2,7 +2,7 @@
 title: Pâtes au pesto
 ---
 
-![Pâtes Pesto](./pates-pesto/pates-pesto.webp)
+![Pâtes Pesto](./pates-pesto.webp)
 
 ## Ingrédients
 

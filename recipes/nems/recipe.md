@@ -2,4 +2,4 @@
 title: Nems
 ---
 
-![nems](./nems/nems.webp)
+![nems](./nems.webp)

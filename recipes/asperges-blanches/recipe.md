@@ -2,4 +2,4 @@
 title: Asperges Blanches
 ---
 
-![asperges blanches](./asperges-blanches/asperges-blanches.webp)
+![asperges blanches](./asperges-blanches.webp)

@@ -1,0 +1,19 @@
+{
+  "name": "Les recettes de Lionel & Ophélie",
+  "short_name": "Recettes L&O",
+  "description": "Collection de recettes favorites de Lionel et Ophélie",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#f59e0b",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

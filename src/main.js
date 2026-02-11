@@ -42,6 +42,17 @@ function createRecipeCard(recipe) {
   if (type === 'youtube' || type === 'external') {
     linkUrl = url;
     linkTarget = '_blank';
+  } else if (type === 'markdown') {
+    // Use static Jekyll page URL for markdown recipes
+    // Extract recipe name from path (e.g., "recipes/index.html?md=orzo-vert-maquereau/recipe.md")
+    const pathMatch = path.match(/\?md=([^/]+)/);
+    if (pathMatch) {
+      const recipeName = pathMatch[1];
+      linkUrl = `./recipes/${recipeName}/`;
+    } else {
+      linkUrl = path;
+    }
+    linkTarget = '_self';
   } else {
     linkUrl = path;
     linkTarget = '_self';

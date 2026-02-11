@@ -30,8 +30,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run build
+      - name: Generate Jekyll recipe pages
+        run: npm run generate:recipes
+
+      - name: Build static recipe HTML pages
+        run: npm run build:recipes
+
+      - name: Build main site
+        run: npm run copy:assets && vite build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

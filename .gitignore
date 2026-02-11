@@ -4,8 +4,17 @@ node_modules/
 # Build output
 dist/
 
-# Public folder (contains copied files)
-public/
+# Generated recipe files (can be regenerated)
+_recipes/
+
+# Build output
+public/recipes/*/
+!public/recipes/*/recipe.md
+!public/recipes/*/*.webp
+!public/recipes/*/*.jpeg
+!public/recipes/*/*.jpg
+!public/recipes/*/*.png
+!public/recipes/*/*.gif
 
 # IDE
 .vscode/

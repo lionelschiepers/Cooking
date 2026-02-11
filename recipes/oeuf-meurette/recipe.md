@@ -2,4 +2,4 @@
 title: Oeuf en meurette
 ---
 
-![oeuf meurette](./oeuf-meurette/oeuf-meurette.webp)
+![oeuf meurette](./oeuf-meurette.webp)

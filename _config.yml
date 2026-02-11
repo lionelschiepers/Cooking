@@ -1,0 +1,55 @@
+# Jekyll Configuration for Les recettes de Lionel & Ophélie
+title: Les recettes de Lionel & Ophélie
+description: Découvrez nos délicieuses recettes maison
+baseurl: '/Cooking'
+url: 'https://lionelschiepers.github.io'
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+permalink: pretty
+
+# Exclude from processing
+exclude:
+  - node_modules
+  - package.json
+  - package-lock.json
+  - vite.config.js
+  - src/
+  - .github/
+  - .sonarlint/
+  - README.md
+  - generate-recipes.js
+
+# Include recipe folders
+include:
+  - recipes
+
+# Collections
+collections:
+  recipes:
+    output: true
+    permalink: /:collection/:name/
+
+# Plugins (GitHub Pages compatible)
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Social media
+twitter:
+  username: lionelschiepers
+
+# Facebook
+facebook:
+  app_id:
+  publisher:
+
+# Defaults
+defaults:
+  - scope:
+      path: ''
+      type: 'recipes'
+    values:
+      layout: 'recipe'

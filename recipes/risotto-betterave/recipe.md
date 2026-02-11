@@ -2,7 +2,7 @@
 title: Risotto Betterave
 ---
 
-![Risotto Betterave](./risotto-betterave/risotto-betterave.webp)
+![Risotto Betterave](./risotto-betterave.webp)
 
 
 ## Ingrédients

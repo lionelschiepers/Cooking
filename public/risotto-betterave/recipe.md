@@ -1,12 +1,11 @@
 ---
-title: Boeuf Koréen
+title: Salade Grecque
+prep_time: 15 minutes
+cook_time: 0 minutes
+servings: 4
 ---
 
-![Boeuf Koreen](./boeuf-koreen.webp)
-
 ## Ingrédients
-
-to be updated
 
 ### Pour la salade :
 - 2 tomates mûres et fermes

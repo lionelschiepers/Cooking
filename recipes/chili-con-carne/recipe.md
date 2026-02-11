@@ -2,4 +2,4 @@
 title: Chili Con Carne
 ---
 
-![chili con carne](./chili-con-carne/chili-con-carne.webp)
+![chili con carne](./chili-con-carne.webp)

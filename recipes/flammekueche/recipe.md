@@ -2,4 +2,4 @@
 title: Flammekueche
 ---
 
-![flammekueche](./flammekueche/flammekueche.webp)
+![flammekueche](./flammekueche.webp)

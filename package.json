@@ -4,10 +4,13 @@
   "description": "A stunning static website to store and showcase cooking recipes",
   "type": "module",
   "scripts": {
-    "dev": "npm run copy:assets && vite",
-    "build": "npm run copy:assets && vite build",
+    "dev": "npm run generate:recipes && npm run build:recipes:dev && npm run copy:assets && vite",
+    "build": "npm run generate:recipes && npm run build:recipes && npm run copy:assets && vite build",
     "preview": "vite preview",
     "copy:assets": "shx mkdir -p public/recipes && shx cp recipes.json public/ && shx cp -r recipes/*/ public/recipes/ && shx rm -f public/recipes/index.html",
+    "generate:recipes": "node generate-recipes.js",
+    "build:recipes": "node build-recipes.js",
+    "build:recipes:dev": "node build-recipes-dev.js",
     "prepare": "husky",
     "format": "prettier --write ."
   },
