@@ -290,6 +290,15 @@ if (mdFiles.length === 0) {
   process.exit(1);
 }
 
+// Sort recipes by date DESC (newest first)
+mdFiles.sort((a, b) => {
+  const contentA = fs.readFileSync(a, 'utf8');
+  const contentB = fs.readFileSync(b, 'utf8');
+  const dateA = parseFrontmatter(contentA).metadata.date || '0';
+  const dateB = parseFrontmatter(contentB).metadata.date || '0';
+  return dateB.localeCompare(dateA);
+});
+
 let generatedCount = 0;
 for (const mdFile of mdFiles) {
   try {
