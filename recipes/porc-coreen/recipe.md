@@ -6,74 +6,36 @@ keywords: Lionel Schiepers, Ophélie De Loz, cooking, recipe, porc coreen, food,
 
 ![Boeuf Koreen](./porc-coreen.webp)
 
-## Ingrédients
+## Ingrédients (2 personnes)
+- 1 gousse ail
+- 1 brocoli
+- 2 éperlans ou longes de porc
+- 1/2 gingembre
+- 10gr graines de sésame
+- ketchup
+- 1/4 sachet pâte gochujang
+- 1/2 botte radis
+- 125 gr riz blanc basmati
+- 10 ml sauce soja
 
-to be updated
+## Préparation
+1. Portez à ébullition une grande casserole d’eau salée pour le brocoli et le riz.
 
-### Pour la salade :
-- 2 tomates mûres et fermes
-- 1 concombre
-- 1 oignon rouge
-- 200g de feta
-- 100g d'olives noires dénoyautées
-- 1 poivron vert (facultatif)
+2. Divisez le brocoli en bouquets. Vous pouvez également éplucher la tige et la couper en morceaux. Faites cuire pendant 4-5 min, puis retirez de l'eau. Faites cuire le riz selon les instructions figurant sur l’emballage.
 
-### Pour la vinaigrette :
-- 4 cuillères à soupe d'huile d'olive extra vierge
-- 1 cuillère à soupe de jus de citron frais
-- 1 cuillère à café d'origan séché
-- 1 pincée de sel
-- Poivre noir du moulin
+3. Coupez les radis en fines tranches. Faites mariner avec la moitié du vinaigre, une pincée de sel et le sucre.
 
-## Instructions
+4. Marinade : râpez le gingembre et l’ail dans un poêlon. Ajoutez le reste du vinaigre, le gochujang (piquant !), le ketchup, la sauce soja, la moitié des graines de sésame et une pincée de sel. Laissez mijoter le tout à feu doux. Ajoutez (éventuellement) un peu de sucre.
 
-### Préparation des légumes
+5. Séchez la viande avec du papier absorbant, puis coupez en tranches ultrafines. Mélangez avec la fécule de maïs afin que chaque morceau en soit enrobé (voir astuce).
 
-1. **Couper les tomates** : Laver les tomates et les couper en quartiers ou en gros dés. Les placer dans un grand saladier.
+6. Faites chauffer un généreux filet d'huile (de sésame) dans une poêle (wok) et faites dorer la viande à feu vif pendant quelques minutes. Retirez du feu et incorporez à la marinade. Facultatif : réchauffez le brocoli dans la poêle de la viande. Assaisonnez de sel et de poivre noir.
 
-2. **Préparer le concombre** : Couper le concombre en rondelles épaisses ou en demi-lunes. L'ajouter aux tomates.
+7. Disposez le riz dans un grand bol. Disposez le porc à la coréenne par-dessus, ainsi que le brocoli et le radis mariné. Garnissez la viande avec le reste des graines de sésame. N’hésitez pas à manger ce plat avec des baguettes ! Bon appétit !
 
-3. **Émincer l'oignon** : Éplucher l'oignon rouge et l'émincer finement. Parsemer sur les légumes.
+## Astuce
+La fécule de maïs permet à la marinade de bien adhérer à la viande.
 
-4. **Ajouter le poivron** (facultatif) : Couper le poivron en fines lamelles et les ajouter à la salade.
-
-### Préparation de la vinaigrette
-
-5. **Mélanger les ingrédients** : Dans un petit bol, fouetter l'huile d'olive, le jus de citron, l'origan, le sel et le poivre.
-
-6. **Assaisonner** : Verser la vinaigrette sur les légumes et mélanger délicatement.
-
-### Finition
-
-7. **Ajouter la feta** : Couper la feta en gros cubes et les disposer sur le dessus de la salade. **Important** : ne pas mélanger la feta, elle doit rester visible sur le dessus !
-
-8. **Ajouter les olives** : Répartir les olives noires sur la salade.
-
-9. **Saupoudrer d'origan** : Finir par un généreux saupoudrage d'origan séché.
-
-10. **Servir immédiatement** : La salade grecque se mange fraîche, juste après préparation.
-
-## Conseils
-
-> **Astuce de Lionel** : Pour une salade encore plus savoureuse, utilisez de la feta authentique grecque (DOP) et des olives kalamata. La qualité des ingrédients fait toute la différence !
-
-> **Note d'Ophélie** : Cette salade se marie parfaitement avec du pain pita chaud et du houmous maison. Un déjeuner complet et équilibré !
-
-## Variations
-
-- **Version complète** : Ajoutez des pois chiches cuits pour plus de protéines
-- **Version épicée** : Ajoutez quelques rondelles de piment frais
-- **Version verte** : Remplacez les tomates par des feuilles de roquette
-
-## Informations nutritionnelles (par portion)
-
-| Élément | Valeur |
-|---------|--------|
-| Calories | ~280 kcal |
-| Protéines | 10g |
-| Glucides | 12g |
-| Lipides | 22g |
-
----
-
-*Kali orexi ! 🥗*
+## Lien
+[Foodbag](https://www.foodbag.be/fr/recept?dishId=a0MJv000005zu2PMAQ&weekDocId=W5Y2026)
+[Pdf](./porc-coreen.pdf)
