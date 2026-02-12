@@ -1,6 +1,16 @@
 {
   "recipes": [
     {
+      "id": "pates-ciao-e-pepe",
+      "title": "Pâtes Ciao e pepe",
+      "type": "markdown",
+      "date": "2026/02/12",
+      "path": "recipes/pates-ciao-e-pepe/",
+      "image": "./recipes/pates-ciao-e-pepe/pates-ciao-e-pepe.webp",
+      "tags": ["Pates"],
+      "description": "Pâtes Ciao e pepe"
+    },
+    {
       "id": "orzo-vert-maquereau",
       "title": "Orzo Vert au Maquereau",
       "type": "markdown",
