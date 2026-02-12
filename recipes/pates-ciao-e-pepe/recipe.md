@@ -7,15 +7,14 @@ keywords: Lionel Schiepers, Ophélie De Loz, cooking, recipe, porc coreen, food,
 ![Pâtes Ciao e pepe](./pates-ciao-e-pepe.webp)
 
 ## Ingrédients
-
-1 gousse d'ail
-1 échalote
-300gr épinards
-50gr Gran Moravia ou parmesan
-30gr pignon de pin
-1/2 sauge
-175gr tomates cerises rouges
-10 tortelloni frais cacio e pepe
+- 1 gousse d'ail
+- 1 échalote
+- 300gr épinards
+- 50gr Gran Moravia ou parmesan
+- 30gr pignon de pin
+- 1/2 sauge
+- 175gr tomates cerises rouges
+- 10 tortelloni frais cacio e pepe
 
 ## Préparation
 1. Préchauffez le four à 220°C. Portez à ébullition une grande casserole d'eau salée pour les pâtes.
