@@ -23,7 +23,7 @@ Read **Findings** below before importing: it is what earlier imports learned.
    ```
 
    Read the title, ingredients and steps. Then choose:
-   - **tags** from those already used in `recipes.json` (`Viande`, `Poisson`, `Pates`, `Asiatique`, `Accompagnement`, `Entrée`, `Apéro`, `Salade`, `Dessert`, ...). The guess only covers Viande, Poisson, Pates and Asiatique.
+   - **tags** from those already used in `recipes.json` (`Viande`, `Poisson`, `Pates`, `Asiatique`, `Accompagnement`, `Entrée`, `Apéro`, `Salade`, `Dessert`, ...). The guess only covers Viande, Poisson, Pates (from the name and the delivered ingredients) and Asiatique (from the name).
    - a short **slug**: the main words without filler, e.g. `escalope-porc-puree-epinards`.
 
 3. Import:
@@ -35,8 +35,8 @@ Read **Findings** below before importing: it is what earlier imports learned.
    Note every line under `À vérifier`: data the script was not written for.
 
 4. **Check the photo.** The home page shows each photo as a centered square. Open the square preview whose path the script prints (`carré : ...png`) with the `view` tool. The whole plate must be visible and centered.
-   - The script finds light plates that do not touch the photo border and trims the photo so the plate sits in the middle (it keeps the full width when the plate is already centered horizontally).
-   - When the plate is not found, the photo is kept whole: check that the square still looks centered. If not, crop the source photo by hand with `sharp` around the food, keeping the whole width, then save it again as `recipes/<slug>/<slug>.webp` (max 1920 px, WebP quality 82).
+   - The script looks for the largest round outline (plate or bowl of any color, side bowls are smaller) and trims the photo so it sits in the middle. An axis is kept whole when the plate is already centered on it, or when the frame cuts the plate.
+   - When no plate is found, the photo is kept whole: check that the square still looks centered. If not, crop the source photo by hand with `sharp` around the food, keeping the whole width, then save it again as `recipes/<slug>/<slug>.webp` (max 1920 px, WebP quality 82).
    - `--force --no-crop` re-imports with the photo kept whole.
 
 5. Read `recipes/<slug>/recipe.md` once and fix anything odd (wording, units, order).
@@ -69,10 +69,13 @@ Never store API keys, tokens or other secrets in the skill.
 - 2026-10-31: Only current-week pages embed the dish. Older weeks (e.g. `W5Y2026`) are read from the Firestore `dish` collection, which holds one document per week the dish was offered. `WeekNumber` values there are messy (`"49$"`, `"02"`, numbers): the script prefers the week of the link, then clean values, then the latest week.
 - 2026-10-31: Firestore collection names come from an enum in Foodbag's scripts (`DishVariantsV4="dish_variants_v4"`, `Dish="dish"`). Another enum also has a `.Dish=` member, so only the block containing `DishVariantsV4` is read. Defaults are used, with a warning, when the enum is not found.
 - 2026-10-31: Week and year are stored either as numbers or as strings: queries match both.
-- 2026-10-31: Plate detection finds light grey/white plates. Dark bowls (porc coréen) and beige speckled bowls (nouilles porc laqué) are not found: the photo is kept whole, and those squares still looked centered.
-- 2026-10-31: A light stone background was once taken for the plate and cropped the bowl off. Light areas touching the photo border (background, or a plate cut by the frame) are now ignored.
+- 2026-10-31: Detecting light pixels missed every non-white plate (blue, black, dark grey), caught only part of a rim (bad zoom), took a small side bowl for the plate, and once a light stone background (bowl cropped off). The script now finds the plate rim with a circle (Hough) search on edges: it found the right plate on 20 photos.
 - 2026-10-31: Foodbag names are plural even for one piece (`1 pièce carottes`). Below 2, the words before the first preposition are made singular (`1 carotte`, `1/2 oignon rouge`); words ending in as/is/os/us stay (`radis`, `frais`). Quantities can be strings like `"1/2"`.
-- 2026-10-31: Steps can say `(voir photo)` about Foodbag step photos the site does not show: it is removed, and any other mention of a photo is listed under `À vérifier`.
+- 2026-10-31: Steps can say `(voir photo)` or `(voir astuce et photo)` about Foodbag step photos the site does not show: the photo part is removed, and any other mention of a photo is listed under `À vérifier`.
+- 2026-10-31: Names can also be singular from 2 (`2 filet de poulet`, `4 pain panini`): the words before the first preposition are made plural (`chou` → `choux`, `-eau` → `-eaux`). Brands and words in parentheses are kept.
+- 2026-10-31: The unit can be repeated in the name (`tranches` + `tranches de lard`, `botte` + `botte de carottes`): it is written once. The unit `facultatif` gives `miel/sirop végétal (facultatif)`.
+- 2026-10-31: Meat can appear only in the ingredients (`lard`, `pancetta`, `jambon`), so meat, fish and pasta tags are also guessed from the delivered ingredients, ignoring stock cubes and sauces. A subtitle starting with `et` is joined without a comma (`gratiné et cresson de jardin`).
+- 2026-10-31: A link was queued again after its import: the script now refuses a dish id already present in `recipes/*/recipe.md` under another slug (`--force` imports it anyway).
 - 2026-10-31: Foodbag can put the size after the name (`brocoli grand`): the script writes `1 grand brocoli`.
 - 2026-10-31: `pnpm run build` rewrites the tracked `public/recipes.json`; keep the change.
 - 2026-10-31: A running `pnpm dev` served the home page at `/recipes/<slug>/`: it writes `public/recipes/<slug>/index.html` (ignored by git) only at start. `pnpm run build:recipes:dev` adds the new page without a restart.
@@ -90,7 +93,7 @@ Never store API keys, tokens or other secrets in the skill.
 | `--tags <a,b>` | guessed |
 | `--date <YYYY/MM/DD>` | today |
 | `--no-crop` | crop around the plate |
-| `--force` | refuse to overwrite an existing recipe |
+| `--force` | refuse to overwrite an existing recipe or import a dish twice |
 | `--dry-run` | write the files |
 | `--check` | re-test `references.json` instead of importing |
 

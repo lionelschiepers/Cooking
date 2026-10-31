@@ -1,6 +1,176 @@
 {
   "recipes": [
     {
+      "id": "couscous-lanieres-porc",
+      "title": "Couscous aux Lanières de Porc",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/couscous-lanieres-porc/",
+      "image": "./recipes/couscous-lanieres-porc/couscous-lanieres-porc.webp",
+      "tags": ["Viande"],
+      "description": "Couscous aux lanières de porc, poivron et yaourt à l’ail (Foodbag)"
+    },
+    {
+      "id": "boulettes-sauce-tomate",
+      "title": "Boulettes à la Sauce Tomate",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/boulettes-sauce-tomate/",
+      "image": "./recipes/boulettes-sauce-tomate/boulettes-sauce-tomate.webp",
+      "tags": ["Viande"],
+      "description": "Boulettes à la sauce tomate, riz et tomates cerises (Foodbag)"
+    },
+    {
+      "id": "filet-poulet-croustillant-riz",
+      "title": "Filet de Poulet Croustillant au Riz",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/filet-poulet-croustillant-riz/",
+      "image": "./recipes/filet-poulet-croustillant-riz/filet-poulet-croustillant-riz.webp",
+      "tags": ["Viande", "Asiatique"],
+      "description": "Filet de poulet croustillant au riz, sauce curry et wok de légumes (Foodbag)"
+    },
+    {
+      "id": "steak-hache-chou-fleur-gratine",
+      "title": "Steak Haché au Chou-Fleur Gratiné",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/steak-hache-chou-fleur-gratine/",
+      "image": "./recipes/steak-hache-chou-fleur-gratine/steak-hache-chou-fleur-gratine.webp",
+      "tags": ["Viande"],
+      "description": "Steak haché au chou-fleur gratiné et cresson de jardin (Foodbag)"
+    },
+    {
+      "id": "pates-fraiches-fromage-frais-herbes",
+      "title": "Pâtes Fraîches au Fromage Frais aux Herbes",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/pates-fraiches-fromage-frais-herbes/",
+      "image": "./recipes/pates-fraiches-fromage-frais-herbes/pates-fraiches-fromage-frais-herbes.webp",
+      "tags": ["Viande", "Pates"],
+      "description": "Pâtes fraîches au fromage frais aux herbes, poireau, courgette et dés de jambon (Foodbag)"
+    },
+    {
+      "id": "salade-blt-lard-croutons",
+      "title": "Salade BLT au Lard et aux Croutons",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/salade-blt-lard-croutons/",
+      "image": "./recipes/salade-blt-lard-croutons/salade-blt-lard-croutons.webp",
+      "tags": ["Viande", "Salade"],
+      "description": "Salade BLT au lard et aux croutons, tomate et sauce au yaourt à l'ail (Foodbag)"
+    },
+    {
+      "id": "filet-porc-sauce-champignons",
+      "title": "Filet de Porc Sauce aux Champignons",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/filet-porc-sauce-champignons/",
+      "image": "./recipes/filet-porc-sauce-champignons/filet-porc-sauce-champignons.webp",
+      "tags": ["Viande"],
+      "description": "Filet de porc sauce aux champignons, jeunes carottes rôties et salade (Foodbag)"
+    },
+    {
+      "id": "salade-pates-spiringue-porc",
+      "title": "Salade de Pâtes et Spiringue de Porc",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/salade-pates-spiringue-porc/",
+      "image": "./recipes/salade-pates-spiringue-porc/salade-pates-spiringue-porc.webp",
+      "tags": ["Viande", "Pates", "Salade"],
+      "description": "Salade de pâtes et spiringue de porc, courgette grillée et tomate (Foodbag)"
+    },
+    {
+      "id": "filet-porc-orzo",
+      "title": "Filet de Porc à l'Orzo",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/filet-porc-orzo/",
+      "image": "./recipes/filet-porc-orzo/filet-porc-orzo.webp",
+      "tags": ["Viande", "Pates"],
+      "description": "Filet de porc à l'orzo, aubergine et tomates cerises (Foodbag)"
+    },
+    {
+      "id": "risotto-pancetta-gran-moravia",
+      "title": "Risotto à la Pancetta et au Gran Moravia",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/risotto-pancetta-gran-moravia/",
+      "image": "./recipes/risotto-pancetta-gran-moravia/risotto-pancetta-gran-moravia.webp",
+      "tags": ["Viande"],
+      "description": "Risotto à la pancetta et au Gran Moravia, haricots princesse et courgette jaune (Foodbag)"
+    },
+    {
+      "id": "mignonnette-porc-estragon-champignons",
+      "title": "Mignonnette Sauce Estragon-Champignons",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/mignonnette-porc-estragon-champignons/",
+      "image": "./recipes/mignonnette-porc-estragon-champignons/mignonnette-porc-estragon-champignons.webp",
+      "tags": ["Viande"],
+      "description": "Mignonnette sauce estragon-champignons, fenouil et frites de patate douce (Foodbag)"
+    },
+    {
+      "id": "escalope-porc-puree-roquette",
+      "title": "Escalope de Porc et Purée de Roquette",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/escalope-porc-puree-roquette/",
+      "image": "./recipes/escalope-porc-puree-roquette/escalope-porc-puree-roquette.webp",
+      "tags": ["Viande"],
+      "description": "Escalope de porc et purée de roquette, tomates en croûte d'herbes (Foodbag)"
+    },
+    {
+      "id": "pates-brocoli-viande-hachee",
+      "title": "Pâtes au Brocoli et à la Viande Hachée",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/pates-brocoli-viande-hachee/",
+      "image": "./recipes/pates-brocoli-viande-hachee/pates-brocoli-viande-hachee.webp",
+      "tags": ["Viande", "Pates"],
+      "description": "Pâtes au brocoli et à la viande hachée, sauce à la crème (Foodbag)"
+    },
+    {
+      "id": "riz-shawarma-escalope-porc",
+      "title": "Riz Shawarma et Escalope de Porc",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/riz-shawarma-escalope-porc/",
+      "image": "./recipes/riz-shawarma-escalope-porc/riz-shawarma-escalope-porc.webp",
+      "tags": ["Viande"],
+      "description": "Riz shawarma et escalope de porc, concombre, tomates et yaourt à l’ail (Foodbag)"
+    },
+    {
+      "id": "tagliatelles-cremeuses-poireau",
+      "title": "Tagliatelles Crémeuses au Poireau",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/tagliatelles-cremeuses-poireau/",
+      "image": "./recipes/tagliatelles-cremeuses-poireau/tagliatelles-cremeuses-poireau.webp",
+      "tags": ["Viande", "Pates"],
+      "description": "Tagliatelles crémeuses au poireau, champignons et crumble lard-panko (Foodbag)"
+    },
+    {
+      "id": "poulet-grille-couscous",
+      "title": "Poulet Grillé au Couscous",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/poulet-grille-couscous/",
+      "image": "./recipes/poulet-grille-couscous/poulet-grille-couscous.webp",
+      "tags": ["Viande"],
+      "description": "Poulet grillé au couscous, avocat, concombre et chimichurri (Foodbag)"
+    },
+    {
+      "id": "hache-stroganoff-pates-fraiches",
+      "title": "Haché Stroganoff et Pâtes Fraîches",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/hache-stroganoff-pates-fraiches/",
+      "image": "./recipes/hache-stroganoff-pates-fraiches/hache-stroganoff-pates-fraiches.webp",
+      "tags": ["Viande", "Pates"],
+      "description": "Haché Stroganoff et pâtes fraîches, carotte, poivron et champignons (Foodbag)"
+    },
+    {
       "id": "nouilles-lanieres-porc-laque",
       "title": "Nouilles aux Lanières de Porc Laqué",
       "type": "markdown",

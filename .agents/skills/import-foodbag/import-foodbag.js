@@ -299,17 +299,55 @@ function singular(name) {
     .join(' ');
 }
 
+// From 2 on, the same words become plural ("2 filets de poulet", "2 oignons rouges").
+// Kept as is: words already plural, brands (capital), hyphenated words, "(porc)",
+// and words after the first one ending in i ("pains panini").
+const INVARIABLE = /^(mini|bio|extra)$/i;
+function plural(name) {
+  const words = name.split(' ');
+  const end = words.findIndex((word) => PREPOSITION.test(word));
+  return words
+    .map((word, i) => {
+      if ((end !== -1 && i >= end) || INVARIABLE.test(word)) return word;
+      if (!/^\p{Ll}[\p{Ll}']*$/u.test(word) || /[sxz]$/i.test(word)) {
+        return word;
+      }
+      if (/^chou$|e?au$/i.test(word)) return `${word}x`;
+      return i > 0 && /i$/i.test(word) ? word : `${word}s`;
+    })
+    .join(' ');
+}
+
+// Foodbag sometimes repeats the unit in the name: "tranches" + "tranches de lard".
+function withoutUnit(name, unit) {
+  const stem = unit
+    .toLowerCase()
+    .replace(/s$/, '')
+    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return name.replace(new RegExp(`^${stem}s? (de |d['’])`, 'i'), '');
+}
+
+const OPTIONAL_UNIT = /^facultatif$/i;
+
 function formatIngredient(ingredient) {
   const quantity = formatQuantity(ingredient.Quantity);
   const unit = (ingredient.SizeFR ?? '').trim();
-  const name = (ingredient.ProductVariantFR ?? '')
-    .trim()
-    .replace(SIZE_LAST, '$2 $1');
+  const name = withoutUnit(
+    (ingredient.ProductVariantFR ?? '').trim().replace(SIZE_LAST, '$2 $1'),
+    unit,
+  );
+  if (OPTIONAL_UNIT.test(unit)) {
+    return `${[quantity, name].filter(Boolean).join(' ')} (facultatif)`;
+  }
   if (!unit || COUNT_UNITS.test(unit)) {
-    const counted =
-      quantity && quantityValue(ingredient.Quantity) < 2
+    const value = quantityValue(ingredient.Quantity);
+    const counted = !quantity
+      ? name
+      : value < 2
         ? singular(name)
-        : name;
+        : value >= 2
+          ? plural(name)
+          : name;
     return [quantity, counted].filter(Boolean).join(' ');
   }
   const metric = METRIC_UNITS[unit.toLowerCase()];
@@ -370,33 +408,30 @@ function slugify(text) {
     .join('-');
 }
 
-function guessTags(text) {
+const FISH =
+  /saumon|cabillaud|maquereau|thon|truite|merlu|colin|dorade|poisson|crevette|scampi|moule|gambas|calamar|scampi|sardine|hareng|\bsole\b|\bbar\b|\blieu\b|églefin|haddock|tilapia|pangasius/;
+const MEAT =
+  /porc|b(œ|oe)uf|veau|agneau|canard|saucisse|haché|lard|jambon|poulet|dinde|chorizo|steak|pancetta|bacon|mignon|merguez|chipolata|volaille|salami|prosciutto|coppa|speck|gyros|kebab|boulette|viande/;
+const PASTA =
+  /pâtes|pates|spaghetti|tagliatelle|penne|orzo|linguine|lasagne|gnocchi|fusilli|rigatoni|farfalle|macaroni|fettuccine|ravioli|tortellini|conchiglie/;
+const ASIAN =
+  /nouilles|udon|ramen|wok|teriyaki|sriracha|gochujang|coréen|thaï|japonais|chinois|vietnamien|curry/;
+// Stock and sauces name an animal without being the dish ("bouillon de poulet", "sauce poisson").
+const NOT_MAIN = /bouillon|fond de|sauce|fumet|graisse/;
+
+/** Tags from the name and subtitle, and from the delivered ingredients for meat, fish and pasta. */
+function guessTags(text, ingredients = []) {
   const t = text.toLowerCase();
+  const items = ingredients
+    .filter((i) => !i.IsBasic)
+    .map((i) => (i.ProductVariantFR ?? '').toLowerCase())
+    .filter((name) => !NOT_MAIN.test(name))
+    .join(' | ');
   const tags = [];
-  if (
-    /saumon|cabillaud|maquereau|thon|truite|merlu|colin|dorade|poisson|crevette|scampi|moule/.test(
-      t,
-    )
-  )
-    tags.push('Poisson');
-  if (
-    /porc|b(œ|oe)uf|veau|agneau|canard|saucisse|haché|lard|jambon|poulet|dinde|chorizo|steak/.test(
-      t,
-    )
-  )
-    tags.push('Viande');
-  if (
-    /pâtes|pates|spaghetti|tagliatelle|penne|orzo|linguine|lasagne|gnocchi|fusilli|rigatoni/.test(
-      t,
-    )
-  )
-    tags.push('Pates');
-  if (
-    /nouilles|udon|ramen|wok|teriyaki|sriracha|gochujang|coréen|thaï|japonais|chinois|vietnamien|curry/.test(
-      t,
-    )
-  )
-    tags.push('Asiatique');
+  if (FISH.test(t) || FISH.test(items)) tags.push('Poisson');
+  if (MEAT.test(t) || MEAT.test(items)) tags.push('Viande');
+  if (PASTA.test(t) || PASTA.test(items)) tags.push('Pates');
+  if (ASIAN.test(t)) tags.push('Asiatique');
   return tags;
 }
 
@@ -407,93 +442,114 @@ function today() {
 }
 
 /**
- * Finds the plate: the largest light, grey-white area that does not touch the
- * border. Areas touching it are a light background or a plate cut by the frame.
+ * Finds the plate: the circle (radius 27–52% of the width) that the most edges
+ * point to (a Hough transform along the gradient). It works for plates of any
+ * colour; side bowls are too small to count.
  */
 async function findPlate(buffer, width, height) {
   const { data, info } = await sharp(buffer)
     .rotate()
-    .resize(320)
-    .removeAlpha()
+    .resize(240)
+    .greyscale()
+    .blur(1.5)
     .raw()
     .toBuffer({ resolveWithObject: true });
   const W = info.width;
   const H = info.height;
-  const light = new Uint8Array(W * H);
-  for (let p = 0; p < W * H; p++) {
-    const [r, g, b] = [data[p * 3], data[p * 3 + 1], data[p * 3 + 2]];
-    light[p] =
-      r > 200 &&
-      g > 200 &&
-      b > 195 &&
-      Math.max(r, g, b) - Math.min(r, g, b) < 30
-        ? 1
-        : 0;
+  const N = W * H;
+  const at = (x, y) => data[y * W + x];
+  const gx = new Float32Array(N);
+  const gy = new Float32Array(N);
+  const mag = new Float32Array(N);
+  for (let y = 1; y < H - 1; y++) {
+    for (let x = 1; x < W - 1; x++) {
+      const p = y * W + x;
+      gx[p] =
+        at(x + 1, y - 1) +
+        2 * at(x + 1, y) +
+        at(x + 1, y + 1) -
+        at(x - 1, y - 1) -
+        2 * at(x - 1, y) -
+        at(x - 1, y + 1);
+      gy[p] =
+        at(x - 1, y + 1) +
+        2 * at(x, y + 1) +
+        at(x + 1, y + 1) -
+        at(x - 1, y - 1) -
+        2 * at(x, y - 1) -
+        at(x + 1, y - 1);
+      mag[p] = Math.hypot(gx[p], gy[p]);
+    }
   }
 
-  const seen = new Uint8Array(W * H);
-  let best = null;
-  for (let start = 0; start < W * H; start++) {
-    if (!light[start] || seen[start]) continue;
-    const box = { size: 0, x0: W, x1: 0, y0: H, y1: 0 };
-    const stack = [start];
-    seen[start] = 1;
-    while (stack.length) {
-      const p = stack.pop();
-      const x = p % W;
-      const y = (p - x) / W;
-      box.size++;
-      box.x0 = Math.min(box.x0, x);
-      box.x1 = Math.max(box.x1, x);
-      box.y0 = Math.min(box.y0, y);
-      box.y1 = Math.max(box.y1, y);
-      const next = [];
-      if (x > 0) next.push(p - 1);
-      if (x < W - 1) next.push(p + 1);
-      if (y > 0) next.push(p - W);
-      if (y < H - 1) next.push(p + W);
-      for (const q of next) {
-        if (light[q] && !seen[q]) {
-          seen[q] = 1;
-          stack.push(q);
+  // The strongest 15% of the edges vote for the centres at distance r on both sides.
+  const threshold = Math.max(
+    40,
+    Float32Array.from(mag).sort()[Math.floor(N * 0.85)],
+  );
+  const rMin = Math.round(W * 0.27);
+  const rMax = Math.round(W * 0.52);
+  const votes = new Uint16Array((rMax - rMin + 1) * N);
+  for (let p = 0; p < N; p++) {
+    if (mag[p] < threshold) continue;
+    const x = p % W;
+    const y = (p - x) / W;
+    const ux = gx[p] / mag[p];
+    const uy = gy[p] / mag[p];
+    for (let r = rMin; r <= rMax; r++) {
+      for (const side of [1, -1]) {
+        const cx = Math.round(x + side * ux * r);
+        const cy = Math.round(y + side * uy * r);
+        if (cx >= 0 && cy >= 0 && cx < W && cy < H) {
+          votes[(r - rMin) * N + cy * W + cx]++;
         }
       }
     }
-    const touchesBorder =
-      box.x0 === 0 || box.y0 === 0 || box.x1 === W - 1 || box.y1 === H - 1;
-    if (!touchesBorder && (!best || box.size > best.size)) best = box;
   }
-  if (!best) return null;
 
-  const boxWidth = best.x1 - best.x0 + 1;
-  const boxHeight = best.y1 - best.y0 + 1;
-  const ratio = boxWidth / boxHeight;
-  if (
-    ratio < 0.7 ||
-    ratio > 1.4 ||
-    Math.min(boxWidth, boxHeight) < 0.25 * Math.min(W, H)
-  ) {
-    return null;
+  let best = null;
+  for (let r = rMin; r <= rMax; r++) {
+    const layer = (r - rMin) * N;
+    for (let y = 2; y < H - 2; y++) {
+      for (let x = 2; x < W - 2; x++) {
+        let sum = 0;
+        for (let dy = -2; dy <= 2; dy++) {
+          const row = layer + (y + dy) * W + x;
+          for (let dx = -2; dx <= 2; dx++) sum += votes[row + dx];
+        }
+        // Votes per pixel of circumference, so large circles are not favoured.
+        const score = sum / (2 * Math.PI * r);
+        if (!best || score > best.score) best = { x, y, r, score };
+      }
+    }
   }
-  const scale = width / W;
+  if (!best || best.score < 0.25) return null;
+  const sx = width / W;
+  const sy = height / H;
   return {
-    x0: Math.round(best.x0 * scale),
-    x1: Math.round((best.x1 + 1) * scale),
-    y0: Math.round(best.y0 * (height / H)),
-    y1: Math.round((best.y1 + 1) * (height / H)),
+    x0: Math.round((best.x - best.r) * sx),
+    x1: Math.round((best.x + best.r) * sx),
+    y0: Math.round((best.y - best.r) * sy),
+    y1: Math.round((best.y + best.r) * sy),
   };
 }
 
-/** Trims the photo so the plate is in the middle; an axis already within 2% is kept whole. */
+/**
+ * Trims the photo so the plate is in the middle. An axis already within 2% is
+ * kept whole, and so is one where centring would cut a plate that leaves the frame.
+ */
 function centerOn(plate, width, height) {
-  const axis = (size, center) => {
+  const axis = (size, start, end) => {
+    const center = (start + end) / 2;
     const half = Math.min(center, size - center);
-    if (size / 2 - half <= size * 0.02) return [0, size];
-    const start = Math.max(0, Math.round(center - half));
-    return [start, Math.min(size - start, Math.round(2 * half))];
+    if (size / 2 - half <= size * 0.02 || half < (end - start) / 2) {
+      return [0, size];
+    }
+    const from = Math.max(0, Math.round(center - half));
+    return [from, Math.min(size - from, Math.round(2 * half))];
   };
-  const [left, cropWidth] = axis(width, (plate.x0 + plate.x1) / 2);
-  const [top, cropHeight] = axis(height, (plate.y0 + plate.y1) / 2);
+  const [left, cropWidth] = axis(width, plate.x0, plate.x1);
+  const [top, cropHeight] = axis(height, plate.y0, plate.y1);
   return { left, top, width: cropWidth, height: cropHeight };
 }
 
@@ -553,8 +609,26 @@ async function writeSquarePreview(webp, file) {
     .toFile(file);
 }
 
-// Foodbag steps point to step photos that this site does not show.
-const STEP_PHOTO = /\s*\(voir (la |les )?photos?\)/gi;
+// Foodbag steps point to step photos that this site does not show:
+// "(voir photo)" is removed, "(voir astuce et photo)" becomes "(voir astuce)".
+const SEE = /\s*\(voir ([^)]*)\)/gi;
+const PHOTO = /^(la |les )?photos?$/i;
+function withoutStepPhotos(text) {
+  return text.replace(SEE, (match, what) => {
+    const parts = what.split(/\s+et\s+|,\s*/);
+    const kept = parts.filter((part) => !PHOTO.test(part.trim()));
+    if (kept.length === parts.length) return match;
+    return kept.length ? ` (voir ${kept.join(' et ')})` : '';
+  });
+}
+
+/** "Name, subtitle", or "Name et ..." when the subtitle already starts with "et". */
+function withSubtitle(name, subtitle) {
+  if (!subtitle) return name;
+  return /^et\s/i.test(subtitle)
+    ? `${name} ${subtitle}`
+    : `${name}, ${subtitle}`;
+}
 
 function buildMarkdown({ title, slug, dish, variant, persons, url }) {
   const name = dish.NameFR.trim();
@@ -562,9 +636,9 @@ function buildMarkdown({ title, slug, dish, variant, persons, url }) {
   const keywords = [name, subtitle]
     .join(', ')
     .toLowerCase()
-    .split(/\s+et\s+|,\s*/)
+    .split(/\s*,\s*(?:et\s+)?|\s+et\s+/)
     .filter(Boolean);
-  const intro = [subtitle ? `${name}, ${subtitle}.` : `${name}.`];
+  const intro = [`${withSubtitle(name, subtitle)}.`];
   if (variant.TotalTime) intro.push(`Prêt en ${variant.TotalTime} minutes.`);
 
   const ingredients = sortIngredients(variant.Ingredients ?? []).map(
@@ -575,9 +649,9 @@ function buildMarkdown({ title, slug, dish, variant, persons, url }) {
     .sort((a, b) => a.Sequence - b.Sequence)
     .map(
       (step, i) =>
-        `${i + 1}. ${step.DescriptionFR.replace(/\s*\n\s*/g, ' ')
-          .replace(STEP_PHOTO, '')
-          .trim()}`,
+        `${i + 1}. ${withoutStepPhotos(
+          step.DescriptionFR.replace(/\s*\n\s*/g, ' '),
+        ).trim()}`,
     );
 
   const lines = [
@@ -634,7 +708,7 @@ function inspect(dish, variant) {
   }
   steps.forEach((step, i) => {
     if (!step.DescriptionFR?.trim()) notes.push(`Étape ${i + 1} vide.`);
-    if (/photo/i.test(step.DescriptionFR?.replace(STEP_PHOTO, '') ?? '')) {
+    if (/photo/i.test(withoutStepPhotos(step.DescriptionFR ?? ''))) {
       notes.push(`Étape ${i + 1} renvoie encore à une photo.`);
     }
   });
@@ -702,6 +776,20 @@ async function fetchRecipe(url, wanted) {
   return { dish, variant, persons, source, notes };
 }
 
+/** Folder of a recipe whose Foodbag link has the same dish id, if any. */
+function importedAs(url) {
+  const dishId = new URL(url).searchParams.get('dishId');
+  if (!dishId) return null;
+  for (const entry of fs.readdirSync(RECIPES_DIR, { withFileTypes: true })) {
+    const file = path.join(RECIPES_DIR, entry.name, 'recipe.md');
+    if (!entry.isDirectory() || !fs.existsSync(file)) continue;
+    if (fs.readFileSync(file, 'utf8').includes(`dishId=${dishId}`)) {
+      return entry.name;
+    }
+  }
+  return null;
+}
+
 async function importRecipe(url) {
   const { dish, variant, persons, source, notes } = await fetchRecipe(
     url,
@@ -713,18 +801,28 @@ async function importRecipe(url) {
   const subtitle = (dish.SubtitleFR ?? '').trim();
   const description =
     opts.description ??
-    `${dish.NameFR.trim()}${subtitle ? `, ${subtitle}` : ''} (Foodbag)`;
+    `${withSubtitle(dish.NameFR.trim(), subtitle)} (Foodbag)`;
   const tags = opts.tags
     ? opts.tags
         .split(',')
         .map((tag) => tag.trim())
         .filter(Boolean)
-    : guessTags(`${dish.NameFR} ${subtitle}`);
+    : guessTags(`${dish.NameFR} ${subtitle}`, variant.Ingredients);
   if (!tags.length) notes.push('Aucun tag deviné : passez --tags.');
   const date = opts.date ?? today();
 
   const recipesData = JSON.parse(fs.readFileSync(RECIPES_JSON, 'utf8'));
   const recipeDir = path.join(RECIPES_DIR, slug);
+  const previous = importedAs(url);
+  if (previous && previous !== slug) {
+    const message = `Plat déjà importé dans recipes/${previous}/.`;
+    if (!opts.force && !opts['dry-run']) {
+      throw new Error(
+        `${message} Utilisez --force pour l'importer quand même.`,
+      );
+    }
+    notes.push(message);
+  }
   const exists =
     fs.existsSync(recipeDir) || recipesData.recipes.some((r) => r.id === slug);
   if (exists && !opts.force && !opts['dry-run']) {
@@ -816,6 +914,14 @@ async function runChecks() {
       const lines = new Set(markdown.split('\n'));
       for (const line of ref.expect ?? []) {
         if (!lines.has(line)) problems.push(`ligne absente : ${line}`);
+      }
+      if (ref.tags !== undefined) {
+        const { dish, variant } = recipe;
+        const tags = guessTags(
+          `${dish.NameFR} ${dish.SubtitleFR ?? ''}`,
+          variant.Ingredients,
+        ).join(',');
+        if (tags !== ref.tags) problems.push(`tags devinés : ${tags}`);
       }
       if (ref.plate !== undefined) {
         const photo = await preparePhoto(photoUrl(recipe.dish), true);

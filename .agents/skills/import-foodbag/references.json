@@ -16,7 +16,7 @@
   },
   {
     "url": "https://www.foodbag.be/fr/recept?dishId=a0MJv000005zu2PMAQ&weekDocId=W5Y2026",
-    "why": "Porc coréen (W5 2026): past week read from Firestore, fractions, size after the name, dark bowl not detected",
+    "why": "Porc coréen (W5 2026): past week read from Firestore, fractions, size after the name, dark bowl found by the circle detector",
     "expect": [
       "- 1/2 gingembre",
       "- 1/4 sachet de pâte gochujang",
@@ -24,17 +24,55 @@
       "- 2 càs de fécule de maïs",
       "- sel et poivre noir"
     ],
-    "plate": false
+    "tags": "Viande,Asiatique",
+    "plate": true
   },
   {
     "url": "https://www.foodbag.be/fr/recept?dishId=a0MJv00000Fb4DhMAJ&weekDocId=W27Y2026",
-    "why": "Nouilles porc laqué (W27 2026): plural name below 2 made singular, (voir photo) removed, light stone background touching the border is not a plate",
+    "why": "Nouilles porc laqué (W27 2026): plural name below 2 made singular, (voir photo) removed, beige bowl on a light stone background",
     "expect": [
       "- 1 carotte",
       "- 2 escalopes de porc",
       "- 1 poivron rouge pointu",
       "2. Divisez le brocoli en bouquets. Coupez le poivron pointu en fines rondelles."
     ],
-    "plate": false
+    "plate": true
+  },
+  {
+    "url": "https://www.foodbag.be/fr/recept?dishId=a0MJv0000086CjRMAU&weekDocId=W34Y2026",
+    "why": "Poulet grillé (W34 2026): singular name from 2 made plural, blue plate",
+    "expect": ["- 2 filets de poulet", "- 1 avocat", "- 1/2 piment vert"],
+    "plate": true
+  },
+  {
+    "url": "https://www.foodbag.be/fr/recept?dishId=a0MJv00000CFmiGMAT&weekDocId=W34Y2026",
+    "why": "Tagliatelles au poireau (W34 2026): unit repeated in the name (tranches de tranches), meat found only in the ingredients, black bowl",
+    "expect": ["- 4 tranches de lard fumé (porc)", "- 2 poireaux"],
+    "tags": "Viande,Pates",
+    "plate": true
+  },
+  {
+    "url": "https://www.foodbag.be/fr/recept?dishId=a0MJv000008lsefMAA&weekDocId=W38Y2026",
+    "why": "Filet de porc champignons (W38 2026): botte de botte, (voir astuce et photo) becomes (voir astuce), dark blue plate",
+    "expect": [
+      "- 1/2 botte de carottes",
+      "4. Déchirez la salade en morceaux et coupez le chicon en fines lamelles (voir astuce). Assaisonnez d’un filet d’huile d’olive, de vinaigre balsamique, de sel et de poivre noir."
+    ],
+    "plate": true
+  },
+  {
+    "url": "https://www.foodbag.be/fr/recept?dishId=a0MJv00000HQ36vMAD&weekDocId=W38Y2026",
+    "why": "Salade BLT (W38 2026): unit facultatif, pain panini made plural, side bowl next to the plate",
+    "expect": ["- miel/sirop végétal (facultatif)", "- 4 pains panini"],
+    "plate": true
+  },
+  {
+    "url": "https://www.foodbag.be/fr/recept?dishId=a0MJv00000HhLLxMAN&weekDocId=W40Y2026",
+    "why": "Steak haché chou-fleur (W40 2026): subtitle starting with et, dark plate",
+    "expect": [
+      "Steak haché au chou-fleur gratiné et cresson de jardin. Prêt en 30 minutes.",
+      "keywords: Lionel Schiepers, Ophélie De Loz, cooking, recipe, steak haché au chou-fleur gratiné, cresson de jardin, food, cuisine"
+    ],
+    "plate": true
   }
 ]
