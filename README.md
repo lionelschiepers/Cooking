@@ -199,6 +199,16 @@ Add to `recipes.json`:
 }
 ```
 
+### 4. Foodbag Recipes
+
+Import a recipe from [foodbag.be](https://www.foodbag.be) as a Markdown recipe (2 servings, photo cropped so the plate is centered):
+
+```bash
+node .agents/skills/import-foodbag/import-foodbag.js "https://www.foodbag.be/fr/recept?dishId=...&weekDocId=..." --tags Viande --dry-run
+```
+
+Remove `--dry-run` to write the files. Run with `--help` for all options. Agents can use the `import-foodbag` skill (`.agents/skills/import-foodbag/SKILL.md`), which also covers checking the photo. The skill updates itself when an import reveals something new; after changing the script, run `node .agents/skills/import-foodbag/import-foodbag.js --check` to re-test the recipes in `references.json`.
+
 ## 🚢 Deployment
 
 This project is configured for automatic deployment to GitHub Pages via GitHub Actions.

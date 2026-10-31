@@ -1,0 +1,29 @@
+[
+  {
+    "url": "https://www.foodbag.be/fr/recept?dishId=a0MJv000003lCDiMAM&weekDocId=W44Y2026",
+    "why": "Escalope de porc (W44 2026): light plate cropped, units (pièce, g, plant, filet, pincée), basics last",
+    "expect": [
+      "## Ingrédients (2 personnes)",
+      "- 2 escalopes de porc",
+      "- 500 gr carottes",
+      "- 1 plant de thym",
+      "- 1 filet de lait",
+      "- 1 pincée de noix de muscade",
+      "- sel et poivre noir",
+      "## Astuce"
+    ],
+    "plate": true
+  },
+  {
+    "url": "https://www.foodbag.be/fr/recept?dishId=a0MJv000005zu2PMAQ&weekDocId=W5Y2026",
+    "why": "Porc coréen (W5 2026): past week read from Firestore, fractions, size after the name, dark bowl not detected",
+    "expect": [
+      "- 1/2 gingembre",
+      "- 1/4 sachet de pâte gochujang",
+      "- 1 grand brocoli",
+      "- 2 càs de fécule de maïs",
+      "- sel et poivre noir"
+    ],
+    "plate": false
+  }
+]
