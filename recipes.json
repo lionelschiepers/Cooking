@@ -1,6 +1,16 @@
 {
   "recipes": [
     {
+      "id": "nouilles-lanieres-porc-laque",
+      "title": "Nouilles aux Lanières de Porc Laqué",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/nouilles-lanieres-porc-laque/",
+      "image": "./recipes/nouilles-lanieres-porc-laque/nouilles-lanieres-porc-laque.webp",
+      "tags": ["Viande", "Asiatique"],
+      "description": "Nouilles aux lanières de porc laqué, œuf et brocoli (Foodbag)"
+    },
+    {
       "id": "escalope-porc-puree-epinards",
       "title": "Escalope de Porc et Purée Fromage-Épinards",
       "type": "markdown",

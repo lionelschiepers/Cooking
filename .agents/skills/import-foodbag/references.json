@@ -25,5 +25,16 @@
       "- sel et poivre noir"
     ],
     "plate": false
+  },
+  {
+    "url": "https://www.foodbag.be/fr/recept?dishId=a0MJv00000Fb4DhMAJ&weekDocId=W27Y2026",
+    "why": "Nouilles porc laqué (W27 2026): plural name below 2 made singular, (voir photo) removed, light stone background touching the border is not a plate",
+    "expect": [
+      "- 1 carotte",
+      "- 2 escalopes de porc",
+      "- 1 poivron rouge pointu",
+      "2. Divisez le brocoli en bouquets. Coupez le poivron pointu en fines rondelles."
+    ],
+    "plate": false
   }
 ]

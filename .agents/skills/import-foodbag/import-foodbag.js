@@ -253,6 +253,18 @@ function formatQuantity(quantity) {
   return whole ? `${whole} ${FRACTIONS[rest]}` : FRACTIONS[rest];
 }
 
+/** "1,5", "1/2" or "1 1/2" as a number (NaN when it is not a quantity). */
+function quantityValue(quantity) {
+  const [whole, fraction] = String(quantity)
+    .replace(',', '.')
+    .trim()
+    .match(/^(?:(\d+(?:\.\d+)?)\s*)?(?:(\d+\/\d+))?$/)
+    ?.slice(1) ?? [NaN];
+  if (whole === undefined && fraction === undefined) return NaN;
+  const [num, den] = (fraction ?? '0/1').split('/').map(Number);
+  return Number(whole ?? 0) + num / den;
+}
+
 const COUNT_UNITS = /^(pièces?|pc|stuks?|stuk)$/i;
 const METRIC_UNITS = {
   g: 'gr',
@@ -272,6 +284,21 @@ function withDe(name) {
 // Foodbag sometimes puts the size last: "brocoli grand" becomes "grand brocoli".
 const SIZE_LAST = /^(.+?) (grande?s?|gros|grosses?|petite?s?)$/i;
 
+// Foodbag names are often plural ("1 carottes"). Below 2, the words before the
+// first preposition lose their plural; words ending in as/is/os/us stay (radis, frais, gros, jus).
+const PREPOSITION = /^(de|des|du|d'.*|d’.*|à|au|aux|en)$/i;
+function singular(name) {
+  const words = name.split(' ');
+  const end = words.findIndex((word) => PREPOSITION.test(word));
+  return words
+    .map((word, i) =>
+      end !== -1 && i >= end
+        ? word
+        : word.replace(/eaux$/i, 'eau').replace(/([^aiouïs])s$/i, '$1'),
+    )
+    .join(' ');
+}
+
 function formatIngredient(ingredient) {
   const quantity = formatQuantity(ingredient.Quantity);
   const unit = (ingredient.SizeFR ?? '').trim();
@@ -279,7 +306,11 @@ function formatIngredient(ingredient) {
     .trim()
     .replace(SIZE_LAST, '$2 $1');
   if (!unit || COUNT_UNITS.test(unit)) {
-    return [quantity, name].filter(Boolean).join(' ');
+    const counted =
+      quantity && quantityValue(ingredient.Quantity) < 2
+        ? singular(name)
+        : name;
+    return [quantity, counted].filter(Boolean).join(' ');
   }
   const metric = METRIC_UNITS[unit.toLowerCase()];
   if (metric) return [quantity, metric, name].filter(Boolean).join(' ');
@@ -360,6 +391,12 @@ function guessTags(text) {
     )
   )
     tags.push('Pates');
+  if (
+    /nouilles|udon|ramen|wok|teriyaki|sriracha|gochujang|coréen|thaï|japonais|chinois|vietnamien|curry/.test(
+      t,
+    )
+  )
+    tags.push('Asiatique');
   return tags;
 }
 
@@ -369,7 +406,10 @@ function today() {
   return `${d.getFullYear()}/${pad(d.getMonth() + 1)}/${pad(d.getDate())}`;
 }
 
-/** Finds the plate: the largest light, grey-white area that does not span the whole photo. */
+/**
+ * Finds the plate: the largest light, grey-white area that does not touch the
+ * border. Areas touching it are a light background or a plate cut by the frame.
+ */
 async function findPlate(buffer, width, height) {
   const { data, info } = await sharp(buffer)
     .rotate()
@@ -419,18 +459,16 @@ async function findPlate(buffer, width, height) {
         }
       }
     }
-    if (!best || box.size > best.size) best = box;
+    const touchesBorder =
+      box.x0 === 0 || box.y0 === 0 || box.x1 === W - 1 || box.y1 === H - 1;
+    if (!touchesBorder && (!best || box.size > best.size)) best = box;
   }
   if (!best) return null;
 
   const boxWidth = best.x1 - best.x0 + 1;
   const boxHeight = best.y1 - best.y0 + 1;
   const ratio = boxWidth / boxHeight;
-  const spansWidth = best.x0 === 0 && best.x1 === W - 1;
-  const spansHeight = best.y0 === 0 && best.y1 === H - 1;
   if (
-    spansWidth ||
-    spansHeight ||
     ratio < 0.7 ||
     ratio > 1.4 ||
     Math.min(boxWidth, boxHeight) < 0.25 * Math.min(W, H)
@@ -515,6 +553,9 @@ async function writeSquarePreview(webp, file) {
     .toFile(file);
 }
 
+// Foodbag steps point to step photos that this site does not show.
+const STEP_PHOTO = /\s*\(voir (la |les )?photos?\)/gi;
+
 function buildMarkdown({ title, slug, dish, variant, persons, url }) {
   const name = dish.NameFR.trim();
   const subtitle = (dish.SubtitleFR ?? '').trim();
@@ -534,7 +575,9 @@ function buildMarkdown({ title, slug, dish, variant, persons, url }) {
     .sort((a, b) => a.Sequence - b.Sequence)
     .map(
       (step, i) =>
-        `${i + 1}. ${step.DescriptionFR.replace(/\s*\n\s*/g, ' ').trim()}`,
+        `${i + 1}. ${step.DescriptionFR.replace(/\s*\n\s*/g, ' ')
+          .replace(STEP_PHOTO, '')
+          .trim()}`,
     );
 
   const lines = [
@@ -591,6 +634,9 @@ function inspect(dish, variant) {
   }
   steps.forEach((step, i) => {
     if (!step.DescriptionFR?.trim()) notes.push(`Étape ${i + 1} vide.`);
+    if (/photo/i.test(step.DescriptionFR?.replace(STEP_PHOTO, '') ?? '')) {
+      notes.push(`Étape ${i + 1} renvoie encore à une photo.`);
+    }
   });
   const texts = [
     dish.NameFR,
