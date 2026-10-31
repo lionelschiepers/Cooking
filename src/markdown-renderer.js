@@ -60,7 +60,7 @@ export function renderMarkdownWithProse(markdown, options) {
  * @returns {string} The loading HTML
  */
 export function createLoadingSpinner() {
-  return '<p class="results-count" role="status">Chargement de la recette…</p>';
+  return '<output class="results-count">Chargement de la recette…</output>';
 }
 
 /**
@@ -78,7 +78,8 @@ export function createErrorMessage(message) {
  * @returns {Object} An object containing the metadata and clean content
  */
 export function extractFrontmatter(markdown) {
-  const frontmatterRegex = /^---\s*\r?\n([\s\S]*?)\r?\n---\s*\r?\n([\s\S]*)$/;
+  const frontmatterRegex =
+    /^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*\r?\n([\s\S]*)$/;
   const match = frontmatterRegex.exec(markdown);
 
   if (!match) {

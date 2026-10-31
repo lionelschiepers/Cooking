@@ -124,7 +124,10 @@ function createTagButton(tag, activeTag) {
 function localSrcset(url) {
   if (!/^\.\/recipes\/.+\.(webp|jpe?g|png|avif)$/i.test(url)) return '';
   return [480, 960, 1440]
-    .map((width) => `${url.replace(/\.[a-z]+$/i, `.w${width}.webp`)} ${width}w`)
+    .map((width) => {
+      const variant = url.replace(/\.[a-z]+$/i, `.w${width}.webp`);
+      return `${variant} ${width}w`;
+    })
     .join(', ');
 }
 
@@ -226,17 +229,22 @@ function popularTags(limit) {
     .map(([tag]) => tag);
 }
 
-function renderNoResults(query, tag) {
-  const quotedQuery = `«&#8239;${escapeHtml(query)}&#8239;»`;
-  let message = 'Aucune recette pour le moment.';
+/** Plain text, set with textContent: the query and tag come from the URL. */
+function noResultsMessage(query, tag) {
+  const quotedQuery = `«\u202F${query}\u202F»`;
   if (query && tag) {
-    message = `Aucune recette de la catégorie ${escapeHtml(tag)} ne correspond à ${quotedQuery}.`;
-  } else if (query) {
-    message = `Aucune recette ne correspond à ${quotedQuery}. Vérifiez l’orthographe ou cherchez un ingrédient.`;
-  } else if (tag) {
-    message = `Aucune recette dans la catégorie ${escapeHtml(tag)}.`;
+    return `Aucune recette de la catégorie ${tag} ne correspond à ${quotedQuery}.`;
   }
+  if (query) {
+    return `Aucune recette ne correspond à ${quotedQuery}. Vérifiez l’orthographe ou cherchez un ingrédient.`;
+  }
+  if (tag) {
+    return `Aucune recette dans la catégorie ${tag}.`;
+  }
+  return 'Aucune recette pour le moment.';
+}
 
+function renderNoResults(query, tag) {
   const widenButton =
     query && tag
       ? `<button type="button" class="button-quiet" data-action="all-categories">Chercher dans toutes les catégories</button>`
@@ -253,13 +261,17 @@ function renderNoResults(query, tag) {
   els.grid.innerHTML = `
     <div class="notice">
       <h2>Aucune recette trouvée</h2>
-      <p>${message}</p>
+      <p data-message></p>
       <div class="notice-actions">
         <button type="button" class="button" data-action="reset">Voir toutes les recettes</button>
         ${widenButton}
       </div>
       ${suggestions}
     </div>`;
+  els.grid.querySelector('[data-message]').textContent = noResultsMessage(
+    query,
+    tag,
+  );
 }
 
 function syncUrl({ query, tag, sort }) {
@@ -268,10 +280,11 @@ function syncUrl({ query, tag, sort }) {
   if (tag) params.set('tag', tag);
   if (sort !== DEFAULT_SORT) params.set('sort', sort);
   const search = params.toString();
+  const queryString = search ? `?${search}` : '';
   history.replaceState(
     history.state,
     '',
-    `${location.pathname}${search ? `?${search}` : ''}${location.hash}`,
+    `${location.pathname}${queryString}${location.hash}`,
   );
 }
 
@@ -396,7 +409,7 @@ function handleGridClick(event) {
     render();
     els.tag.focus();
   } else if (action === 'retry') {
-    loadRecipes();
+    void loadRecipes();
   }
 }
 
@@ -434,7 +447,7 @@ function init() {
   els.grid.addEventListener('click', handleGridClick);
   els.grid.addEventListener('error', handleImageError, true);
 
-  loadRecipes();
+  void loadRecipes();
   registerServiceWorker();
 }
 

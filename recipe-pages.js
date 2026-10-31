@@ -3,10 +3,10 @@
  * _recipes/<name>.md and the _layouts/recipe.html template.
  * Used by build-recipes.js (production) and build-recipes-dev.js (dev server).
  */
-import crypto from 'crypto';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import crypto from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Marked } from 'marked';
 import { getImageSize, variantName, variantSrcset } from './image-variants.js';
 
@@ -52,7 +52,7 @@ function normalize(value) {
 }
 
 function parseFrontmatter(markdown) {
-  const match = /^---\s*\r?\n([\s\S]*?)\r?\n---\s*\r?\n([\s\S]*)$/.exec(
+  const match = /^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*\r?\n([\s\S]*)$/.exec(
     markdown,
   );
   if (!match) return { metadata: {}, content: markdown };
@@ -89,15 +89,16 @@ function isLocal(url) {
 
 /** Sizes of the local photos used by a recipe, keyed by their markdown URL. */
 async function readImageSizes(markdown, name) {
-  const sizes = new Map();
+  const files = new Map();
   for (const [, url] of markdown.matchAll(MARKDOWN_IMAGE)) {
-    if (!isLocal(url) || sizes.has(url)) continue;
+    if (!isLocal(url) || files.has(url)) continue;
     const file = path.join(SOURCE_DIR, name, decodeURI(url));
-    if (fs.existsSync(file)) {
-      sizes.set(url, await getImageSize(file));
-    }
+    if (fs.existsSync(file)) files.set(url, file);
   }
-  return sizes;
+  const sizes = await Promise.all(
+    [...files].map(async ([url, file]) => [url, await getImageSize(file)]),
+  );
+  return new Map(sizes);
 }
 
 function imageTag({ src, alt, size, sizes, eager = false }) {
@@ -110,9 +111,11 @@ function imageTag({ src, alt, size, sizes, eager = false }) {
       `height="${size.height}"`,
     );
   }
-  attrs.push(`alt="${escapeHtml(alt)}"`);
-  attrs.push(eager ? 'fetchpriority="high"' : 'loading="lazy"');
-  attrs.push('decoding="async"');
+  attrs.push(
+    `alt="${escapeHtml(alt)}"`,
+    eager ? 'fetchpriority="high"' : 'loading="lazy"',
+    'decoding="async"',
+  );
   return `<img ${attrs.join(' ')}>`;
 }
 
@@ -265,18 +268,23 @@ export async function buildRecipePages({ outputDir, siteUrl, assets }) {
   const template = fs.readFileSync(LAYOUT_PATH, 'utf8');
   fs.mkdirSync(outputDir, { recursive: true });
 
-  let count = 0;
+  const results = await Promise.allSettled(
+    files.map((file) =>
+      buildPage({ file, template, outputDir, siteUrl, assets }),
+    ),
+  );
   let failed = 0;
-  for (const file of files) {
-    try {
-      await buildPage({ file, template, outputDir, siteUrl, assets });
-      count++;
-    } catch (error) {
+  results.forEach((result, index) => {
+    if (result.status === 'rejected') {
       failed++;
-      console.error(`Erreur pour ${path.basename(file)} : ${error.message}`);
+      console.error(
+        `Erreur pour ${path.basename(files[index])} : ${result.reason.message}`,
+      );
     }
-  }
-  console.log(`${count} pages de recette générées dans ${outputDir}`);
+  });
+  console.log(
+    `${results.length - failed} pages de recette générées dans ${outputDir}`,
+  );
   if (failed) process.exitCode = 1;
 }
 

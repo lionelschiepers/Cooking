@@ -3,9 +3,9 @@
  * Reads recipes/<name>/*, writes public/recipes/<name>/<photo>.w<width>.webp.
  * Copies that are newer than their source are kept, so reruns are fast.
  */
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import {
   VARIANT_WIDTHS,
@@ -49,8 +49,7 @@ const recipeDirs = fs
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name);
 
-let created = 0;
-let failed = 0;
+const jobs = [];
 for (const name of recipeDirs) {
   const sourceDir = path.join(SOURCE_DIR, name);
   const images = fs.readdirSync(sourceDir).filter(isSourceImage);
@@ -68,14 +67,26 @@ for (const name of recipeDirs) {
   fs.mkdirSync(outputDir, { recursive: true });
 
   for (const image of byVariant.values()) {
-    try {
-      created += await buildImage(path.join(sourceDir, image), outputDir);
-    } catch (error) {
-      failed++;
-      console.error(`Image ignorée ${name}/${image} : ${error.message}`);
-    }
+    jobs.push({ name, image, source: path.join(sourceDir, image), outputDir });
   }
 }
+
+// sharp queues the work on its own thread pool, so all images can start at once.
+const results = await Promise.allSettled(
+  jobs.map(({ source, outputDir }) => buildImage(source, outputDir)),
+);
+
+let created = 0;
+let failed = 0;
+results.forEach((result, index) => {
+  if (result.status === 'fulfilled') {
+    created += result.value;
+  } else {
+    failed++;
+    const { name, image } = jobs[index];
+    console.error(`Image ignorée ${name}/${image} : ${result.reason.message}`);
+  }
+});
 
 console.log(`Images responsives : ${created} créées.`);
 if (failed) process.exitCode = 1;

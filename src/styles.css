@@ -194,6 +194,7 @@
   }
 
   .results-count {
+    display: block;
     margin-block: 1.25rem 2rem;
     font-size: 1rem;
     color: var(--sourdine);
@@ -906,6 +907,7 @@
 }
 
 /* ===== PRINT ===== */
+/* Not in a layer, so these rules win over the base and components layers. */
 @media print {
   .no-print,
   .skip-link,
@@ -914,13 +916,13 @@
   .recipe-actions,
   .recipe-end,
   .ingredient-reset {
-    display: none !important;
+    display: none;
   }
 
   html,
   body {
-    background: #fff !important;
-    color: #000 !important;
+    background: #fff;
+    color: #000;
   }
 
   .recipe-hero {

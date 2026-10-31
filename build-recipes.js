@@ -2,9 +2,9 @@
  * Production: writes dist/recipes/<name>/index.html.
  * Runs after `vite build`, because it links the hashed stylesheet from dist/.
  */
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { buildRecipePages, fileHash } from './recipe-pages.js';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));

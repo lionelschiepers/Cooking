@@ -158,6 +158,9 @@ export async function renderRecipeToContainer(
   }
 
   const bodyHtml = renderMarkdown(body, { baseUrl: folderUrl }).trim();
+  const bodySection = bodyHtml
+    ? `<div id="recipe-content" class="recipe-body prose">${bodyHtml}</div>`
+    : '';
 
   container.innerHTML = `
     <div class="recipe-hero">
@@ -169,7 +172,7 @@ export async function renderRecipeToContainer(
       </div>
       ${hero ? `<figure class="recipe-photo"><img src="${escapeHtml(hero.src)}" alt="${escapeHtml(hero.alt)}" fetchpriority="high" decoding="async"></figure>` : ''}
     </div>
-    ${bodyHtml ? `<div id="recipe-content" class="recipe-body prose">${bodyHtml}</div>` : ''}`;
+    ${bodySection}`;
   container.removeAttribute('aria-busy');
 
   document.title = `${title} - ${SITE_TITLE}`;

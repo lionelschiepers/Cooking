@@ -1,6 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,7 +25,8 @@ const recipesData = JSON.parse(fs.readFileSync(RECIPES_JSON_PATH, 'utf8'));
 
 // Extract frontmatter from markdown content
 function extractFrontmatter(markdown) {
-  const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+  const frontmatterRegex =
+    /^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*\r?\n([\s\S]*)$/;
   const match = frontmatterRegex.exec(markdown);
 
   if (!match) {
@@ -62,7 +63,7 @@ function extractFirstImage(markdown) {
   const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/;
   const match = imageRegex.exec(markdown);
 
-  if (match && match[2]) {
+  if (match?.[2]) {
     return match[2];
   }
 
@@ -125,7 +126,7 @@ for (const recipe of recipesData.recipes) {
 
   // Read recipe markdown
   const markdownContent = fs.readFileSync(recipeMdPath, 'utf8');
-  const { metadata, content } = extractFrontmatter(markdownContent);
+  const { content } = extractFrontmatter(markdownContent);
 
   // Extract first image
   const firstImage = extractFirstImage(content);

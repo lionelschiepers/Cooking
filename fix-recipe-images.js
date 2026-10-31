@@ -1,6 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,7 +27,7 @@ for (const folder of recipeFolders) {
   // Pattern: ./folder-name/file-name.webp -> ./file-name.webp
   // Replace ./folder-name/ with ./
   const originalContent = content;
-  content = content.replace(new RegExp(`\\.\\/${folder}/`, 'g'), './');
+  content = content.replaceAll(`./${folder}/`, './');
 
   if (content !== originalContent) {
     fs.writeFileSync(recipeMdPath, content, 'utf8');

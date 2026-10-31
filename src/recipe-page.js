@@ -66,7 +66,7 @@ function enhanceIngredients(content, key) {
 
   for (const list of lists) {
     list.classList.add('ingredient-list');
-    for (const item of [...list.children]) {
+    for (const item of list.children) {
       if (item.tagName !== 'LI') continue;
       const box = document.createElement('input');
       box.type = 'checkbox';
@@ -168,7 +168,7 @@ function setupWakeLock(root) {
   // The browser drops the lock when the tab is hidden; take it back on return.
   document.addEventListener('visibilitychange', () => {
     if (wanted && !sentinel && document.visibilityState === 'visible') {
-      acquire();
+      void acquire();
     }
   });
 }
