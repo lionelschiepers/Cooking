@@ -1,6 +1,16 @@
 {
   "recipes": [
     {
+      "id": "escalope-porc-puree-epinards",
+      "title": "Escalope de Porc et Purée Fromage-Épinards",
+      "type": "markdown",
+      "date": "2026/10/31",
+      "path": "recipes/escalope-porc-puree-epinards/",
+      "image": "./recipes/escalope-porc-puree-epinards/escalope-porc-puree-epinards.webp",
+      "tags": ["Viande"],
+      "description": "Escalope de porc, purée fromage-épinards et carottes étuvées (Foodbag)"
+    },
+    {
       "id": "pates-ciao-e-pepe",
       "title": "Pâtes Ciao e pepe",
       "type": "markdown",
