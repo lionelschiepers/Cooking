@@ -35,7 +35,7 @@ The palette comes from the kitchen table: blue-grey stoneware plates on a pale l
 | `--sourdine` | `#55666B` | Secondary text (dates, descriptions) |
 | `--chicon` | `#E8C547` | Selected category, ticked ingredients only |
 
-- **Type**: [Alegreya](https://www.huertatipografica.com/en/fonts/alegreya-ht-pro) (serif, titles and recipe text) and Alegreya Sans (labels, buttons), self-hosted with Fontsource
+- **Type**: [Alegreya](https://www.huertatipografica.com/en/fonts/alegreya-ht-pro) (serif, titles and recipe text) and Alegreya Sans (labels, buttons), self-hosted with Fontsource. While they load, local fonts resized to the same metrics stand in, so the page does not jump
 - The large square photos are the one bold element; everything else stays quiet
 - All tokens and components live in `src/styles.css`
 - Accessibility: WCAG AA contrast, visible keyboard focus, skip link, reduced motion and Windows high-contrast support

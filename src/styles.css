@@ -6,6 +6,30 @@
 @import '@fontsource/alegreya-sans/latin-700.css';
 
 /*
+ * Local fonts resized to the metrics of Alegreya and Alegreya Sans. They are
+ * shown while the web fonts load, so text wraps the same way and the page
+ * does not jump when the web fonts arrive. Values come from
+ * @capsizecss/metrics: size-adjust is the ratio of the average letter widths.
+ */
+@font-face {
+  font-family: 'Alegreya Fallback';
+  src: local('Times New Roman'), local('TimesNewRomanPSMT');
+  size-adjust: 100.92%;
+  ascent-override: 100.67%;
+  descent-override: 34.18%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Alegreya Sans Fallback';
+  src: local('Arial'), local('ArialMT');
+  size-adjust: 86.81%;
+  ascent-override: 103.67%;
+  descent-override: 34.56%;
+  line-gap-override: 0%;
+}
+
+/*
  * Palette taken from the photos: the pale leaf of a chicon (nappe), the
  * blue-grey stoneware bowls (grès) and the yellow tip of the chicon, which is
  * reserved for "selected / checked" states.
@@ -20,8 +44,9 @@
   --ligne: #c9d2ce;
   --bord: #7a8a86;
 
-  --serif: 'Alegreya Variable', 'Alegreya', Georgia, serif;
-  --sans: 'Alegreya Sans', 'Segoe UI', system-ui, sans-serif;
+  --serif: 'Alegreya Variable', 'Alegreya', 'Alegreya Fallback', Georgia, serif;
+  --sans:
+    'Alegreya Sans', 'Alegreya Sans Fallback', 'Segoe UI', system-ui, sans-serif;
 
   --page-gutter: clamp(1rem, 4vw, 3rem);
 }
@@ -172,6 +197,14 @@
     margin-block: 1.25rem 2rem;
     font-size: 1rem;
     color: var(--sourdine);
+  }
+
+  /* Keeps the footer below the fold until the recipes are shown, so it does
+   * not jump down when they arrive. */
+  @media (scripting: enabled) {
+    .recipe-grid[aria-busy='true'] {
+      min-height: 100vh;
+    }
   }
 
   /* ===== HOME: PLATES =====

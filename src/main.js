@@ -288,6 +288,7 @@ function render() {
       ? countLabel(allRecipes.length)
       : `${countLabel(results.length)} sur ${allRecipes.length}`;
 
+  els.grid.removeAttribute('aria-busy');
   if (results.length === 0) {
     renderNoResults(controls.query, controls.tag);
   } else {
@@ -301,6 +302,7 @@ function render() {
 
 function showLoading() {
   els.count.textContent = 'Chargement des recettes…';
+  els.grid.setAttribute('aria-busy', 'true');
   const placeholder =
     '<li class="plate-card"><div class="plate skeleton"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line"></div></li>';
   els.grid.innerHTML = `<ul class="plates" aria-hidden="true">${placeholder.repeat(8)}</ul>`;
@@ -308,6 +310,7 @@ function showLoading() {
 
 function showError() {
   els.count.textContent = '';
+  els.grid.removeAttribute('aria-busy');
   els.grid.innerHTML = `
     <div class="notice" role="alert">
       <h2>Impossible de charger les recettes</h2>
