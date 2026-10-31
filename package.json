@@ -3,12 +3,17 @@
   "version": "1.0.0",
   "description": "A stunning static website to store and showcase cooking recipes",
   "type": "module",
+  "packageManager": "pnpm@11.22.0",
+  "engines": {
+    "node": ">=22.13"
+  },
   "scripts": {
-    "dev": "npm run generate:recipes && npm run build:recipes:dev && npm run copy:assets && vite",
-    "build": "npm run generate:recipes && npm run copy:assets && vite build && npm run build:recipes",
+    "dev": "pnpm run generate:recipes && pnpm run copy:assets && pnpm run build:images && pnpm run build:recipes:dev && vite",
+    "build": "pnpm run generate:recipes && pnpm run copy:assets && pnpm run build:images && vite build && pnpm run build:recipes",
     "preview": "vite preview",
     "copy:assets": "shx mkdir -p public/recipes && shx cp recipes.json public/ && shx cp -r recipes/*/ public/recipes/ && shx rm -f public/recipes/index.html",
     "generate:recipes": "node generate-recipes.js",
+    "build:images": "node build-images.js",
     "build:recipes": "node build-recipes.js",
     "build:recipes:dev": "node build-recipes-dev.js",
     "prepare": "husky",
@@ -23,6 +28,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fontsource-variable/alegreya": "^5.3.0",
+    "@fontsource/alegreya-sans": "^5.3.0",
     "@tailwindcss/vite": "^4.3.3",
     "marked": "^18.1.2",
     "tailwindcss": "^4.3.3",
@@ -31,6 +38,7 @@
   "devDependencies": {
     "husky": "^9.1.7",
     "prettier": "^3.9.10",
+    "sharp": "^0.35.5",
     "shx": "^0.4.0"
   }
 }

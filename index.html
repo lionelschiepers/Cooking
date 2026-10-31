@@ -11,129 +11,92 @@
       name="description"
       content="Découvrez les recettes de cuisine favorites de Lionel et Ophélie : plats délicieux, desserts gourmands et conseils pratiques pour tous les jours."
     />
+    <meta name="theme-color" content="#EEF1EC" />
     <title>Les recettes de Lionel & Ophélie</title>
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <link rel="preconnect" href="https://img.youtube.com" crossorigin />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="preconnect" href="https://img.youtube.com" />
     <link rel="stylesheet" href="./src/styles.css" />
     <script type="module" src="./src/main.js"></script>
   </head>
-  <body class="bg-gray-100 min-h-screen flex flex-col">
-    <!-- Skip to main content link for accessibility -->
+  <body>
     <a href="#main-content" class="skip-link">Aller au contenu principal</a>
 
-    <!-- Header -->
-    <header class="bg-black text-white shadow-lg" role="banner">
-      <div class="container mx-auto px-4 py-6">
-        <h1 class="text-3xl md:text-4xl font-bold text-center">
-          🍳 Les recettes de Lionel & Ophélie
-        </h1>
-        <p class="text-center text-gray-300 mt-2">
-          Découvrez nos recettes favorites
-        </p>
-      </div>
+    <header class="masthead page">
+      <h1 class="masthead-title">
+        <span class="masthead-title-small">Les recettes de</span>
+        <span class="masthead-title-names">Lionel &amp; Ophélie</span>
+      </h1>
+      <p class="masthead-lede">
+        Ce qu’on cuisine à la maison&#8239;: nos recettes, nos photos et les
+        vidéos qui nous ont inspirés.
+      </p>
     </header>
 
-    <!-- Main Content -->
-    <main
-      id="main-content"
-      class="flex-grow container mx-auto px-4 py-8"
-      role="main"
-      tabindex="-1"
-    >
-      <!-- Search & Filter Bar -->
-      <section class="mb-8" aria-label="Recherche et filtres">
-        <div class="search-filter-bar bg-white p-4 rounded-lg shadow-md">
-          <!-- Search Input -->
-          <div class="flex-1 min-w-[200px]">
-            <label
-              for="search-input"
-              class="block text-sm font-semibold text-gray-800 mb-1"
-              >Rechercher une recette</label
-            >
-            <input
-              type="text"
-              id="search-input"
-              placeholder="Rechercher une recette..."
-              class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
-              aria-describedby="search-help"
-            />
-            <span id="search-help" class="sr-only"
-              >Tapez pour rechercher parmi les recettes par titre, description
-              ou tag</span
-            >
-          </div>
-
-          <!-- Tag Filter -->
-          <div class="w-32">
-            <label
-              for="tag-filter"
-              class="block text-sm font-semibold text-gray-800 mb-1"
-              >Filtrer par catégorie</label
-            >
-            <select
-              id="tag-filter"
-              class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none bg-white"
-              aria-describedby="filter-help"
-            >
-              <option value="">Toutes les catégories</option>
-            </select>
-            <span id="filter-help" class="sr-only"
-              >Sélectionnez une catégorie pour filtrer les recettes</span
-            >
-          </div>
-
-          <!-- Sort Dropdown -->
-          <div class="flex-none w-40">
-            <label
-              for="sort-select"
-              class="block text-sm font-semibold text-gray-800 mb-1"
-              >Trier les recettes</label
-            >
-            <select
-              id="sort-select"
-              class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none bg-white"
-              aria-label="Trier les recettes"
-              aria-describedby="sort-help"
-            >
-              <option value="title-asc">A-Z</option>
-              <option value="title-desc">Z-A</option>
-              <option value="date-desc" selected>Date ↓</option>
-              <option value="date-asc">Date ↑</option>
-            </select>
-            <span id="sort-help" class="sr-only"
-              >Sélectionnez un ordre de tri pour les recettes</span
-            >
-          </div>
+    <main id="main-content" class="page" tabindex="-1">
+      <form
+        id="filters"
+        class="filters"
+        role="search"
+        aria-label="Rechercher une recette"
+      >
+        <div class="field field--search">
+          <label for="search-input">Rechercher une recette</label>
+          <input
+            type="search"
+            id="search-input"
+            name="q"
+            placeholder="Ex.&#8239;: pâtes, poulet, feta"
+            autocomplete="off"
+            aria-describedby="search-help"
+          />
+          <span id="search-help" class="sr-only"
+            >La liste se met à jour pendant que vous tapez. La recherche porte
+            sur les titres, les descriptions et les catégories.</span
+          >
         </div>
 
-        <!-- Results Count -->
-        <p
-          id="results-count"
-          class="text-gray-700 mt-2 text-sm font-medium"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          Chargement des recettes...
-        </p>
-      </section>
-
-      <!-- Recipe Grid -->
-      <section>
-        <div id="recipe-grid" class="recipe-grid">
-          <!-- Recipes will be loaded here by JavaScript -->
+        <div class="field">
+          <label for="tag-filter">Catégorie</label>
+          <select id="tag-filter" name="tag">
+            <option value="">Toutes</option>
+          </select>
         </div>
-      </section>
+
+        <div class="field">
+          <label for="sort-select">Trier par</label>
+          <select id="sort-select" name="sort">
+            <option value="date-desc" selected>Plus récentes</option>
+            <option value="date-asc">Plus anciennes</option>
+            <option value="title-asc">Nom, de A à Z</option>
+            <option value="title-desc">Nom, de Z à A</option>
+          </select>
+        </div>
+      </form>
+
+      <p
+        id="results-count"
+        class="results-count"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        Chargement des recettes…
+      </p>
+
+      <div id="recipe-grid">
+        <noscript>
+          <p class="notice">
+            Activez JavaScript dans votre navigateur pour voir la liste des
+            recettes.
+          </p>
+        </noscript>
+      </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-black text-white py-6 mt-auto">
-      <div class="container mx-auto px-4 text-center">
-        <p class="text-gray-400">
-          &copy; 2026 Les recettes de Lionel & Ophélie
-        </p>
-        <p class="text-gray-500 text-sm mt-1">
-          Fait avec ❤️ pour partager notre passion de la cuisine
-        </p>
+    <footer class="site-footer">
+      <div class="page">
+        <p>&copy; 2026 Les recettes de Lionel &amp; Ophélie</p>
+        <p>Fait avec amour pour partager notre passion de la cuisine.</p>
       </div>
     </footer>
   </body>

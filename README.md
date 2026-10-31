@@ -7,10 +7,17 @@ A stunning static website to store and showcase cooking recipes with an incredib
 ## ✨ Features
 
 ### 🏠 Home Page
-- **Beautiful grid layout** displaying recipe icons (4 per row on desktop, fully responsive)
-- **Magical hover effects** that make icons come alive
-- **Powerful search & filter** capabilities
-- **Tag-based filtering** with dropdown menu
+- **Recipes as square photos** with softly rounded corners (2 to 4 per row depending on screen width)
+- **Search** across titles, descriptions and categories (every word must match, accents ignored)
+- **Category filter and sorting**; clicking a category on a recipe filters the list too
+- **Shareable filters**: the search, category and sort live in the URL (`?q=pâtes&tag=Pates&sort=title-asc`)
+- Helpful empty state with one-click ways to widen the search
+
+### 🍽️ Recipe Pages
+- Title, photo, date and categories at the top; categories link back to the filtered list
+- **Ingredient checklist**: tick ingredients as you go (kept while the tab is open)
+- **Keep the screen on** while cooking (Screen Wake Lock API, where supported)
+- Print button
 
 ### 📝 Recipe Types
 1. 🔗 **External Links** - Link to other websites
@@ -18,23 +25,33 @@ A stunning static website to store and showcase cooking recipes with an incredib
 3. 📄 **Markdown Pages** - Stored in dedicated sub-folders for easy organization
 
 ### 🎨 Design
-- Soft colors inspired by [CuisineAZ](https://www.cuisineaz.com/)
-- Light grey background for the main area
-- Black header and footer background
-- Beautiful typography with proper hierarchy
+The palette comes from the kitchen table: blue-grey stoneware plates on a pale linen cloth, with a touch of chicon (Belgian endive) yellow.
+
+| Token | Hex | Use |
+| --- | --- | --- |
+| `--nappe` | `#EEF1EC` | Page background (tablecloth) |
+| `--gres` | `#34505B` | Headings, links, buttons (stoneware) |
+| `--encre` | `#1D2A2F` | Body text |
+| `--sourdine` | `#55666B` | Secondary text (dates, descriptions) |
+| `--chicon` | `#E8C547` | Selected category, ticked ingredients only |
+
+- **Type**: [Alegreya](https://www.huertatipografica.com/en/fonts/alegreya-ht-pro) (serif, titles and recipe text) and Alegreya Sans (labels, buttons), self-hosted with Fontsource
+- The large square photos are the one bold element; everything else stays quiet
+- All tokens and components live in `src/styles.css`
+- Accessibility: WCAG AA contrast, visible keyboard focus, skip link, reduced motion and Windows high-contrast support
 
 ### 🖨️ Print-Friendly
-All markdown recipe pages are optimized for printing with:
-- Hidden navigation elements
-- Clean, readable layout
-- Proper page breaks
-- No shadows or decorative elements
+Recipe pages print without navigation or buttons, with unticked boxes in front of each ingredient (handy as a shopping list) and the address of every link.
+
+### 📱 Offline
+`public/sw.js` keeps the pages you have visited available offline, and `public/manifest.json` lets the site be added to a phone's home screen.
 
 ## 🛠️ Tech Stack
 
-- ⚡ **Vite 7+** - Lightning-fast builds and minification
-- 🎨 **TailwindCSS 4.1+** - Beautiful, responsive styling via PostCSS/Vite plugin
-- 📝 **Marked 17+** - Markdown rendering
+- ⚡ **Vite 8** - Builds and minification
+- 🎨 **Tailwind CSS 4** - Via the Vite plugin, with custom components in `src/styles.css`
+- 📝 **Marked 18** - Markdown rendering
+- 🖼️ **sharp** - Creates 480/960/1440 px WebP copies of every recipe photo (`pnpm run build:images`)
 - 📦 **GitHub Actions** - Automated deployment
 - 🌐 **GitHub Pages** - Free hosting with relative paths
 
@@ -51,10 +68,18 @@ All markdown recipe pages are optimized for printing with:
 │   └── salade-grecque/
 │       └── recipe.md      # Greek salad recipe
 ├── src/                   # Source code
-│   ├── styles.css         # Tailwind + custom styles
+│   ├── styles.css         # Tailwind + design tokens and components
 │   ├── main.js            # Home page logic
+│   ├── recipe-page.js     # Ingredient checklist, print, keep screen on
 │   ├── markdown-renderer.js   # Centralized markdown rendering
 │   └── recipe-loader.js       # Recipe page loader
+├── public/                # favicon.svg, manifest.json, sw.js (copied as is)
+├── _layouts/recipe.html   # Template of the static recipe pages
+├── recipe-pages.js        # Builds the static recipe pages (shared by prod and dev)
+├── build-recipes.js       # Static recipe pages for dist/
+├── build-recipes-dev.js   # Static recipe pages for the dev server
+├── build-images.js        # Responsive WebP copies of the photos
+├── image-variants.js      # Naming of those copies (photo.w480.webp, ...)
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml     # GitHub Actions deployment
@@ -65,8 +90,8 @@ All markdown recipe pages are optimized for printing with:
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
-- npm or yarn
+- Node.js 22.13 or newer (the deployment uses Node.js 26)
+- [pnpm](https://pnpm.io/installation) 11: `npm install -g pnpm`. pnpm then uses the exact version set in `package.json` (`packageManager`)
 
 ### Installation
 
@@ -78,12 +103,12 @@ cd les-recettes-de-lionel-et-ophelie
 
 2. Install dependencies:
 ```bash
-npm install
+pnpm install
 ```
 
 3. Start the development server:
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 4. Open http://localhost:5173 in your browser
@@ -91,7 +116,7 @@ npm run dev
 ### Build for Production
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 The built files will be in the `dist/` directory.
@@ -99,14 +124,14 @@ The built files will be in the `dist/` directory.
 ### Preview Production Build
 
 ```bash
-npm run preview
+pnpm run preview
 ```
 
 ## 📖 Adding New Recipes
 
 ### 1. Markdown Recipes
 
-Create a new folder in `/recipes/` with the recipe name, add a `recipe.md` file:
+Create a new folder in `/recipes/` with the recipe name, add a `recipe.md` file and the photo. Start the markdown with the photo (`![Recipe name](./recipe-name.webp)`) to show it at the top of the page. Name the ingredients section `## Ingrédients` so its list becomes a checklist:
 
 ```markdown
 ---
@@ -134,7 +159,7 @@ Then add to `recipes.json`:
   "type": "markdown",
   "date": "2025/12/31",
   "path": "recipes/index.html?md=recipe-name/recipe.md",
-  "image": "https://placehold.co/400x300/HEX/TEXT?text=Recipe+Name",
+  "image": "./recipes/recipe-name/recipe-name.webp",
   "tags": ["tag1", "tag2"],
   "description": "Brief description"
 }
@@ -195,8 +220,9 @@ This project is configured for automatic deployment to GitHub Pages via GitHub A
 **DO NOT use cdn.tailwindcss.com in production!** We use the Vite plugin for production-ready CSS with proper purging.
 
 ### ⚠️ Image Considerations
-- External placeholder services may be blocked by some networks
-- For production, consider hosting images locally in `/public/images/`
+- Keep recipe photos in their recipe folder; `pnpm run build:images` creates the smaller copies the pages use
+- Do not name your own files `*.w480.webp`, `*.w960.webp` or `*.w1440.webp`: those names are reserved for the generated copies
+- If a photo cannot be loaded, the home page shows an empty plate instead
 - YouTube thumbnails are generally reliable
 
 ## 📜 Troubleshooting
@@ -205,7 +231,7 @@ This project is configured for automatic deployment to GitHub Pages via GitHub A
 1. Check browser console for 404 or CORS errors
 2. Test image URL directly in browser
 3. Check if ad blockers are blocking external images
-4. Solution: Use local images in `/public/images/` folder
+4. Solution: Store the photo in the recipe folder (`recipes/<name>/`)
 
 ### Markdown Not Rendering
 1. Verify the `path` field uses the correct format: `recipes/index.html?md=recipe-name/recipe.md`

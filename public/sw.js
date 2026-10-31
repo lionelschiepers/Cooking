@@ -1,105 +1,83 @@
 /**
- * Service Worker for Les Recettes de Lionel & Ophélie
- * Provides caching for offline support and improved performance
+ * Service worker: keeps the recipes readable offline.
+ * Pages and recipes.json: network first, cached copy when offline.
+ * Other files (styles, scripts, photos): cached copy first, refreshed in the background.
  */
 
-const CACHE_NAME = 'recipes-cache-v1';
-const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/recipes.json',
-  '/src/styles.css',
-  '/src/main.js',
-  '/favicon.svg'
-];
+const CACHE_NAME = 'recettes-v2';
+const PRECACHE = ['./', './recipes.json', './favicon.svg', './manifest.json'];
 
-// Install event - cache static assets
 self.addEventListener('install', (event) => {
-  console.log('[SW] Install event');
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('[SW] Caching static assets');
-        return cache.addAll(STATIC_ASSETS);
-      })
-      .catch((error) => {
-        console.error('[SW] Cache addAll failed:', error);
-      })
+    caches
+      .open(CACHE_NAME)
+      .then((cache) => cache.addAll(PRECACHE))
+      .catch((error) => console.warn('[SW] Précache incomplet :', error)),
   );
   self.skipWaiting();
 });
 
-// Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
-  console.log('[SW] Activate event');
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => {
-            console.log('[SW] Deleting old cache:', name);
-            return caches.delete(name);
-          })
-      );
-    })
+    caches
+      .keys()
+      .then((names) =>
+        Promise.all(
+          names
+            .filter((name) => name !== CACHE_NAME)
+            .map((name) => caches.delete(name)),
+        ),
+      )
+      .then(() => self.clients.claim()),
   );
-  self.clients.claim();
 });
 
-// Fetch event - serve from cache or network
-self.addEventListener('fetch', (event) => {
-  // Skip cross-origin requests we don't control
-  if (!event.request.url.startsWith(self.location.origin)) {
-    return;
+async function putInCache(request, response) {
+  if (response && response.ok && response.type === 'basic') {
+    const cache = await caches.open(CACHE_NAME);
+    await cache.put(request, response.clone());
   }
+  return response;
+}
 
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      // Return cached response if found
-      if (cachedResponse) {
-        // Fetch in background to update cache (stale-while-revalidate)
-        fetch(event.request)
-          .then((networkResponse) => {
-            if (networkResponse && networkResponse.status === 200) {
-              caches.open(CACHE_NAME).then((cache) => {
-                cache.put(event.request, networkResponse.clone());
-              });
-            }
-          })
-          .catch(() => {
-            // Network fetch failed, but we have cached version
-          });
-        
-        return cachedResponse;
-      }
+async function networkFirst(event) {
+  try {
+    const response = await fetch(event.request);
+    event.waitUntil(putInCache(event.request, response.clone()));
+    return response;
+  } catch (error) {
+    const cached = await caches.match(event.request, { ignoreSearch: true });
+    if (cached) return cached;
+    if (event.request.mode === 'navigate') {
+      const home = await caches.match(new URL('./', self.registration.scope));
+      if (home) return home;
+    }
+    throw error;
+  }
+}
 
-      // Otherwise fetch from network
-      return fetch(event.request)
-        .then((networkResponse) => {
-          // Don't cache non-successful responses
-          if (!networkResponse || networkResponse.status !== 200) {
-            return networkResponse;
-          }
-
-          // Clone the response
-          const responseToCache = networkResponse.clone();
-
-          // Add to cache
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
-
-          return networkResponse;
-        })
-        .catch((error) => {
-          console.error('[SW] Fetch failed:', error);
-          // Return offline fallback if available
-          if (event.request.mode === 'navigate') {
-            return caches.match('/index.html');
-          }
-          throw error;
-        });
-    })
+async function staleWhileRevalidate(event) {
+  const cached = await caches.match(event.request);
+  const refresh = fetch(event.request).then((response) =>
+    putInCache(event.request, response.clone()).then(() => response),
   );
+  if (cached) {
+    event.waitUntil(refresh.catch(() => undefined));
+    return cached;
+  }
+  return refresh;
+}
+
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  if (request.method !== 'GET') return;
+
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+
+  if (request.mode === 'navigate' || url.pathname.endsWith('.json')) {
+    event.respondWith(networkFirst(event));
+  } else {
+    event.respondWith(staleWhileRevalidate(event));
+  }
 });

@@ -1,518 +1,438 @@
 /**
- * Main Module
- * Handles the home page functionality including recipe grid, search, and filtering
+ * Home page: recipe list with search, category filter and sorting.
+ * The filter state is mirrored in the URL (?q=…&tag=…&sort=…) so a filtered
+ * list can be bookmarked or shared.
  */
 
-// State management
+const DEFAULT_SORT = 'date-desc';
+const SORT_OPTIONS = new Set([
+  'date-desc',
+  'date-asc',
+  'title-asc',
+  'title-desc',
+]);
+const EAGER_IMAGES = 4;
+const CARD_SIZES =
+  '(min-width: 80rem) 17rem, (min-width: 64rem) 22vw, (min-width: 40rem) 30vw, 46vw';
+const EMPTY_PLATE =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23C9D2CE'/%3E%3Ccircle cx='50' cy='50' r='31' fill='none' stroke='%237A8A86' stroke-width='1.5'/%3E%3C/svg%3E";
+
+const ICONS = {
+  play: '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path fill="currentColor" d="M8 6.5v7l6-3.5z"/></svg>',
+  external:
+    '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M11 4h5v5M16 4l-7 7M14 11.5V16H4V6h4.5"/></svg>',
+};
+
+const KINDS = {
+  youtube: {
+    label: 'Vidéo YouTube',
+    srText: ' (vidéo YouTube, nouvel onglet)',
+    icon: ICONS.play,
+  },
+  external: {
+    label: 'Site externe',
+    srText: ' (site externe, nouvel onglet)',
+    icon: ICONS.external,
+  },
+};
+
+const dateFormatter = new Intl.DateTimeFormat('fr-BE', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+
 let allRecipes = [];
-let filteredRecipes = [];
-let currentSort = 'date-desc';
+let allTags = [];
+let loaded = false;
+const els = {};
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+/** Only allow http(s) and relative URLs in links and images. */
+function safeUrl(url) {
+  const value = String(url ?? '').trim();
+  const scheme = /^([a-z][a-z\d+.-]*):/i.exec(value);
+  if (scheme && !['http', 'https'].includes(scheme[1].toLowerCase())) {
+    return '#';
+  }
+  return value;
+}
+
+function normalize(value) {
+  return String(value ?? '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replaceAll(/[\u0300-\u036f]/g, '')
+    .trim();
+}
+
+/** Parses the "2026/02/12" dates used in recipes.json. */
+function parseDate(value) {
+  const match = /^(\d{4})[/-](\d{1,2})[/-](\d{1,2})$/.exec(value ?? '');
+  if (!match) return null;
+  const [, year, month, day] = match.map(Number);
+  return new Date(Date.UTC(year, month - 1, day));
+}
+
+function prepareRecipe(recipe) {
+  const date = parseDate(recipe.date);
+  const tags = Array.isArray(recipe.tags) ? recipe.tags : [];
+  return {
+    ...recipe,
+    tags,
+    time: date ? date.getTime() : 0,
+    isoDate: date ? date.toISOString().slice(0, 10) : '',
+    displayDate: date ? dateFormatter.format(date) : '',
+    searchText: normalize(
+      [recipe.title, recipe.description, ...tags].join(' '),
+    ),
+  };
+}
+
+function recipeLink(recipe) {
+  if (recipe.type === 'youtube' || recipe.type === 'external') {
+    return { href: recipe.url, external: true };
+  }
+  const legacy = /\?md=([^/]+)/.exec(recipe.path ?? '');
+  if (legacy) {
+    return { href: `./recipes/${legacy[1]}/`, external: false };
+  }
+  return {
+    href: `./${String(recipe.path ?? '').replace(/^\.?\//, '')}`,
+    external: false,
+  };
+}
+
+function createTagButton(tag, activeTag) {
+  const pressed = tag === activeTag;
+  return `<li><button type="button" class="tag" data-tag="${escapeHtml(tag)}" aria-pressed="${pressed}"><span class="sr-only">Filtrer par </span>${escapeHtml(tag)}</button></li>`;
+}
 
 /**
- * Fetches recipes from the recipes.json file
- * @returns {Promise<Array>} Array of recipe objects
+ * build-images.js writes "<photo>.w480.webp" (and 960, 1440) next to every
+ * local photo. If a copy is missing, handleImageError falls back to src.
  */
-async function fetchRecipes() {
+function localSrcset(url) {
+  if (!/^\.\/recipes\/.+\.(webp|jpe?g|png|avif)$/i.test(url)) return '';
+  return [480, 960, 1440]
+    .map((width) => `${url.replace(/\.[a-z]+$/i, `.w${width}.webp`)} ${width}w`)
+    .join(', ');
+}
+
+function createRecipeCard(recipe, index, activeTag) {
+  const { href, external } = recipeLink(recipe);
+  const kind = KINDS[recipe.type];
+  const showDescription =
+    recipe.description &&
+    normalize(recipe.description) !== normalize(recipe.title);
+
+  const image = safeUrl(recipe.image);
+  const srcset = localSrcset(image);
+  const imageAttrs = [
+    `src="${escapeHtml(image)}"`,
+    srcset ? `srcset="${escapeHtml(srcset)}" sizes="${CARD_SIZES}"` : '',
+    'alt=""',
+    `loading="${index < EAGER_IMAGES ? 'eager' : 'lazy'}"`,
+    'decoding="async"',
+    index === 0 ? 'fetchpriority="high"' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const linkAttrs = external
+    ? ' target="_blank" rel="noopener noreferrer"'
+    : '';
+
+  const tags = recipe.tags.length
+    ? `<ul class="tag-list" aria-label="Catégories">${recipe.tags
+        .map((tag) => createTagButton(tag, activeTag))
+        .join('')}</ul>`
+    : '';
+
+  return `
+    <li class="plate-card">
+      <div class="plate${recipe.type === 'youtube' ? ' plate--video' : ''}">
+        <img ${imageAttrs}>
+      </div>
+      <h2 class="plate-title">
+        <a class="plate-link" href="${escapeHtml(safeUrl(href))}"${linkAttrs}>${escapeHtml(recipe.title)}${kind ? `<span class="sr-only">${kind.srText}</span>` : ''}</a>
+      </h2>
+      ${kind ? `<p class="plate-kind" aria-hidden="true">${kind.icon}${kind.label}</p>` : ''}
+      ${showDescription ? `<p class="plate-desc">${escapeHtml(recipe.description)}</p>` : ''}
+      <div class="plate-meta">
+        ${recipe.isoDate ? `<time class="plate-date" datetime="${recipe.isoDate}">${recipe.displayDate}</time>` : ''}
+        ${tags}
+      </div>
+    </li>`;
+}
+
+function readControls() {
+  return {
+    query: els.search.value.trim(),
+    tag: els.tag.value,
+    sort: SORT_OPTIONS.has(els.sort.value) ? els.sort.value : DEFAULT_SORT,
+  };
+}
+
+function filterRecipes(query, tag) {
+  const terms = normalize(query)
+    .split(/[\s,]+/)
+    .filter(Boolean);
+  return allRecipes.filter(
+    (recipe) =>
+      (!tag || recipe.tags.includes(tag)) &&
+      terms.every((term) => recipe.searchText.includes(term)),
+  );
+}
+
+function sortRecipes(recipes, sort) {
+  const byTitle = (a, b) =>
+    a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' });
+  const sorted = [...recipes];
+  switch (sort) {
+    case 'date-asc':
+      return sorted.sort((a, b) => a.time - b.time || byTitle(a, b));
+    case 'title-asc':
+      return sorted.sort(byTitle);
+    case 'title-desc':
+      return sorted.sort((a, b) => byTitle(b, a));
+    default:
+      return sorted.sort((a, b) => b.time - a.time);
+  }
+}
+
+function countLabel(count) {
+  return `${count} recette${count > 1 ? 's' : ''}`;
+}
+
+/** The most used categories, offered as a way out of an empty search. */
+function popularTags(limit) {
+  const counts = new Map();
+  for (const recipe of allRecipes) {
+    for (const tag of recipe.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'fr'))
+    .slice(0, limit)
+    .map(([tag]) => tag);
+}
+
+function renderNoResults(query, tag) {
+  const quotedQuery = `«&#8239;${escapeHtml(query)}&#8239;»`;
+  let message = 'Aucune recette pour le moment.';
+  if (query && tag) {
+    message = `Aucune recette de la catégorie ${escapeHtml(tag)} ne correspond à ${quotedQuery}.`;
+  } else if (query) {
+    message = `Aucune recette ne correspond à ${quotedQuery}. Vérifiez l’orthographe ou cherchez un ingrédient.`;
+  } else if (tag) {
+    message = `Aucune recette dans la catégorie ${escapeHtml(tag)}.`;
+  }
+
+  const widenButton =
+    query && tag
+      ? `<button type="button" class="button-quiet" data-action="all-categories">Chercher dans toutes les catégories</button>`
+      : '';
+
+  const suggestions =
+    query && !tag
+      ? `<p>Ou parcourez une catégorie&#8239;:</p>
+         <ul class="tag-list" aria-label="Catégories">${popularTags(5)
+           .map((t) => createTagButton(t, ''))
+           .join('')}</ul>`
+      : '';
+
+  els.grid.innerHTML = `
+    <div class="notice">
+      <h2>Aucune recette trouvée</h2>
+      <p>${message}</p>
+      <div class="notice-actions">
+        <button type="button" class="button" data-action="reset">Voir toutes les recettes</button>
+        ${widenButton}
+      </div>
+      ${suggestions}
+    </div>`;
+}
+
+function syncUrl({ query, tag, sort }) {
+  const params = new URLSearchParams();
+  if (query) params.set('q', query);
+  if (tag) params.set('tag', tag);
+  if (sort !== DEFAULT_SORT) params.set('sort', sort);
+  const search = params.toString();
+  history.replaceState(
+    history.state,
+    '',
+    `${location.pathname}${search ? `?${search}` : ''}${location.hash}`,
+  );
+}
+
+function render() {
+  if (!loaded) return;
+  const controls = readControls();
+  const results = sortRecipes(
+    filterRecipes(controls.query, controls.tag),
+    controls.sort,
+  );
+
+  els.count.textContent =
+    results.length === allRecipes.length
+      ? countLabel(allRecipes.length)
+      : `${countLabel(results.length)} sur ${allRecipes.length}`;
+
+  if (results.length === 0) {
+    renderNoResults(controls.query, controls.tag);
+  } else {
+    els.grid.innerHTML = `<ul class="plates">${results
+      .map((recipe, index) => createRecipeCard(recipe, index, controls.tag))
+      .join('')}</ul>`;
+  }
+
+  syncUrl(controls);
+}
+
+function showLoading() {
+  els.count.textContent = 'Chargement des recettes…';
+  const placeholder =
+    '<li class="plate-card"><div class="plate skeleton"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line"></div></li>';
+  els.grid.innerHTML = `<ul class="plates" aria-hidden="true">${placeholder.repeat(8)}</ul>`;
+}
+
+function showError() {
+  els.count.textContent = '';
+  els.grid.innerHTML = `
+    <div class="notice" role="alert">
+      <h2>Impossible de charger les recettes</h2>
+      <p>Vérifiez votre connexion internet puis réessayez.</p>
+      <div class="notice-actions">
+        <button type="button" class="button" data-action="retry">Réessayer</button>
+      </div>
+    </div>`;
+}
+
+function populateTagFilter() {
+  const tags = new Set(allRecipes.flatMap((recipe) => recipe.tags));
+  allTags = [...tags].sort((a, b) => a.localeCompare(b, 'fr'));
+  els.tag.length = 1;
+  for (const tag of allTags) {
+    els.tag.add(new Option(tag, tag));
+  }
+}
+
+function applyUrlState() {
+  const params = new URLSearchParams(location.search);
+  els.search.value = params.get('q') ?? '';
+  const tag = params.get('tag');
+  els.tag.value = tag && allTags.includes(tag) ? tag : '';
+  const sort = params.get('sort');
+  els.sort.value = SORT_OPTIONS.has(sort) ? sort : DEFAULT_SORT;
+}
+
+async function loadRecipes() {
+  showLoading();
   try {
     const response = await fetch('./recipes.json');
     if (!response.ok) {
-      throw new Error(
-        `Failed to fetch recipes: ${response.status} ${response.statusText}`,
-      );
+      throw new Error(`HTTP ${response.status}`);
     }
     const data = await response.json();
-    return data.recipes || [];
+    allRecipes = (data.recipes ?? []).map(prepareRecipe);
   } catch (error) {
-    console.error('Error fetching recipes:', error);
-    showError('Failed to load recipes. Please try again later.');
-    return [];
+    console.error('Impossible de charger recipes.json :', error);
+    showError();
+    return;
+  }
+  loaded = true;
+  populateTagFilter();
+  applyUrlState();
+  render();
+}
+
+/** Falls back to the original image, then to an empty plate. */
+function handleImageError(event) {
+  const img = event.target;
+  if (!(img instanceof HTMLImageElement)) return;
+  if (img.hasAttribute('srcset')) {
+    img.removeAttribute('srcset');
+    img.removeAttribute('sizes');
+    return;
+  }
+  if (!img.dataset.empty) {
+    img.dataset.empty = 'true';
+    img.closest('.plate')?.classList.remove('plate--video');
+    img.src = EMPTY_PLATE;
   }
 }
 
-/**
- * Creates a recipe card HTML element
- * @param {Object} recipe - The recipe object
- * @returns {string} HTML string for the recipe card
- */
-function createRecipeCard(recipe) {
-  const { id, title, type, path, url, image, tags, description, date } = recipe;
-
-  // Determine the link URL and target based on type
-  let linkUrl, linkTarget;
-  if (type === 'youtube' || type === 'external') {
-    linkUrl = url;
-    linkTarget = '_blank';
-  } else if (type === 'markdown') {
-    // Use static Jekyll page URL for markdown recipes
-    // Extract recipe name from path (e.g., "recipes/index.html?md=orzo-vert-maquereau/recipe.md")
-    const pathMatch = path.match(/\?md=([^/]+)/);
-    if (pathMatch) {
-      const recipeName = pathMatch[1];
-      linkUrl = `./recipes/${recipeName}/`;
-    } else {
-      linkUrl = path;
-    }
-    linkTarget = '_self';
-  } else {
-    linkUrl = path;
-    linkTarget = '_self';
-  }
-
-  // Create tags HTML with proper ARIA labels
-  const tagsHtml =
-    tags && tags.length > 0
-      ? tags
-          .slice(0, 3)
-          .map((tag) => `<span class="tag" role="listitem">${tag}</span>`)
-          .join('')
-      : '';
-
-  // Determine external link attributes
-  const externalAttrs =
-    linkTarget === '_blank' ? 'rel="noopener noreferrer"' : '';
-
-  let actionLabel = 'Voir la recette';
-  if (type === 'youtube') {
-    actionLabel = 'Ouvrir la vidéo YouTube';
-  } else if (type === 'external') {
-    actionLabel = 'Ouvrir la recette externe';
-  }
-
-  return `
-    <article class="recipe-card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer group"
-             role="article"
-             aria-labelledby="recipe-title-${id}">
-      <a href="${linkUrl}"
-         target="${linkTarget}"
-         ${externalAttrs}
-         class="block no-underline text-inherit focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-inset"
-         aria-label="${title} - ${actionLabel}">
-        <div class="relative h-48 overflow-hidden">
-          <img src="${image}"
-               alt=""
-               width="400"
-               height="300"
-               loading="lazy"
-               decoding="async"
-               class="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
-               onerror="this.src='https://placehold.co/400x300/8B4513/white?text=No+Image'">
-          <div class="absolute top-2 right-2">
-            ${getTypeIcon(type)}
-          </div>
-        </div>
-        <div class="p-4">
-          <h3 id="recipe-title-${id}" class="text-lg font-semibold text-gray-900 mb-2 line-clamp-1 group-hover:text-amber-700 transition-colors">${title}</h3>
-          <p class="text-sm text-gray-600 mb-3 line-clamp-2">${description || ''}</p>
-          <div class="flex flex-wrap gap-1 mb-2" role="list" aria-label="Tags de la recette">
-            ${tagsHtml}
-          </div>
-          ${date ? `<p class="text-xs text-gray-500" aria-label="Date de publication: ${date}">${date}</p>` : ''}
-        </div>
-      </a>
-    </article>
-  `;
-}
-
-/**
- * Gets an icon HTML for the recipe type
- * @param {string} type - The recipe type
- * @returns {string} HTML string for the icon
- */
-function getTypeIcon(type) {
-  const icons = {
-    youtube:
-      '<span class="bg-red-600 text-white px-2 py-1 rounded text-xs font-medium">YouTube</span>',
-    external:
-      '<span class="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">Web</span>',
-    markdown:
-      '<span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-medium">Recette</span>',
-  };
-  return icons[type] || '';
-}
-
-/**
- * Renders the "no results" state
- * @param {HTMLElement} gridContainer - The grid container element
- * @param {HTMLElement} resultsCount - The results count element
- * @param {string} searchValue - The current search value
- * @param {string} tagValue - The current tag filter value
- */
-function renderNoResults(gridContainer, resultsCount, searchValue, tagValue) {
-  let suggestionHtml = '';
-  if (searchValue || tagValue) {
-    const allTags = getUniqueTags();
-    const randomTags = [...allTags].sort(() => 0.5 - Math.random()).slice(0, 3);
-    suggestionHtml = `
-        <div class="mt-6">
-          <p class="text-gray-600 mb-3">Essayez avec :</p>
-          <div class="flex flex-wrap justify-center gap-2">
-            ${randomTags
-              .map(
-                (tag) => `
-              <button onclick="clearFiltersAndSelectTag('${tag}')" 
-                      class="px-4 py-2 bg-amber-100 text-amber-800 rounded-full text-sm font-medium hover:bg-amber-200 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">
-                ${tag}
-              </button>
-            `,
-              )
-              .join('')}
-            <button onclick="clearAllFilters()" 
-                    class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-              Voir toutes les recettes
-            </button>
-          </div>
-        </div>
-      `;
-  }
-
-  gridContainer.innerHTML = `
-      <div class="col-span-full flex flex-col items-center justify-center py-16 px-4" role="status" aria-live="polite">
-        <div class="text-6xl mb-4">🔍</div>
-        <h3 class="text-xl font-semibold text-gray-800 mb-2">Aucune recette trouvée</h3>
-        <p class="text-gray-600 text-center max-w-md mb-4">
-          ${
-            searchValue || tagValue
-              ? 'Aucune recette ne correspond à vos critères de recherche.'
-              : "Il n'y a pas encore de recettes disponibles."
-          }
-        </p>
-        ${suggestionHtml}
-      </div>
-    `;
-  if (resultsCount) {
-    resultsCount.textContent = '0 recette trouvée';
-  }
-}
-
-/**
- * Renders the recipe grid
- * @param {Array} recipes - Array of recipe objects to render
- */
-function renderRecipeGrid(recipes) {
-  const gridContainer = document.getElementById('recipe-grid');
-  const resultsCount = document.getElementById('results-count');
-
-  if (!gridContainer) return;
-
-  if (recipes.length === 0) {
-    const searchInput = document.getElementById('search-input');
-    const tagSelect = document.getElementById('tag-filter');
-    const searchValue = searchInput ? searchInput.value.trim() : '';
-    const tagValue = tagSelect ? tagSelect.value : '';
-
-    renderNoResults(gridContainer, resultsCount, searchValue, tagValue);
+function handleGridClick(event) {
+  const tagButton = event.target.closest('button[data-tag]');
+  if (tagButton) {
+    const tag = tagButton.dataset.tag;
+    els.tag.value = els.tag.value === tag ? '' : tag;
+    render();
+    els.tag.focus();
     return;
   }
 
-  const recipesHtml = recipes
-    .map((recipe) => createRecipeCard(recipe))
-    .join('');
-  gridContainer.innerHTML = recipesHtml;
-
-  if (resultsCount) {
-    const countText = `${recipes.length} recette${recipes.length > 1 ? 's' : ''} trouvée${recipes.length > 1 ? 's' : ''}`;
-    resultsCount.textContent = countText;
-    resultsCount.setAttribute('aria-live', 'polite');
+  const action = event.target.closest('button[data-action]')?.dataset.action;
+  if (action === 'reset') {
+    els.search.value = '';
+    els.tag.value = '';
+    render();
+    els.search.focus();
+  } else if (action === 'all-categories') {
+    els.tag.value = '';
+    render();
+    els.tag.focus();
+  } else if (action === 'retry') {
+    loadRecipes();
   }
 }
 
-/**
- * Clears all filters and selects a specific tag
- * @param {string} tag - The tag to select
- */
-function clearFiltersAndSelectTag(tag) {
-  const searchInput = document.getElementById('search-input');
-  const tagSelect = document.getElementById('tag-filter');
-
-  if (searchInput) searchInput.value = '';
-  if (tagSelect) tagSelect.value = tag;
-
-  handleSearch();
-}
-
-/**
- * Clears all filters and shows all recipes
- */
-function clearAllFilters() {
-  const searchInput = document.getElementById('search-input');
-  const tagSelect = document.getElementById('tag-filter');
-
-  if (searchInput) searchInput.value = '';
-  if (tagSelect) tagSelect.value = '';
-
-  handleSearch();
-}
-
-/**
- * Shows an error message
- * @param {string} message - The error message to display
- */
-function showError(message) {
-  const gridContainer = document.getElementById('recipe-grid');
-  const resultsCount = document.getElementById('results-count');
-  if (gridContainer) {
-    gridContainer.innerHTML = `
-      <div class="col-span-full flex flex-col items-center justify-center py-16 px-4" role="alert" aria-live="assertive">
-        <div class="text-6xl mb-4">⚠️</div>
-        <div class="error-message">
-          <p class="text-red-700 font-medium">${message}</p>
-        </div>
-        <button onclick="location.reload()" 
-                class="mt-4 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-          Réessayer
-        </button>
-      </div>
-    `;
-  }
-  if (resultsCount) {
-    resultsCount.textContent = 'Erreur de chargement';
-  }
-}
-
-/**
- * Creates a skeleton card HTML
- * @returns {string} HTML string for skeleton card
- */
-function createSkeletonCard() {
-  return `
-    <article class="recipe-card skeleton-card bg-white rounded-lg shadow-md overflow-hidden" aria-hidden="true">
-      <div class="skeleton-image h-48 bg-gray-200 animate-pulse"></div>
-      <div class="p-4 space-y-3">
-        <div class="skeleton-title h-6 bg-gray-200 rounded animate-pulse w-3/4"></div>
-        <div class="skeleton-description h-4 bg-gray-200 rounded animate-pulse w-full"></div>
-        <div class="skeleton-description h-4 bg-gray-200 rounded animate-pulse w-5/6"></div>
-        <div class="flex gap-1 mt-3">
-          <div class="skeleton-tag h-5 bg-gray-200 rounded-full w-16 animate-pulse"></div>
-          <div class="skeleton-tag h-5 bg-gray-200 rounded-full w-20 animate-pulse"></div>
-        </div>
-      </div>
-    </article>
-  `;
-}
-
-/**
- * Shows a loading state with skeleton cards
- */
-function showLoading() {
-  const gridContainer = document.getElementById('recipe-grid');
-  const resultsCount = document.getElementById('results-count');
-  if (gridContainer) {
-    // Show 8 skeleton cards to fill the grid
-    const skeletonCards = new Array(8)
-      .fill(null)
-      .map(() => createSkeletonCard())
-      .join('');
-    gridContainer.innerHTML = skeletonCards;
-  }
-  if (resultsCount) {
-    resultsCount.textContent = 'Chargement des recettes...';
-    resultsCount.setAttribute('aria-live', 'polite');
-  }
-}
-
-/**
- * Normalizes a string by removing accents/diacritics
- * @param {string} str - The string to normalize
- * @returns {string} The normalized string without accents
- */
-function normalizeString(str) {
-  return str.normalize('NFD').replaceAll(/[\u0300-\u036f]/g, '');
-}
-
-/**
- * Filters recipes based on search query and selected tags
- * @param {string} searchQuery - The search query
- * @param {string} selectedTag - The selected tag
- * @returns {Array} Filtered array of recipes
- */
-function filterRecipes(searchQuery, selectedTag) {
-  const normalizedQuery = searchQuery
-    ? normalizeString(searchQuery.toLowerCase())
-    : '';
-
-  return allRecipes.filter((recipe) => {
-    // Text search (accent-insensitive)
-    const matchesSearch =
-      !searchQuery ||
-      normalizeString(recipe.title.toLowerCase()).includes(normalizedQuery) ||
-      normalizeString(recipe.description?.toLowerCase() ?? '').includes(
-        normalizedQuery,
-      ) ||
-      recipe.tags?.some((tag) =>
-        normalizeString(tag.toLowerCase()).includes(normalizedQuery),
-      );
-
-    // Tag filter
-    const matchesTag = !selectedTag || recipe.tags?.includes(selectedTag);
-
-    return matchesSearch && matchesTag;
-  });
-}
-
-/**
- * Sorts recipes based on the specified sort option
- * @param {Array} recipes - Array of recipe objects to sort
- * @param {string} sortOption - The sort option (date-desc, date-asc, title-asc, title-desc)
- * @returns {Array} Sorted array of recipes
- */
-function sortRecipes(recipes, sortOption) {
-  const sorted = [...recipes];
-
-  switch (sortOption) {
-    case 'date-desc':
-      return sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
-    case 'date-asc':
-      return sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
-    case 'title-asc':
-      return sorted.sort((a, b) =>
-        a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' }),
-      );
-    case 'title-desc':
-      return sorted.sort((a, b) =>
-        b.title.localeCompare(a.title, 'fr', { sensitivity: 'base' }),
-      );
-    default:
-      return sorted;
-  }
-}
-
-/**
- * Gets unique tags from all recipes
- * @returns {Array} Array of unique tags
- */
-function getUniqueTags() {
-  const tagsSet = new Set();
-  allRecipes.forEach((recipe) => {
-    if (recipe.tags) {
-      recipe.tags.forEach((tag) => tagsSet.add(tag));
-    }
-  });
-  return Array.from(tagsSet).sort((a, b) => a.localeCompare(b));
-}
-
-/**
- * Populates the tag filter dropdown
- */
-function populateTagFilter() {
-  const tagSelect = document.getElementById('tag-filter');
-  if (!tagSelect) return;
-
-  const tags = getUniqueTags();
-
-  // Clear existing options except the first one
-  while (tagSelect.options.length > 1) {
-    tagSelect.remove(1);
-  }
-
-  // Add tag options
-  tags.forEach((tag) => {
-    const option = document.createElement('option');
-    option.value = tag;
-    option.textContent = tag.charAt(0).toUpperCase() + tag.slice(1);
-    tagSelect.appendChild(option);
-  });
-}
-
-/**
- * Handles search input changes and applies current sort
- */
-function handleSearch() {
-  const searchInput = document.getElementById('search-input');
-  const tagSelect = document.getElementById('tag-filter');
-  const sortSelect = document.getElementById('sort-select');
-
-  const searchQuery = searchInput ? searchInput.value.trim() : '';
-  const selectedTag = tagSelect ? tagSelect.value : '';
-  const sortOption = sortSelect ? sortSelect.value : currentSort;
-
-  const filtered = filterRecipes(searchQuery, selectedTag);
-  filteredRecipes = sortRecipes(filtered, sortOption);
-  renderRecipeGrid(filteredRecipes);
-}
-
-/**
- * Handles sort selection changes
- */
-function handleSort() {
-  const sortSelect = document.getElementById('sort-select');
-  if (!sortSelect) return;
-
-  currentSort = sortSelect.value;
-  handleSearch();
-}
-
-/**
- * Sets up event listeners
- */
-function setupEventListeners() {
-  // Search input
-  const searchInput = document.getElementById('search-input');
-  if (searchInput) {
-    searchInput.addEventListener('input', debounce(handleSearch, 300));
-  }
-
-  // Tag filter
-  const tagSelect = document.getElementById('tag-filter');
-  if (tagSelect) {
-    tagSelect.addEventListener('change', handleSearch);
-  }
-
-  // Sort dropdown
-  const sortSelect = document.getElementById('sort-select');
-  if (sortSelect) {
-    sortSelect.addEventListener('change', handleSort);
-  }
-}
-
-/**
- * Debounce function to limit how often a function can fire
- * @param {Function} func - The function to debounce
- * @param {number} wait - The delay in milliseconds
- * @returns {Function} The debounced function
- */
-function debounce(func, wait) {
+function debounce(fn, wait) {
   let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
+  return (...args) => {
     clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
+    timeout = setTimeout(() => fn(...args), wait);
   };
 }
 
-/**
- * Initializes the home page
- */
-async function init() {
-  showLoading();
-
-  // Fetch recipes
-  allRecipes = await fetchRecipes();
-
-  // Get initial sort option from dropdown
-  const sortSelect = document.getElementById('sort-select');
-  currentSort = sortSelect ? sortSelect.value : 'date-desc';
-
-  // Apply initial sort
-  filteredRecipes = sortRecipes([...allRecipes], currentSort);
-
-  // Populate tag filter
-  populateTagFilter();
-
-  // Render recipes
-  renderRecipeGrid(filteredRecipes);
-
-  // Setup event listeners
-  setupEventListeners();
+function registerServiceWorker() {
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch((error) => {
+        console.warn('Service worker non enregistré :', error);
+      });
+    });
+  }
 }
 
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  // Attach functions to globalThis object for inline onclick handlers
-  globalThis.clearFiltersAndSelectTag = clearFiltersAndSelectTag;
-  globalThis.clearAllFilters = clearAllFilters;
+function init() {
+  els.form = document.getElementById('filters');
+  els.search = document.getElementById('search-input');
+  els.tag = document.getElementById('tag-filter');
+  els.sort = document.getElementById('sort-select');
+  els.count = document.getElementById('results-count');
+  els.grid = document.getElementById('recipe-grid');
+  if (!els.form || !els.grid) return;
 
-  init();
-});
+  els.form.addEventListener('submit', (event) => event.preventDefault());
+  els.search.addEventListener('input', debounce(render, 250));
+  els.tag.addEventListener('change', render);
+  els.sort.addEventListener('change', render);
+  els.grid.addEventListener('click', handleGridClick);
+  els.grid.addEventListener('error', handleImageError, true);
+
+  loadRecipes();
+  registerServiceWorker();
+}
+
+init();

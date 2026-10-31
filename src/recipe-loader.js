@@ -1,14 +1,27 @@
 import {
-  renderMarkdownWithProse,
+  renderMarkdown,
   createLoadingSpinner,
-  createErrorMessage,
   extractFrontmatter,
+  escapeHtml,
 } from './markdown-renderer.js';
+import { initRecipePage } from './recipe-page.js';
 
 /**
  * Recipe Loader Module
- * Handles loading and displaying recipe markdown files
+ * Loads a markdown recipe given as ?md=<name>/recipe.md and renders it with
+ * the same layout as the static recipe pages.
  */
+
+const SITE_TITLE = 'Les recettes de Lionel & Ophélie';
+const LEADING_IMAGE =
+  /^!\[([^\]]*)\]\(\s*<?([^)\s>]+)>?(?:\s+"[^"]*")?\s*\)[ \t]*(?:\r?\n|$)/;
+const ABSOLUTE_URL = /^([a-z][a-z\d+.-]*:|\/|#)/i;
+
+const FACTS = [
+  ['prep_time', 'Préparation'],
+  ['cook_time', 'Cuisson'],
+  ['servings', 'Portions'],
+];
 
 /**
  * Extracts the first image URL from markdown content
@@ -17,128 +30,47 @@ import {
  */
 export function extractFirstImage(markdown) {
   if (!markdown) return null;
+  const match = /!\[([^\]]*)\]\(([^)]+)\)/.exec(markdown);
+  return match?.[2] ?? null;
+}
 
-  // Match markdown image syntax: ![alt](url)
-  const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/;
-  const match = imageRegex.exec(markdown);
-
-  if (match && match[2]) {
-    return match[2];
-  }
-
-  return null;
+function setMeta(selector, value) {
+  document.querySelector(selector)?.setAttribute('content', value);
 }
 
 /**
- * Gets the absolute URL for an image
- * @param {string} imageUrl - The image URL (can be relative or absolute)
- * @returns {string|null} The absolute image URL
+ * Updates the description and Open Graph meta tags for the loaded recipe
  */
-function getAbsoluteImageUrl(imageUrl) {
-  if (!imageUrl) return null;
-
-  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-    return imageUrl;
-  } else if (imageUrl.startsWith('./')) {
-    const relativePath = imageUrl.replace(/^\.\//, '');
-    const baseUrl = window.location.href.replace(/\/[^\/]*$/, '/');
-    return new URL(relativePath, baseUrl).href;
-  } else if (imageUrl.startsWith('/')) {
-    return new URL(imageUrl, window.location.origin).href;
-  } else {
-    return new URL(imageUrl, window.location.origin).href;
+export function updateOpenGraphMeta({ title, description, imageUrl, url }) {
+  if (title) setMeta('meta[property="og:title"]', title);
+  if (description) {
+    setMeta('meta[name="description"]', description);
+    setMeta('meta[property="og:description"]', description);
   }
+  if (imageUrl) setMeta('meta[property="og:image"]', imageUrl);
+  if (url) setMeta('meta[property="og:url"]', url);
 }
 
 /**
- * Loads an image and gets its dimensions
- * @param {string} imageUrl - The image URL
- * @returns {Promise<{width: number, height: number} | null>} The image dimensions
- */
-function getImageDimensions(imageUrl) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => {
-      resolve({ width: img.naturalWidth, height: img.naturalHeight });
-    };
-    img.onerror = () => {
-      resolve(null);
-    };
-    img.src = imageUrl;
-  });
-}
-
-/**
- * Updates Open Graph meta tags for social sharing
- * @param {Object} params - The parameters for OG tags
- * @param {string} params.title - The page title
- * @param {string} params.description - The page description
- * @param {string} params.imageUrl - The image URL
- * @param {string} params.imageBasePath - The base path for resolving relative image URLs
- * @param {string} params.url - The canonical URL
- */
-export async function updateOpenGraphMeta({
-  title,
-  description,
-  imageUrl,
-  imageBasePath,
-  url,
-}) {
-  // Update og:title
-  let ogTitle = document.querySelector('meta[property="og:title"]');
-  if (ogTitle && title) {
-    ogTitle.setAttribute('content', title);
-  }
-
-  // Update og:description
-  let ogDescription = document.querySelector('meta[property="og:description"]');
-  if (ogDescription && description) {
-    ogDescription.setAttribute('content', description);
-  }
-
-  // Update og:image and get dimensions
-  let ogImage = document.querySelector('meta[property="og:image"]');
-  let ogImageWidth = document.querySelector('meta[property="og:image:width"]');
-  let ogImageHeight = document.querySelector(
-    'meta[property="og:image:height"]',
-  );
-
-  if (ogImage && imageUrl) {
-    const absoluteImageUrl = getAbsoluteImageUrl(imageUrl);
-    ogImage.setAttribute('content', absoluteImageUrl);
-
-    // Load image to get dimensions
-    try {
-      const dimensions = await getImageDimensions(absoluteImageUrl);
-      if (dimensions) {
-        if (ogImageWidth) {
-          ogImageWidth.setAttribute('content', dimensions.width.toString());
-        }
-        if (ogImageHeight) {
-          ogImageHeight.setAttribute('content', dimensions.height.toString());
-        }
-      }
-    } catch (error) {
-      console.error('Failed to get image dimensions:', error);
-    }
-  }
-
-  // Update og:url
-  let ogUrl = document.querySelector('meta[property="og:url"]');
-  if (ogUrl && url) {
-    ogUrl.setAttribute('content', url);
-  }
-}
-
-/**
- * Gets the recipe path from the URL
- * Supports new format (?md=recipename/recipe.md)
+ * Gets the recipe path from the URL (?md=recipename/recipe.md)
  * @returns {string|null} The recipe path or null if not found
  */
 export function getRecipeFromUrl() {
-  const urlParams = new URLSearchParams(globalThis.location.search);
-  const recipePath = urlParams.get('md');
-  return recipePath ? decodeURIComponent(recipePath) : null;
+  const recipePath = new URLSearchParams(globalThis.location.search).get('md');
+  return recipePath || null;
+}
+
+function cleanRecipePath(recipePath) {
+  const cleanPath = String(recipePath ?? '').replaceAll(
+    /[^a-zA-Z0-9-_./]/g,
+    '',
+  );
+  if (!cleanPath.endsWith('/recipe.md') || cleanPath.includes('..')) {
+    throw new Error(
+      'L’adresse de la recette n’est pas valide. Elle doit se terminer par nom-de-la-recette/recipe.md.',
+    );
+  }
+  return cleanPath;
 }
 
 /**
@@ -147,121 +79,108 @@ export function getRecipeFromUrl() {
  * @returns {Promise<string>} The markdown content
  */
 export async function loadRecipeFile(recipePath) {
-  if (!recipePath) {
-    throw new Error('No recipe file specified');
-  }
+  const cleanPath = cleanRecipePath(recipePath);
+  const recipeName = cleanPath.replace(/\/recipe\.md$/, '');
 
-  // Clean the path to prevent directory traversal but allow forward slashes
-  const cleanPath = recipePath.replaceAll(/[^a-zA-Z0-9-_./]/g, '');
-
-  if (!cleanPath.endsWith('/recipe.md')) {
-    throw new Error('Invalid file path. Expected format: recipename/recipe.md');
-  }
-
-  // Extract recipe name from path (e.g., "tiramisu/recipe.md" -> "tiramisu")
-  const recipeName = cleanPath.replaceAll('/recipe.md', '');
-
+  let response;
   try {
-    const response = await fetch(cleanPath);
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error(`Recipe "${recipeName}" not found`);
-      }
-      throw new Error(
-        `Failed to load recipe: ${response.status} ${response.statusText}`,
-      );
-    }
-
-    const content = await response.text();
-    return content;
-  } catch (error) {
-    console.error('Error loading recipe:', error);
-    throw error;
+    response = await fetch(cleanPath);
+  } catch {
+    throw new Error(
+      'Impossible de charger la recette. Vérifiez votre connexion internet puis réessayez.',
+    );
   }
+
+  const isHtml = response.headers.get('content-type')?.includes('text/html');
+  if (response.status === 404 || (response.ok && isHtml)) {
+    throw new Error(`La recette « ${recipeName} » est introuvable.`);
+  }
+  if (!response.ok) {
+    throw new Error(
+      `Impossible de charger la recette (erreur ${response.status}). Réessayez dans quelques minutes.`,
+    );
+  }
+  return response.text();
+}
+
+function titleFromPath(recipePath) {
+  const name =
+    recipePath
+      .replace(/\/recipe\.md$/, '')
+      .split('/')
+      .pop() ?? '';
+  const words = name.replaceAll('-', ' ').trim();
+  return words ? words[0].toUpperCase() + words.slice(1) : 'Recette';
+}
+
+function factsHtml(metadata) {
+  const facts = FACTS.filter(([key]) => metadata[key]);
+  if (!facts.length) return '';
+  return `<dl class="recipe-facts">${facts
+    .map(
+      ([key, label]) =>
+        `<div><dt>${label}</dt><dd>${escapeHtml(metadata[key])}</dd></div>`,
+    )
+    .join('')}</dl>`;
 }
 
 /**
  * Renders a recipe to a container element
  * @param {string} markdown - The markdown content
  * @param {HTMLElement} container - The container element to render into
+ * @param {string} [recipePath] - The ?md= path, used to resolve relative images
  */
-export async function renderRecipeToContainer(markdown, container) {
+export async function renderRecipeToContainer(
+  markdown,
+  container,
+  recipePath = getRecipeFromUrl() ?? '',
+) {
   if (!container) {
     console.error('Container element not found');
     return;
   }
 
-  try {
-    // Extract frontmatter if present
-    const { metadata, content } = extractFrontmatter(markdown);
+  const { metadata, content } = extractFrontmatter(markdown);
+  const folderUrl = new URL(
+    cleanRecipePath(recipePath).replace(/recipe\.md$/, ''),
+    globalThis.location.href,
+  );
+  const resolve = (href) =>
+    ABSOLUTE_URL.test(href) ? href : new URL(href, folderUrl).href;
 
-    // Render the markdown
-    const html = renderMarkdownWithProse(content);
-
-    // Build the full recipe HTML
-    let recipeHtml = '';
-
-    // Add title if present in metadata
-    if (metadata.title) {
-      recipeHtml += `<h1 class="text-3xl font-bold text-gray-900 mb-4">${metadata.title}</h1>`;
-    }
-
-    // Add metadata info if present
-    if (metadata.date || metadata.prep_time || metadata.cook_time) {
-      recipeHtml +=
-        '<div class="flex flex-wrap gap-4 mb-6 text-sm text-gray-600">';
-
-      if (metadata.date) {
-        recipeHtml += `<span><strong>Date:</strong> ${metadata.date}</span>`;
-      }
-      if (metadata.prep_time) {
-        recipeHtml += `<span><strong>Prep:</strong> ${metadata.prep_time}</span>`;
-      }
-      if (metadata.cook_time) {
-        recipeHtml += `<span><strong>Cook:</strong> ${metadata.cook_time}</span>`;
-      }
-      if (metadata.servings) {
-        recipeHtml += `<span><strong>Servings:</strong> ${metadata.servings}</span>`;
-      }
-
-      recipeHtml += '</div>';
-    }
-
-    // Add the rendered content
-    recipeHtml += html;
-
-    container.innerHTML = recipeHtml;
-
-    // Update page title if metadata has title
-    if (metadata.title) {
-      document.title = `${metadata.title} - Les recettes de Lionel & Ophélie`;
-    }
-
-    // Extract first image and update Open Graph meta tags
-    const firstImage = extractFirstImage(content);
-    const recipeName = metadata.title || 'Recette';
-    const description =
-      metadata.description || `Découvrez notre recette de ${recipeName}`;
-    const currentUrl = window.location.href;
-
-    // Get recipe folder from URL to resolve relative image paths
-    const recipeFile = getRecipeFromUrl();
-    const recipeFolder = recipeFile ? recipeFile.replace('/recipe.md', '') : '';
-
-    await updateOpenGraphMeta({
-      title: `${recipeName} - Les recettes de Lionel & Ophélie`,
-      description: description,
-      imageUrl: firstImage,
-      imageBasePath: recipeFolder,
-      url: currentUrl,
-    });
-  } catch (error) {
-    console.error('Error rendering recipe:', error);
-    container.innerHTML = createErrorMessage(
-      `Error displaying recipe: ${error.message}`,
-    );
+  const title = metadata.title || titleFromPath(recipePath);
+  let body = content.trim();
+  let hero = null;
+  const lead = LEADING_IMAGE.exec(body);
+  if (lead) {
+    hero = { alt: lead[1] || title, src: resolve(lead[2]) };
+    body = body.slice(lead[0].length).trim();
   }
+
+  const bodyHtml = renderMarkdown(body, { baseUrl: folderUrl }).trim();
+
+  container.innerHTML = `
+    <div class="recipe-hero">
+      <div class="recipe-head">
+        <h1 class="recipe-title">${escapeHtml(title)}</h1>
+        ${metadata.description ? `<p class="recipe-lede">${escapeHtml(metadata.description)}</p>` : ''}
+        ${factsHtml(metadata)}
+        <div class="recipe-actions" data-recipe-actions></div>
+      </div>
+      ${hero ? `<figure class="recipe-photo"><img src="${escapeHtml(hero.src)}" alt="${escapeHtml(hero.alt)}" fetchpriority="high" decoding="async"></figure>` : ''}
+    </div>
+    ${bodyHtml ? `<div id="recipe-content" class="recipe-body prose">${bodyHtml}</div>` : ''}`;
+  container.removeAttribute('aria-busy');
+
+  document.title = `${title} - ${SITE_TITLE}`;
+  updateOpenGraphMeta({
+    title: `${title} - ${SITE_TITLE}`,
+    description: metadata.description || `Découvrez notre recette : ${title}.`,
+    imageUrl: hero?.src ?? null,
+    url: globalThis.location.href,
+  });
+
+  initRecipePage({ key: cleanRecipePath(recipePath) });
 }
 
 /**
@@ -270,6 +189,7 @@ export async function renderRecipeToContainer(markdown, container) {
  */
 export function showLoading(container) {
   if (container) {
+    container.setAttribute('aria-busy', 'true');
     container.innerHTML = createLoadingSpinner();
   }
 }
@@ -277,12 +197,20 @@ export function showLoading(container) {
 /**
  * Shows error state in a container
  * @param {HTMLElement} container - The container element
- * @param {string} message - The error message
+ * @param {string} message - What went wrong and how to fix it
  */
 export function showError(container, message) {
-  if (container) {
-    container.innerHTML = createErrorMessage(message);
-  }
+  if (!container) return;
+  container.removeAttribute('aria-busy');
+  container.innerHTML = `
+    <div class="notice" role="alert">
+      <h1 class="recipe-title">Recette indisponible</h1>
+      <p>${escapeHtml(message)}</p>
+      <div class="notice-actions">
+        <a class="button" href="../">Voir toutes les recettes</a>
+      </div>
+    </div>`;
+  document.title = `Recette indisponible - ${SITE_TITLE}`;
 }
 
 /**
@@ -295,7 +223,7 @@ export async function loadAndDisplayRecipe(container) {
   if (!recipeFile) {
     showError(
       container,
-      'No recipe specified. Please select a recipe from the home page.',
+      'Aucune recette n’est indiquée dans l’adresse. Choisissez-en une dans la liste.',
     );
     return;
   }
@@ -304,8 +232,9 @@ export async function loadAndDisplayRecipe(container) {
 
   try {
     const markdown = await loadRecipeFile(recipeFile);
-    renderRecipeToContainer(markdown, container);
+    await renderRecipeToContainer(markdown, container, recipeFile);
   } catch (error) {
+    console.error('Error loading recipe:', error);
     showError(container, error.message);
   }
 }

@@ -48,7 +48,7 @@ The name of the site is 'Les recettes de Lionel & Ophélie'
 
 ### Important Note on Tailwind CSS
 **DO NOT use cdn.tailwindcss.com in production!** The Tailwind CSS CDN is designed for development purposes only and is not intended for production. Instead:
-- Install Tailwind CSS via npm: `npm install tailwindcss @tailwindcss/vite`
+- Install Tailwind CSS via pnpm: `pnpm add tailwindcss @tailwindcss/vite`
 - Use the Vite plugin in `vite.config.js`
 - Import the CSS file in your HTML: `<link rel="stylesheet" href="./src/style.css">`
 - This ensures optimized, production-ready CSS with proper purging and smaller bundle sizes
@@ -190,7 +190,7 @@ If you find multiple `recipes.json` files in the project:
 1. **Check git status**: Run `git ls-files | grep recipes.json` to see tracked files
 2. **Remove duplicates**: Delete any recipes.json files outside the project root
 3. **Update .gitignore**: Ensure `dist/` is in `.gitignore` to prevent build output from being committed
-4. **Clean build**: Run `rm -rf dist/` and rebuild with `npm run build`
+4. **Clean build**: Run `rm -rf dist/` and rebuild with `pnpm run build`
 5. **Best practice**: Only the source `recipes.json` in the project root should exist in the repository
 
 ---
