@@ -826,6 +826,14 @@
     border-bottom: 2px solid var(--gres);
   }
 
+  /* Keeps five-column tables (like the pizza dough quantities) readable. */
+  @media (max-width: 30rem) {
+    .prose th,
+    .prose td {
+      padding-inline: 0.5rem;
+    }
+  }
+
   .prose hr {
     margin-block: 2rem;
     border: none;

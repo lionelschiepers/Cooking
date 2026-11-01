@@ -1,6 +1,16 @@
 {
   "recipes": [
     {
+      "id": "pate-a-pizza",
+      "title": "Pâte à Pizza",
+      "type": "markdown",
+      "date": "2026/11/01",
+      "path": "recipes/pate-a-pizza/",
+      "image": "./recipes/pate-a-pizza/pate-a-pizza.webp",
+      "tags": ["Pizza"],
+      "description": "Pâte à pizza à 65 % d’hydratation, avec les quantités pour 1 à 6 pâtons."
+    },
+    {
       "id": "poitrine-lard-laquee-riz-miso",
       "title": "Poitrine de Lard Laquée et Riz au Miso",
       "type": "markdown",
