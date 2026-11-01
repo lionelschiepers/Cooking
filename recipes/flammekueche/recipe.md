@@ -27,6 +27,8 @@ Pourcentages boulangers : **60 % d’eau**, **2,4 % de sel** et **0,28 % de levu
 
 > Ajouter un petit filet d’**huile neutre** au pétrissage, jusqu’à ce que la pâte soit souple et ne colle plus.
 
+**Poivre** : facultatif, à doser au goût dans la crème.
+
 ## Préparation
 
 1. **Mélanger et pétrir.** Mélanger la farine et la levure, puis verser l’eau froide du réfrigérateur petit à petit. Ajouter le sel et pétrir 8 à 10 minutes, jusqu’à ce que la pâte soit lisse et élastique. Ajouter un filet d’huile neutre en fin de pétrissage. La pâte ne doit pas dépasser **24 °C** pendant le pétrissage : si besoin, faites des pauses pour laisser le bol refroidir.
@@ -41,9 +43,13 @@ Pourcentages boulangers : **60 % d’eau**, **2,4 % de sel** et **0,28 % de levu
 
 ## Garniture
 
-- **Crème** : crème fraîche épaisse (ou fromage blanc), muscade et poivre.
+- **Crème** : crème fraîche épaisse (ou fromage blanc), muscade et poivre (facultatif).
 - **Oignons** : émincés finement.
 - **Lardons** : fumés, légèrement revenus à la poêle.
+
+## Accompagnement
+
+Une **salade de mâche**, assaisonnée d’une vinaigrette simple (huile neutre ou de noix, vinaigre, sel et poivre), accompagne parfaitement la flammekueche : sa fraîcheur et son croquant équilibrent le côté riche de la crème et des lardons.
 
 ## Astuce
 
