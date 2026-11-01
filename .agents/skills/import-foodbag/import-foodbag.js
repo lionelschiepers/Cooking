@@ -302,8 +302,12 @@ function singular(name) {
 // From 2 on, the same words become plural ("2 filets de poulet", "2 oignons rouges").
 // Kept as is: words already plural, brands (capital), hyphenated words, "(porc)",
 // and words after the first one ending in i ("pains panini").
+// Names that list or join words ("estragon & cerfeuil", "cacio e pepe") are fixed
+// names: adding an s to each word would break them.
 const INVARIABLE = /^(mini|bio|extra)$/i;
+const FIXED_NAME = /\s(&|et|e)\s/i;
 function plural(name) {
+  if (FIXED_NAME.test(name)) return name;
   const words = name.split(' ');
   const end = words.findIndex((word) => PREPOSITION.test(word));
   return words
@@ -413,7 +417,7 @@ const FISH =
 const MEAT =
   /porc|b(œ|oe)uf|veau|agneau|canard|saucisse|haché|lard|jambon|poulet|dinde|chorizo|steak|pancetta|bacon|mignon|merguez|chipolata|volaille|salami|prosciutto|coppa|speck|gyros|kebab|boulette|viande/;
 const PASTA =
-  /pâtes|pates|spaghetti|tagliatelle|penne|orzo|linguine|lasagne|gnocchi|fusilli|rigatoni|farfalle|macaroni|fettuccine|ravioli|tortellini|conchiglie/;
+  /pâtes|pates|spaghetti|tagliatelle|penne|orzo|linguine|lasagne|gnocchi|fusilli|rigatoni|farfalle|macaroni|fettuccine|ravioli|tortell[io]ni?s?|conchiglie/;
 const ASIAN =
   /nouilles|udon|ramen|wok|teriyaki|sriracha|gochujang|coréen|thaï|japonais|chinois|vietnamien|curry/;
 // Stock and sauces name an animal without being the dish ("bouillon de poulet", "sauce poisson").

@@ -81,6 +81,7 @@ Never store API keys, tokens or other secrets in the skill.
 - 2026-10-31: A running `pnpm dev` served the home page at `/recipes/<slug>/`: it writes `public/recipes/<slug>/index.html` (ignored by git) only at start. `pnpm run build:recipes:dev` adds the new page without a restart.
 - 2026-10-31: Files created on Windows can get CRLF line endings; `.md` files are not fixed by Prettier, so convert them to LF.
 - 2026-10-31: Keep the front matter `description` in double quotes: it contains `: `, which is invalid in plain YAML and hides the skill from agents.
+- 2026-11-01: A name that joins words with `&`, `et` or the Italian `e` (`cacio e pepe`, `estragon & cerfeuil`) is a fixed name: making it plural added an s to every word (`cacios es pepes`). Those names are now left untouched when made plural. `tortelloni`/`tortellonis` count as pasta, like `tortellini`.
 
 ## Options
 

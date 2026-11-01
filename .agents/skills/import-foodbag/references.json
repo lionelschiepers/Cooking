@@ -74,5 +74,15 @@
       "keywords: Lionel Schiepers, Ophélie De Loz, cooking, recipe, steak haché au chou-fleur gratiné, cresson de jardin, food, cuisine"
     ],
     "plate": true
+  },
+  {
+    "url": "https://www.foodbag.be/fr/recept?dishId=a0MJv00000C3ltFMAR&weekDocId=W46Y2026",
+    "why": "Tortellonis cacio e pepe (W46 2026): joined dish name kept as it is (no s on cacio/e/pepe), tortelloni counted as pasta, wide bowl",
+    "expect": [
+      "- 10 tortelloni frais cacio e pepe",
+      "- 1/2 paquet d'estragon & cerfeuil"
+    ],
+    "tags": "Pates",
+    "plate": true
   }
 ]

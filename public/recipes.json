@@ -1,6 +1,16 @@
 {
   "recipes": [
     {
+      "id": "tortellonis-cacio-e-pepe-salsifis",
+      "title": "Tortellonis Cacio E Pepe et Salsifis",
+      "type": "markdown",
+      "date": "2026/11/01",
+      "path": "recipes/tortellonis-cacio-e-pepe-salsifis/",
+      "image": "./recipes/tortellonis-cacio-e-pepe-salsifis/tortellonis-cacio-e-pepe-salsifis.webp",
+      "tags": ["Pates"],
+      "description": "Tortellonis cacio e pepe et salsifis, champignons à la sauce au vin blanc (Foodbag)"
+    },
+    {
       "id": "couscous-lanieres-porc",
       "title": "Couscous aux Lanières de Porc",
       "type": "markdown",
