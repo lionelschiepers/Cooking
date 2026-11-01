@@ -287,14 +287,16 @@ const SIZE_LAST = /^(.+?) (grande?s?|gros|grosses?|petite?s?)$/i;
 // Foodbag names are often plural ("1 carottes"). Below 2, the words before the
 // first preposition lose their plural; words ending in as/is/os/us stay (radis, frais, gros, jus).
 const PREPOSITION = /^(de|des|du|d'.*|d’.*|à|au|aux|en)$/i;
-function singular(name) {
+function singular(name, names = new Set()) {
   const words = name.split(' ');
   const end = words.findIndex((word) => PREPOSITION.test(word));
   return words
     .map((word, i) =>
       end !== -1 && i >= end
         ? word
-        : word.replace(/eaux$/i, 'eau').replace(/([^aiouïs])s$/i, '$1'),
+        : names.has(normalizeWord(word))
+          ? word
+          : word.replace(/eaux$/i, 'eau').replace(/([^aiouïs])s$/i, '$1'),
     )
     .join(' ');
 }
@@ -306,13 +308,14 @@ function singular(name) {
 // names: adding an s to each word would break them.
 const INVARIABLE = /^(mini|bio|extra)$/i;
 const FIXED_NAME = /\s(&|et|e)\s/i;
-function plural(name) {
+function plural(name, names = new Set()) {
   if (FIXED_NAME.test(name)) return name;
   const words = name.split(' ');
   const end = words.findIndex((word) => PREPOSITION.test(word));
   return words
     .map((word, i) => {
       if ((end !== -1 && i >= end) || INVARIABLE.test(word)) return word;
+      if (names.has(normalizeWord(word))) return word;
       if (!/^\p{Ll}[\p{Ll}']*$/u.test(word) || /[sxz]$/i.test(word)) {
         return word;
       }
@@ -320,6 +323,41 @@ function plural(name) {
       return i > 0 && /i$/i.test(word) ? word : `${word}s`;
     })
     .join(' ');
+}
+
+// Foodbag quotes the names it invents in the dish story (« enigma »): a quoted
+// name is invariable, pluralizing it would write "16 raviolis enigmas".
+// A quote with a determiner (« la sauce ») is a sentence fragment, not a name.
+const QUOTED = /[«“"]([^»”"]+)[»”"]/g;
+const DETERMINER =
+  /^(le|la|les|l['’]|un|une|des|du|de|d['’]|ce|cet|cette|ces|mon|ma|mes|son|sa|ses)\s/i;
+function normalizeWord(word) {
+  return word
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .replace(/[^\p{L}]/gu, '')
+    .toLowerCase();
+}
+function quotedNames(dish) {
+  const texts = [
+    dish.NameFR,
+    dish.SubtitleFR,
+    dish.TipFR,
+    dish.TableStoryFR,
+    dish.IngredientsInfoFR,
+  ]
+    .filter(Boolean)
+    .join(' ');
+  const names = new Set();
+  for (const [, quote] of texts.matchAll(QUOTED)) {
+    const text = quote.trim();
+    if (DETERMINER.test(text)) continue;
+    for (const word of text.split(/\s+/)) {
+      const normalized = normalizeWord(word);
+      if (normalized) names.add(normalized);
+    }
+  }
+  return names;
 }
 
 // Foodbag sometimes repeats the unit in the name: "tranches" + "tranches de lard".
@@ -335,7 +373,7 @@ const OPTIONAL_UNIT = /^facultatif$/i;
 // "flocons de chili" + "au goût" is not a measure: the quantity goes after the name.
 const TO_TASTE_UNIT = /^(au|selon le|selon) goût$/i;
 
-function formatIngredient(ingredient) {
+function formatIngredient(ingredient, names = new Set()) {
   const quantity = formatQuantity(ingredient.Quantity);
   const unit = (ingredient.SizeFR ?? '').trim();
   const name = withoutUnit(
@@ -353,9 +391,9 @@ function formatIngredient(ingredient) {
     const counted = !quantity
       ? name
       : value < 2
-        ? singular(name)
+        ? singular(name, names)
         : value >= 2
-          ? plural(name)
+          ? plural(name, names)
           : name;
     return [quantity, counted].filter(Boolean).join(' ');
   }
@@ -650,8 +688,9 @@ function buildMarkdown({ title, slug, dish, variant, persons, url }) {
   const intro = [`${withSubtitle(name, subtitle)}.`];
   if (variant.TotalTime) intro.push(`Prêt en ${variant.TotalTime} minutes.`);
 
+  const names = quotedNames(dish);
   const ingredients = sortIngredients(variant.Ingredients ?? []).map(
-    (ingredient) => `- ${formatIngredient(ingredient)}`,
+    (ingredient) => `- ${formatIngredient(ingredient, names)}`,
   );
   const steps = [...(variant.Directions ?? [])]
     .filter((step) => step.DescriptionFR?.trim())
