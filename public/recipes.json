@@ -1,6 +1,36 @@
 {
   "recipes": [
     {
+      "id": "poitrine-lard-laquee-riz-miso",
+      "title": "Poitrine de Lard Laquée et Riz au Miso",
+      "type": "markdown",
+      "date": "2026/11/01",
+      "path": "recipes/poitrine-lard-laquee-riz-miso/",
+      "image": "./recipes/poitrine-lard-laquee-riz-miso/poitrine-lard-laquee-riz-miso.webp",
+      "tags": ["Viande", "Asiatique"],
+      "description": "Poitrine de lard laquée et riz au miso, champignons châtaigne et sauce sriracha (Foodbag)"
+    },
+    {
+      "id": "poulet-teriyaki-orange",
+      "title": "Poulet Teriyaki à l’Orange",
+      "type": "markdown",
+      "date": "2026/11/01",
+      "path": "recipes/poulet-teriyaki-orange/",
+      "image": "./recipes/poulet-teriyaki-orange/poulet-teriyaki-orange.webp",
+      "tags": ["Viande", "Asiatique"],
+      "description": "Poulet teriyaki à l’orange, chou rouge et germes de soja (Foodbag)"
+    },
+    {
+      "id": "broccolinis-sauce-cacahuete-sesame",
+      "title": "Broccolinis Sauce Cacahuète-Sésame",
+      "type": "markdown",
+      "date": "2026/11/01",
+      "path": "recipes/broccolinis-sauce-cacahuete-sesame/",
+      "image": "./recipes/broccolinis-sauce-cacahuete-sesame/broccolinis-sauce-cacahuete-sesame.webp",
+      "tags": ["Asiatique"],
+      "description": "Broccolinis sauce cacahuète-sésame, edamame et riz sauté (Foodbag)"
+    },
+    {
       "id": "tortellonis-cacio-e-pepe-salsifis",
       "title": "Tortellonis Cacio E Pepe et Salsifis",
       "type": "markdown",

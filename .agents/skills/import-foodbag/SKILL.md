@@ -82,6 +82,8 @@ Never store API keys, tokens or other secrets in the skill.
 - 2026-10-31: Files created on Windows can get CRLF line endings; `.md` files are not fixed by Prettier, so convert them to LF.
 - 2026-10-31: Keep the front matter `description` in double quotes: it contains `: `, which is invalid in plain YAML and hides the skill from agents.
 - 2026-11-01: A name that joins words with `&`, `et` or the Italian `e` (`cacio e pepe`, `estragon & cerfeuil`) is a fixed name: making it plural added an s to every word (`cacios es pepes`). Those names are now left untouched when made plural. `tortelloni`/`tortellonis` count as pasta, like `tortellini`.
+- 2026-11-01: Fish names were matched inside other words: `broccolinis` contains `colin`, so the dish got the Poisson tag. Short fish names now need word boundaries (`\bcolin\b`).
+- 2026-11-01: The unit `au goût` is not a measure: `1 au goût de flocons de chili` now reads `flocons de chili (au goût)`, like `facultatif`.
 
 ## Options
 

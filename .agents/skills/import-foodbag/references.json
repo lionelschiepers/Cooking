@@ -84,5 +84,12 @@
     ],
     "tags": "Pates",
     "plate": true
+  },
+  {
+    "url": "https://www.foodbag.be/fr/recept?dishId=a0MJv000004n7xJMAQ&weekDocId=W46Y2026",
+    "why": "Broccolinis sauce cacahuète-sésame (W46 2026): unit au goût written after the name, and broccolinis no longer matched as colin (no Poisson tag)",
+    "expect": ["- flocons de chili (au goût)", "- 200 gr broccolini"],
+    "tags": "",
+    "plate": true
   }
 ]

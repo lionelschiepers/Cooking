@@ -332,6 +332,8 @@ function withoutUnit(name, unit) {
 }
 
 const OPTIONAL_UNIT = /^facultatif$/i;
+// "flocons de chili" + "au goût" is not a measure: the quantity goes after the name.
+const TO_TASTE_UNIT = /^(au|selon le|selon) goût$/i;
 
 function formatIngredient(ingredient) {
   const quantity = formatQuantity(ingredient.Quantity);
@@ -342,6 +344,9 @@ function formatIngredient(ingredient) {
   );
   if (OPTIONAL_UNIT.test(unit)) {
     return `${[quantity, name].filter(Boolean).join(' ')} (facultatif)`;
+  }
+  if (TO_TASTE_UNIT.test(unit)) {
+    return `${[quantity, name].filter(Boolean).join(' ')} (${unit.toLowerCase()})`;
   }
   if (!unit || COUNT_UNITS.test(unit)) {
     const value = quantityValue(ingredient.Quantity);
@@ -413,7 +418,7 @@ function slugify(text) {
 }
 
 const FISH =
-  /saumon|cabillaud|maquereau|thon|truite|merlu|colin|dorade|poisson|crevette|scampi|moule|gambas|calamar|scampi|sardine|hareng|\bsole\b|\bbar\b|\blieu\b|églefin|haddock|tilapia|pangasius/;
+  /saumon|cabillaud|maquereau|thon|truite|merlu|\bcolin\b|dorade|poisson|crevette|scampi|moule|gambas|calamar|scampi|sardine|hareng|\bsole\b|\bbar\b|\blieu\b|églefin|haddock|tilapia|pangasius/;
 const MEAT =
   /porc|b(œ|oe)uf|veau|agneau|canard|saucisse|haché|lard|jambon|poulet|dinde|chorizo|steak|pancetta|bacon|mignon|merguez|chipolata|volaille|salami|prosciutto|coppa|speck|gyros|kebab|boulette|viande/;
 const PASTA =
