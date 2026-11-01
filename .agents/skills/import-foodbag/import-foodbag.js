@@ -3,8 +3,8 @@
  *
  *   node .agents/skills/import-foodbag/import-foodbag.js "<foodbag url>" [options]
  *
- * Writes recipes/<slug>/recipe.md, recipes/<slug>/<slug>.webp (cropped so the
- * plate sits in the middle of the home page's square thumbnail) and adds the
+ * Writes recipes/<slug>/recipe.md, recipes/<slug>/<slug>.webp (cropped to a
+ * square around the plate, like the home page's thumbnail) and adds the
  * entry to recipes.json. Run with --help for the options.
  */
 import fs from 'node:fs';
@@ -582,22 +582,22 @@ async function findPlate(buffer, width, height) {
 }
 
 /**
- * Trims the photo so the plate is in the middle. An axis already within 2% is
- * kept whole, and so is one where centring would cut a plate that leaves the frame.
+ * Crops a square around the plate, so the home page's square thumbnail shows the
+ * dish and not the empty background around it. The plate keeps a small margin
+ * and stays inside the frame; the square never leaves the photo.
  */
-function centerOn(plate, width, height) {
-  const axis = (size, start, end) => {
-    const center = (start + end) / 2;
-    const half = Math.min(center, size - center);
-    if (size / 2 - half <= size * 0.02 || half < (end - start) / 2) {
-      return [0, size];
-    }
-    const from = Math.max(0, Math.round(center - half));
-    return [from, Math.min(size - from, Math.round(2 * half))];
+const CROP_MARGIN = 0.06;
+function squareOn(plate, width, height) {
+  const size = Math.max(plate.x1 - plate.x0, plate.y1 - plate.y0);
+  const side = Math.min(width, height, Math.round(size * (1 + CROP_MARGIN)));
+  const place = (center, frame) =>
+    Math.round(Math.max(0, Math.min(frame - side, center - side / 2)));
+  return {
+    left: place((plate.x0 + plate.x1) / 2, width),
+    top: place((plate.y0 + plate.y1) / 2, height),
+    width: side,
+    height: side,
   };
-  const [left, cropWidth] = axis(width, plate.x0, plate.x1);
-  const [top, cropHeight] = axis(height, plate.y0, plate.y1);
-  return { left, top, width: cropWidth, height: cropHeight };
 }
 
 async function preparePhoto(url, crop) {
@@ -614,8 +614,8 @@ async function preparePhoto(url, crop) {
   if (crop) {
     plate = await findPlate(buffer, width, height);
     if (plate) {
-      area = centerOn(plate, width, height);
-      note = `assiette ${plate.x1 - plate.x0}px trouvée, recadrage ${area.width}x${area.height} depuis (${area.left}, ${area.top})`;
+      area = squareOn(plate, width, height);
+      note = `assiette ${plate.x1 - plate.x0}px trouvée, carré ${area.width}x${area.height} depuis (${area.left}, ${area.top})`;
     } else {
       note = 'assiette non trouvée, photo gardée entière';
     }

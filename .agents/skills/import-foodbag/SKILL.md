@@ -35,8 +35,8 @@ Read **Findings** below before importing: it is what earlier imports learned.
    Note every line under `À vérifier`: data the script was not written for.
 
 4. **Check the photo.** The home page shows each photo as a centered square. Open the square preview whose path the script prints (`carré : ...png`) with the `view` tool. The whole plate must be visible and centered.
-   - The script looks for the largest round outline (plate or bowl of any color, side bowls are smaller) and trims the photo so it sits in the middle. An axis is kept whole when the plate is already centered on it, or when the frame cuts the plate.
-   - When no plate is found, the photo is kept whole: check that the square still looks centered. If not, crop the source photo by hand with `sharp` around the food, keeping the whole width, then save it again as `recipes/<slug>/<slug>.webp` (max 1920 px, WebP quality 82).
+   - The script looks for the largest round outline (plate or bowl of any color, side bowls are smaller) and crops a square around it, with a 6% margin, so the thumbnail is a deliberate crop instead of the middle of a portrait photo.
+   - When no plate is found, the photo is kept whole: check that the square still looks centered. If not, crop the source photo by hand with `sharp` around the food, then save it again as `recipes/<slug>/<slug>.webp` (max 1920 px, WebP quality 82).
    - `--force --no-crop` re-imports with the photo kept whole.
 
 5. Read `recipes/<slug>/recipe.md` once and fix anything odd (wording, units, order).
@@ -85,6 +85,7 @@ Never store API keys, tokens or other secrets in the skill.
 - 2026-11-01: Fish names were matched inside other words: `broccolinis` contains `colin`, so the dish got the Poisson tag. Short fish names now need word boundaries (`\bcolin\b`).
 - 2026-11-01: The unit `au goût` is not a measure: `1 au goût de flocons de chili` now reads `flocons de chili (au goût)`, like `facultatif`.
 - 2026-11-01: Foodbag names some products after inventing them in the dish story, in quotes (`le nom mystérieux d'« enigma »`): the ingredient was written `16 raviolis frais enigmas`. Words quoted in `NameFR`, `SubtitleFR`, `TipFR`, `TableStoryFR` or `IngredientsInfoFR` are now left untouched by `singular()`/`plural()`.
+- 2026-11-01: Centring the plate on a portrait photo kept most of the background: the thumbnail (a centred square) showed the dish small, with empty marble around it. The script now crops a square around the plate with a 6% margin (`carré 1799x1799` on a 2480x3508 photo), so the dish fills the thumbnail. The crop stays inside the frame and keeps the plate whole.
 
 ## Options
 

@@ -94,7 +94,7 @@
   },
   {
     "url": "https://www.foodbag.be/fr/recept?dishId=a0MJv00000IGbKbMAL&weekDocId=W44Y2026",
-    "why": "Lasagne de raviolis (W44 2026): a name Foodbag quotes in the dish story (« enigma ») stays invariable instead of getting an s, plate kept whole",
+    "why": "Lasagne de raviolis (W44 2026): a name Foodbag quotes in the dish story (« enigma ») stays invariable instead of getting an s, and the portrait photo is cropped to a square around the pan",
     "expect": [
       "- 16 raviolis frais enigma",
       "- 1/2 boîte de concentré de tomates",
