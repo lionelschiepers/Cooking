@@ -14,5 +14,27 @@
     ],
     "tags": "Viande,Pates",
     "square": true
+  },
+  {
+    "url": "https://www.hellofresh.be/recipes/farfalle-en-sauce-cremeuse-a-la-courgette-648c4ce8343321ec366399bd?locale=fr-BE",
+    "why": "Farfalle à la courgette: steps wrapped in HTML lists and paragraphs, entities, 'Le saviez-vous ?' kept as Markdown emphasis",
+    "expect": [
+      "- 1 sachet d'épices italiennes",
+      "- 200 gr poulet haché aux épices italiennes",
+      "- 1/4 cube de bouillon de légumes à faible teneur en sel",
+      "- poivre et sel",
+      "## Préparation"
+    ],
+    "absent": ["<ul>", "<p>", "<strong>", "&#39;"],
+    "tags": "Viande,Pates",
+    "square": true
+  },
+  {
+    "url": "https://www.hellofresh.be/recipes/mousse-au-chocolat-sirop-a-lorange-and-pointe-de-sel-6a9a8db271b095d5fbb00628?locale=fr-BE",
+    "why": "Mousse au chocolat: HTML lists cleaned, (voir photo) removed, 'brin' unit, dessert gets no guessed tag",
+    "expect": ["- 1 brin de romarin frais", "## Préparation"],
+    "absent": ["(voir photo)", "<ul>"],
+    "tags": "",
+    "square": true
   }
 ]

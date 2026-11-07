@@ -82,19 +82,70 @@ async function get(url, type = 'text') {
 }
 
 const ENTITIES = {
+  aacute: 'á',
+  acirc: 'â',
+  agrave: 'à',
   amp: '&',
   apos: "'",
+  aring: 'å',
+  auml: 'ä',
+  aelig: 'æ',
+  bdquo: '„',
+  bull: '•',
+  ccedil: 'ç',
+  cent: '¢',
+  copy: '©',
+  deg: '°',
+  divide: '÷',
+  eacute: 'é',
+  ecirc: 'ê',
+  egrave: 'è',
+  emsp: ' ',
+  ensp: ' ',
+  euml: 'ë',
+  euro: '€',
+  frac12: '½',
+  frac14: '¼',
+  frac34: '¾',
   gt: '>',
   hellip: '…',
+  iacute: 'í',
+  icirc: 'î',
+  igrave: 'ì',
+  iuml: 'ï',
   laquo: '«',
+  ldquo: '“',
+  lsquo: '‘',
   lt: '<',
+  mdash: '—',
+  middot: '·',
   nbsp: ' ',
+  ndash: '–',
+  ntilde: 'ñ',
+  oacute: 'ó',
+  ocirc: 'ô',
+  oelig: 'œ',
+  ograve: 'ò',
+  oslash: 'ø',
+  otilde: 'õ',
+  ouml: 'ö',
+  pound: '£',
   quot: '"',
   raquo: '»',
+  rdquo: '”',
+  reg: '®',
   rsquo: '’',
-  lsquo: '‘',
-  ndash: '–',
-  mdash: '—',
+  sbquo: '‚',
+  szlig: 'ß',
+  thinsp: ' ',
+  times: '×',
+  trade: '™',
+  uacute: 'ú',
+  ucirc: 'û',
+  ugrave: 'ù',
+  uuml: 'ü',
+  yacute: 'ý',
+  yuml: 'ÿ',
 };
 
 function decodeEntities(text) {
@@ -107,6 +158,41 @@ function decodeEntities(text) {
       return Number.isFinite(code) ? String.fromCodePoint(code) : match;
     }
     return ENTITIES[entity.toLowerCase()] ?? match;
+  });
+}
+
+/**
+ * HelloFresh wraps some steps in HTML lists and paragraphs. Turns them into
+ * readable prose (bold and italics kept as Markdown) and decodes entities.
+ */
+function cleanText(text) {
+  if (!text) return '';
+  const withoutTags = String(text)
+    .replace(/<\s*br\s*\/?\s*>/gi, ' ')
+    .replace(/<\s*\/\s*(?:p|li|ul|ol|div|h[1-6])\s*>/gi, ' ')
+    .replace(/<\s*(?:strong|b)\s*>/gi, '**')
+    .replace(/<\s*\/\s*(?:strong|b)\s*>/gi, '**')
+    .replace(/<\s*(?:em|i)\s*>/gi, '*')
+    .replace(/<\s*\/\s*(?:em|i)\s*>/gi, '*')
+    .replace(/<[^>]+>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return decodeEntities(withoutTags)
+    .replace(/\s+\*\*/g, '**')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// HelloFresh points to step photos this site does not show: "(voir photo)" is
+// removed, "(voir conseil et photo)" becomes "(voir conseil)".
+const SEE = /\s*\((?:voir|cf\.?)\s+([^)]*)\)/gi;
+const PHOTO = /^(?:la |les )?(?:photos?|images?)(?:\s+\d+)?$/i;
+function withoutStepPhotos(text) {
+  return text.replace(SEE, (match, what) => {
+    const parts = what.split(/\s+et\s+|,\s*/);
+    const kept = parts.filter((part) => !PHOTO.test(part.trim()));
+    if (kept.length === parts.length) return match;
+    return kept.length ? ` (voir ${kept.join(' et ')})` : '';
   });
 }
 
@@ -252,6 +338,7 @@ const CONTAINER_UNITS = new Set([
   'bouquet',
   'botte',
   'branche',
+  'brin',
   'bocal',
   'barquette',
   'cube',
@@ -672,17 +759,17 @@ async function fetchRecipe(url) {
 
   const html = await get(url);
   const recipe = findRecipeJson(html);
-  const name = pageText(html, 'recipe-name') || recipe.name?.trim();
+  const name = cleanText(pageText(html, 'recipe-name') || recipe.name?.trim());
   if (!name) throw new Error('Nom de la recette introuvable.');
-  const subtitle = pageText(html, 'recipe-headline');
-  const description = (recipe.description ?? '').trim();
+  const subtitle = cleanText(pageText(html, 'recipe-headline'));
+  const description = cleanText(recipe.description ?? '');
   const minutes = totalMinutes(recipe.totalTime);
   const persons = servingsOf(recipe.recipeYield);
   const ingredients = (recipe.recipeIngredient ?? [])
-    .map((line) => formatIngredient(line))
+    .map((line) => formatIngredient(cleanText(line)))
     .filter(Boolean);
   const steps = instructionTexts(recipe.recipeInstructions)
-    .map((text) => text.replace(/\s*\n\s*/g, ' ').trim())
+    .map((text) => withoutStepPhotos(cleanText(text)))
     .filter(Boolean);
 
   const notes = inspect({
@@ -870,6 +957,9 @@ async function runChecks() {
       const lines = new Set(markdown.split('\n'));
       for (const line of ref.expect ?? []) {
         if (!lines.has(line)) problems.push(`ligne absente : ${line}`);
+      }
+      for (const text of ref.absent ?? []) {
+        if (markdown.includes(text)) problems.push(`texte inattendu : ${text}`);
       }
       if (ref.tags !== undefined) {
         const tags = guessTags(

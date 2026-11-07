@@ -75,8 +75,9 @@ For each finding, before finishing the task:
    script. If it cannot be automated, write the manual workaround in
    **Findings**.
 2. **Add a reference** in `references.json` (or extend one): the HelloFresh URL,
-   `why` it matters, the exact Markdown lines (`expect`) that prove the fix, and
-   whether the plate is detected (`plate`). Use the recipe just imported.
+   `why` it matters, the exact Markdown lines (`expect`) that prove the fix, the
+   text that must not appear (`absent`, e.g. `<ul>` or `&#39;`), and whether
+   the photo is square (`square`). Use the recipe just imported.
 3. **Check for regressions**: `node .agents/skills/import-hellofresh/import-hellofresh.js --check`
    must end with all references `OK`. It reads every reference again and writes
    nothing. If an old reference fails because HelloFresh changed its data (not
@@ -114,6 +115,19 @@ Never store API keys, tokens or other secrets in the skill.
   photos are 3:2 landscape with the dish centred, so this script crops a centred
   square of the shorter side instead (3180x2120 → 2120x2120) and the square
   preview shows the whole bowl.
+- 2026-11-07: Some steps are HTML lists and paragraphs (`<ul><li>`, `<p>`,
+  `<strong>`, `<em>`, `&#39;`). `cleanText` flattens block tags to spaces, keeps
+  bold/italic as Markdown and decodes numeric and French named entities, so a
+  step reads as one prose paragraph. The farfalle reference checks that no
+  `<ul>`, `<p>`, `<strong>` or `&#39;` remains.
+- 2026-11-07: HelloFresh steps can point to step photos (`(voir photo)`) that
+  this site does not show: they are removed, while `(voir conseil)` stays
+  because the tip is in the same step. The mousse reference checks it.
+- 2026-11-07: The unit `brin` was missing (`1 brin de romarin frais`); it is now
+  in the container units, so two become `2 brins`.
+- 2026-11-07: Vegetarian and dessert recipes often get no guessed tag: pass
+  `--tags` (`Accompagnement`, `Dessert`, ...). The mousse reference expects an
+  empty guess.
 - 2026-11-07: HelloFresh can contradict itself: the title and steps say
   `tagliatelle` while the ingredient list says `Linguine`, and a step contains
   the typo `Arossez`. The script now flags a different pasta in the title and
