@@ -4,8 +4,9 @@
 
 HelloFresh recipe pages embed a schema.org `Recipe` object as JSON-LD, so no
 browser is needed. The script reads the name, headline, photo, description,
-total time, servings, ingredients and steps from that object and writes them in
-the same shape as the Foodbag imports.
+total time, servings, ingredients and steps from that object, and the step
+photos from the HTML instruction blocks, then writes them in the same shape as
+the Foodbag imports.
 
 Read **Findings** below before importing: it is what earlier imports learned.
 
@@ -48,7 +49,8 @@ Read **Findings** below before importing: it is what earlier imports learned.
 
 5. Read `recipes/<slug>/recipe.md` once and fix anything odd (wording, units,
    order). HelloFresh mixes singular/plural and sometimes contradicts itself:
-   check that the ingredient names match the title and the steps.
+   check that the ingredient names match the title and the steps, and that each
+   step shows the photo of that step (open the `-etape-N.webp` files).
 6. Validate: `pnpm run build`. It must succeed and print the new page in
    `dist/recipes/<slug>/`. It also refreshes `public/recipes.json`, which is
    tracked: keep that change. If `pnpm dev` is already running, also run
@@ -76,8 +78,9 @@ For each finding, before finishing the task:
    **Findings**.
 2. **Add a reference** in `references.json` (or extend one): the HelloFresh URL,
    `why` it matters, the exact Markdown lines (`expect`) that prove the fix, the
-   text that must not appear (`absent`, e.g. `<ul>` or `&#39;`), and whether
-   the photo is square (`square`). Use the recipe just imported.
+   text that must not appear (`absent`, e.g. `<ul>` or `&#39;`), the number of
+   step photos (`stepImages`), and whether the photo is square (`square`). Use
+   the recipe just imported.
 3. **Check for regressions**: `node .agents/skills/import-hellofresh/import-hellofresh.js --check`
    must end with all references `OK`. It reads every reference again and writes
    nothing. If an old reference fails because HelloFresh changed its data (not
@@ -128,6 +131,14 @@ Never store API keys, tokens or other secrets in the skill.
 - 2026-11-07: Vegetarian and dessert recipes often get no guessed tag: pass
   `--tags` (`Accompagnement`, `Dessert`, ...). The mousse reference expects an
   empty guess.
+- 2026-11-07: HelloFresh also shows one photo per instruction step, but the
+  JSON-LD does not contain them: they sit in the HTML
+  `data-test-id="instruction-step"` blocks (a 384 px `src` with a 750 px
+  `srcset` copy). The script reads the widest URL of the first image of each
+  step and writes `recipes/<slug>/<slug>-etape-N.webp` (at most 1200 px, WebP,
+  full frame), shown under the step. A failed download drops only that photo;
+  `--no-step-images` skips them all. The tagliatelle reference checks
+  `stepImages: 6`.
 - 2026-11-07: HelloFresh can contradict itself: the title and steps say
   `tagliatelle` while the ingredient list says `Linguine`, and a step contains
   the typo `Arossez`. The script now flags a different pasta in the title and
@@ -150,6 +161,7 @@ Never store API keys, tokens or other secrets in the skill.
 | `--tags <a,b>` | guessed |
 | `--date <YYYY/MM/DD>` | today |
 | `--no-crop` | crop around the plate |
+| `--no-step-images` | download the instruction step photos |
 | `--force` | refuse to overwrite an existing recipe or import a dish twice |
 | `--dry-run` | write the files |
 | `--check` | re-test `references.json` instead of importing |
@@ -159,10 +171,12 @@ Never store API keys, tokens or other secrets in the skill.
 - `recipes/<slug>/recipe.md`: front matter (title, authors, keywords), the
   photo, a one-line intro with the total time, the HelloFresh description, a
   `## Ingrédients (2 personnes)` list (this heading turns the list into a
-  checklist on the site), `## Préparation` (numbered steps) and `## Lien` (the
-  HelloFresh URL).
+  checklist on the site), `## Préparation` (numbered steps, each followed by its
+  step photo when available) and `## Lien` (the HelloFresh URL).
 - `recipes/<slug>/<slug>.webp`: the largest HelloFresh photo, cropped, at most
   1920 px.
+- `recipes/<slug>/<slug>-etape-N.webp`: one WebP per instruction step photo
+  (at most 1200 px, uncropped). Stale ones are removed on `--force`.
 - `recipes.json`: the entry, inserted by date (newest first) and formatted with
   Prettier.
 - In the console: a summary, the path of the square preview, and `À vérifier`

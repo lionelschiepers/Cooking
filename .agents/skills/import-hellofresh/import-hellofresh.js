@@ -33,6 +33,7 @@ const USAGE = `Usage: node .agents/skills/import-hellofresh/import-hellofresh.js
   --tags <a,b>         Comma-separated tags (default: guessed)
   --date <YYYY/MM/DD>  Date (default: today)
   --no-crop            Keep the photo uncropped
+  --no-step-images     Do not download the photos of the instruction steps
   --force              Replace an existing recipe with the same slug
   --dry-run            Print the result without writing to the repository
   --check              Re-test the recipes listed in references.json`;
@@ -46,6 +47,7 @@ const { values: opts, positionals } = parseArgs({
     tags: { type: 'string' },
     date: { type: 'string' },
     'no-crop': { type: 'boolean', default: false },
+    'no-step-images': { type: 'boolean', default: false },
     force: { type: 'boolean', default: false },
     'dry-run': { type: 'boolean', default: false },
     check: { type: 'boolean', default: false },
@@ -234,6 +236,41 @@ function instructionTexts(instructions = []) {
     } else if (step.text) texts.push(step.text);
   }
   return texts;
+}
+
+function widestUrl(urls) {
+  const widthOf = (url) => Number(url.match(/(?:^|[,/])w_(\d+)/)?.[1] ?? 0);
+  return [...urls].sort((a, b) => widthOf(b) - widthOf(a))[0] ?? null;
+}
+
+/**
+ * The step photos are not in the JSON-LD: they sit in the HTML instruction
+ * steps (`data-test-id="instruction-step"`), one image per step. The page shows
+ * a 384 px image with a 750 px srcset copy; keep the widest.
+ */
+function findStepImages(html) {
+  const marker = 'data-test-id="instruction-step"';
+  const images = [];
+  let index = html.indexOf(marker);
+  while (index !== -1) {
+    const next = html.indexOf(marker, index + 1);
+    const block = html.slice(index, next === -1 ? index + 8000 : next);
+    const tag = block.match(/<img\b[^>]*>/i)?.[0];
+    if (!tag) {
+      images.push(null);
+    } else {
+      const src = tag.match(/\bsrc="([^"]+)"/i)?.[1];
+      const dataSrc = tag.match(/\bdata-src="([^"]+)"/i)?.[1];
+      const srcset = tag.match(/\bsrcset="([^"]+)"/i)?.[1] ?? '';
+      const urls = [src, dataSrc, ...srcset.split(',')]
+        .filter(Boolean)
+        .map((candidate) => candidate.trim().split(/\s+/)[0])
+        .filter((url) => /^https?:\/\//.test(url));
+      images.push(widestUrl(urls));
+    }
+    index = next;
+  }
+  return images;
 }
 
 function totalMinutes(iso) {
@@ -626,6 +663,25 @@ async function writeSquarePreview(webp, file) {
     .toFile(file);
 }
 
+/** Step photos are instructional: keep the whole frame, just make a WebP. */
+async function prepareStepImage(url) {
+  const buffer = await get(url, 'buffer');
+  const webp = await sharp(buffer)
+    .rotate()
+    .resize({
+      width: 1200,
+      height: 1200,
+      fit: 'inside',
+      withoutEnlargement: true,
+    })
+    .webp({ quality: 82 })
+    .toBuffer({ resolveWithObject: true });
+  return {
+    webp: webp.data,
+    size: [webp.info.width, webp.info.height],
+  };
+}
+
 function escapeRegExp(text) {
   return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
@@ -665,6 +721,7 @@ function buildMarkdown({
   subtitle,
   description,
   steps,
+  stepImages = [],
   ingredients,
   persons,
   minutes,
@@ -696,7 +753,14 @@ function buildMarkdown({
     ...sortIngredients(ingredients).map((line) => `- ${line}`),
     '',
     '## Préparation',
-    steps.map((step, i) => `${i + 1}. ${step}`).join('\n\n'),
+    steps
+      .map((step, i) => {
+        const photo = stepImages[i]
+          ? `\n\n   ![Étape ${i + 1}](./${stepImages[i]})`
+          : '';
+        return `${i + 1}. ${step}${photo}`;
+      })
+      .join('\n\n'),
     '',
     '## Lien',
     `[HelloFresh](${url})`,
@@ -771,6 +835,7 @@ async function fetchRecipe(url) {
   const steps = instructionTexts(recipe.recipeInstructions)
     .map((text) => withoutStepPhotos(cleanText(text)))
     .filter(Boolean);
+  const stepImages = findStepImages(html);
 
   const notes = inspect({
     name,
@@ -781,6 +846,17 @@ async function fetchRecipe(url) {
     minutes,
     persons,
   });
+  const missingPhotos = stepImages
+    .map((url, i) => (url ? null : i + 1))
+    .filter(Boolean);
+  if (missingPhotos.length) {
+    notes.push(`Photo manquante pour l’étape ${missingPhotos.join(', ')}.`);
+  }
+  if (stepImages.length && stepImages.length !== steps.length) {
+    notes.push(
+      `${stepImages.length} photo(s) d’étape pour ${steps.length} étape(s) : vérifiez l’association.`,
+    );
+  }
   const titlePasta = pastaNames(name);
   const ingredientPasta = [...new Set(ingredients.flatMap(pastaNames))];
   const otherPasta = ingredientPasta.filter(
@@ -801,6 +877,7 @@ async function fetchRecipe(url) {
     persons: persons ?? 2,
     ingredients,
     steps,
+    stepImages,
     notes,
   };
 }
@@ -867,6 +944,36 @@ async function importRecipe(url) {
   const preview = path.join(os.tmpdir(), `hellofresh-${slug}-square.png`);
   await writeSquarePreview(photo.webp, preview);
 
+  // One photo per instruction step, named <slug>-etape-N.webp. A failed
+  // download only drops that photo: the step keeps its text.
+  const stepImages = opts['no-step-images']
+    ? []
+    : data.stepImages.map((url, i) =>
+        url ? `${slug}-etape-${i + 1}.webp` : null,
+      );
+  const stepFiles = [];
+  if (!opts['no-step-images']) {
+    for (let i = 0; i < data.stepImages.length; i++) {
+      if (!data.stepImages[i]) continue;
+      if (opts['dry-run']) {
+        stepFiles.push({ file: stepImages[i], webp: null });
+        continue;
+      }
+      try {
+        const image = await prepareStepImage(data.stepImages[i]);
+        stepFiles.push({ file: stepImages[i], ...image });
+      } catch (error) {
+        stepImages[i] = null;
+        notes.push(
+          `Photo de l’étape ${i + 1} non téléchargée : ${error.message}`,
+        );
+      }
+    }
+    if (!stepFiles.length && data.stepImages.length) {
+      notes.push('Aucune photo d’étape récupérée.');
+    }
+  }
+
   const markdown = buildMarkdown({
     title,
     slug,
@@ -874,6 +981,7 @@ async function importRecipe(url) {
     subtitle: data.subtitle,
     description: data.description,
     steps: data.steps,
+    stepImages,
     ingredients: data.ingredients,
     persons: data.persons,
     minutes: data.minutes,
@@ -897,6 +1005,16 @@ async function importRecipe(url) {
     fs.mkdirSync(recipeDir, { recursive: true });
     fs.writeFileSync(path.join(recipeDir, 'recipe.md'), markdown);
     fs.writeFileSync(path.join(recipeDir, `${slug}.webp`), photo.webp);
+    for (const name of fs.readdirSync(recipeDir)) {
+      if (name.startsWith(`${slug}-etape-`) && name.endsWith('.webp')) {
+        fs.rmSync(path.join(recipeDir, name));
+      }
+    }
+    for (const image of stepFiles) {
+      if (image.webp) {
+        fs.writeFileSync(path.join(recipeDir, image.file), image.webp);
+      }
+    }
 
     recipesData.recipes = recipesData.recipes.filter((r) => r.id !== slug);
     const at = recipesData.recipes.findIndex(
@@ -925,6 +1043,13 @@ ${opts['dry-run'] ? 'Aperçu (rien écrit)' : 'Importé'} : ${title}
   tags     : ${tags.join(', ') || '(aucun)'}
   photo    : ${photo.size.join('x')}, ${photo.note}
   carré    : ${preview}`);
+  if (stepFiles.length) {
+    const written = stepFiles.filter((image) => image.webp);
+    const label = written.length
+      ? `${written.length} photo(s) d’étape${written[0].size ? ` (${written[0].size.join('x')})` : ''}`
+      : `${stepFiles.length} photo(s) d’étape (aperçu, non téléchargées)`;
+    console.log(`  étapes   : ${label}`);
+  }
   if (notes.length) {
     console.log(
       `\nÀ vérifier (voir « Keep this skill up to date » dans SKILL.md) :\n${notes.map((note) => `  - ${note}`).join('\n')}`,
@@ -949,6 +1074,9 @@ async function runChecks() {
         subtitle: recipe.subtitle,
         description: recipe.description,
         steps: recipe.steps,
+        stepImages: recipe.stepImages.map((url, i) =>
+          url ? `check-etape-${i + 1}.webp` : null,
+        ),
         ingredients: recipe.ingredients,
         persons: recipe.persons,
         minutes: recipe.minutes,
@@ -967,6 +1095,14 @@ async function runChecks() {
           recipe.ingredients,
         ).join(',');
         if (tags !== ref.tags) problems.push(`tags devinés : ${tags}`);
+      }
+      if (ref.stepImages !== undefined) {
+        const found = recipe.stepImages.filter(Boolean).length;
+        if (found !== ref.stepImages) {
+          problems.push(
+            `photos d’étape : ${found} au lieu de ${ref.stepImages}`,
+          );
+        }
       }
       if (ref.square !== undefined) {
         const photo = await preparePhoto(

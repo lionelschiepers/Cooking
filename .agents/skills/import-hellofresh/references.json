@@ -1,7 +1,7 @@
 [
   {
     "url": "https://www.hellofresh.be/recipes/tagliatelle-au-ragu-de-canard-confit-5c3f45e8c445fa483b13e192?locale=fr-BE",
-    "why": "Tagliatelle au ragù de canard (2019): schema.org Recipe JSON-LD, unicode fractions, count/container/spoon units, landscape photo with a bowl",
+    "why": "Tagliatelle au ragù de canard (2019): schema.org Recipe JSON-LD, unicode fractions, count/container/spoon units, landscape photo with a bowl, 6 step photos in the HTML",
     "expect": [
       "## Ingrédients (2 personnes)",
       "- 2 confits de canard",
@@ -10,9 +10,11 @@
       "- 1 1/2 cuillère à soupe d'huile d'olive vierge extra",
       "- 2 cuillères à soupe de beurre",
       "- poivre et sel",
-      "## Préparation"
+      "## Préparation",
+      "   ![Étape 1](./check-etape-1.webp)"
     ],
     "tags": "Viande,Pates",
+    "stepImages": 6,
     "square": true
   },
   {
