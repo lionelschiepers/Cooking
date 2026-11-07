@@ -91,7 +91,7 @@ Recipe pages print without navigation or buttons, with unticked boxes in front o
 
 ### Prerequisites
 - Node.js 22.13 or newer (the deployment uses Node.js 26)
-- [pnpm](https://pnpm.io/installation) 11: `npm install -g pnpm`. pnpm then uses the exact version set in `package.json` (`packageManager`)
+- [pnpm](https://pnpm.io/installation) 12: `npm install -g pnpm`. pnpm then uses the exact version set in `package.json` (`packageManager`)
 
 ### Installation
 

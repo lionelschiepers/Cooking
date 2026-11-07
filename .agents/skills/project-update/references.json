@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "checks": [
+    {
+      "id": "parse-version-with-prefix",
+      "why": "Tags and registry versions can carry a leading v.",
+      "fn": "parseVersion",
+      "input": "v8.4.1",
+      "expect": { "major": 8, "minor": 4, "patch": 1, "prerelease": "" }
+    },
+    {
+      "id": "version-order",
+      "why": "An older dependency must be reported as behind, not ahead.",
+      "fn": "compareVersions",
+      "input": { "a": "4.3.3", "b": "4.3.5" },
+      "expect": -1
+    },
+    {
+      "id": "patch-bump",
+      "why": "Tailwind 4.3.3 -> 4.3.5 is a patch bump.",
+      "fn": "bumpType",
+      "input": { "current": "4.3.3", "latest": "4.3.5" },
+      "expect": "patch"
+    },
+    {
+      "id": "major-bump",
+      "why": "pnpm 11.22.0 -> 12.18.0 must be flagged as a major, not a minor.",
+      "fn": "bumpType",
+      "input": { "current": "11.22.0", "latest": "12.18.0" },
+      "expect": "major"
+    },
+    {
+      "id": "prerelease-is-not-stable",
+      "why": "nodejs.org lists v27.0.0-alpha first; it must never be reported as the newest usable Node.",
+      "fn": "isStable",
+      "input": "v27.0.0-alpha.0.0.0",
+      "expect": false
+    },
+    {
+      "id": "release-is-stable",
+      "why": "A release without a suffix is usable.",
+      "fn": "isStable",
+      "input": "v26.13.0",
+      "expect": true
+    },
+    {
+      "id": "keep-caret-range",
+      "why": "package.json uses ^ ranges; the range operator must survive a bump.",
+      "fn": "nextSpec",
+      "input": { "spec": "^18.1.2", "latest": "18.1.3" },
+      "expect": "^18.1.3"
+    },
+    {
+      "id": "keep-tilde-range",
+      "why": "Only the version changes, whatever the range operator is.",
+      "fn": "nextSpec",
+      "input": { "spec": "~1.2.3", "latest": "1.2.9" },
+      "expect": "~1.2.9"
+    },
+    {
+      "id": "keep-exact-version",
+      "why": "An exact version must stay exact.",
+      "fn": "nextSpec",
+      "input": { "spec": "1.2.3", "latest": "1.2.4" },
+      "expect": "1.2.4"
+    },
+    {
+      "id": "parse-pinned-workflow-line",
+      "why": "The workflow pins actions to a full commit and keeps the tag in a comment.",
+      "fn": "parseUseLine",
+      "input": "        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1",
+      "expect": {
+        "prefix": "        uses: ",
+        "repo": "pnpm/action-setup",
+        "ref": "73e46992e05b19abd31f2f3c20e0e7370d762115",
+        "comment": "v6.1.1",
+        "suffix": ""
+      }
+    },
+    {
+      "id": "parse-step-list-workflow-line",
+      "why": "Actions can be written as a list item with a tag instead of a SHA.",
+      "fn": "parseUseLine",
+      "input": "      - uses: actions/checkout@v7.0.1",
+      "expect": {
+        "prefix": "      - uses: ",
+        "repo": "actions/checkout",
+        "ref": "v7.0.1",
+        "comment": "",
+        "suffix": ""
+      }
+    },
+    {
+      "id": "ignore-docker-uses",
+      "why": "uses: docker://... is not a GitHub action and must be left alone.",
+      "fn": "parseUseLine",
+      "input": "      - uses: docker://alpine:3",
+      "expect": null
+    },
+    {
+      "id": "ignore-local-action",
+      "why": "uses: ./.github/actions/... is a local action, not owner/repo.",
+      "fn": "parseUseLine",
+      "input": "      - uses: ./.github/actions/build",
+      "expect": null
+    },
+    {
+      "id": "render-pinned-workflow-line",
+      "why": "Writing an update must keep the indentation and add the tag comment.",
+      "fn": "renderActionUse",
+      "input": {
+        "prefix": "        uses: ",
+        "repo": "pnpm/action-setup",
+        "sha": "73e46992e05b19abd31f2f3c20e0e7370d762115",
+        "tag": "v6.1.1",
+        "suffix": ""
+      },
+      "expect": "        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1"
+    },
+    {
+      "id": "tag-from-release-redirect",
+      "why": "The script reads the latest tag from the redirected releases/latest URL.",
+      "fn": "tagFromReleaseUrl",
+      "input": "https://github.com/actions/checkout/releases/tag/v7.0.1",
+      "expect": "v7.0.1"
+    },
+    {
+      "id": "no-tag-from-latest-url",
+      "why": "A redirect to /releases/latest (no release) is not a tag.",
+      "fn": "tagFromReleaseUrl",
+      "input": "https://github.com/some/repo/releases/latest",
+      "expect": null
+    },
+    {
+      "id": "annotated-tag-peels-to-commit",
+      "why": "uses: needs a commit SHA, not the annotated tag object SHA (pnpm/action-setup v6.1.1).",
+      "fn": "pickCommit",
+      "input": {
+        "output": "9bbca1e9dc2902adb87e8780fe5c98796985a62d\trefs/tags/v6.1.1\n73e46992e05b19abd31f2f3c20e0e7370d762115\trefs/tags/v6.1.1^{}\n",
+        "tag": "v6.1.1"
+      },
+      "expect": "73e46992e05b19abd31f2f3c20e0e7370d762115"
+    },
+    {
+      "id": "lightweight-tag-uses-commit",
+      "why": "A lightweight tag has no peeled entry; its own SHA is the commit.",
+      "fn": "pickCommit",
+      "input": {
+        "output": "3d3c42e5aac5ba805825da76410c181273ba90b1\trefs/tags/v7.0.1\n",
+        "tag": "v7.0.1"
+      },
+      "expect": "3d3c42e5aac5ba805825da76410c181273ba90b1"
+    },
+    {
+      "id": "current-pin-is-current",
+      "why": "A matching commit and tag comment means there is nothing to write.",
+      "fn": "isCurrentPin",
+      "input": {
+        "ref": "73e46992e05b19abd31f2f3c20e0e7370d762115",
+        "comment": "v6.1.1",
+        "sha": "73e46992e05b19abd31f2f3c20e0e7370d762115",
+        "tag": "v6.1.1"
+      },
+      "expect": true
+    },
+    {
+      "id": "stale-comment-is-updated",
+      "why": "The pin can be right while the comment still names the old tag.",
+      "fn": "isCurrentPin",
+      "input": {
+        "ref": "73e46992e05b19abd31f2f3c20e0e7370d762115",
+        "comment": "v6.1.0",
+        "sha": "73e46992e05b19abd31f2f3c20e0e7370d762115",
+        "tag": "v6.1.1"
+      },
+      "expect": false
+    },
+    {
+      "id": "tag-ref-is-not-pinned",
+      "why": "An action written with a tag must be pinned to a SHA, even when the tag is latest.",
+      "fn": "isCurrentPin",
+      "input": {
+        "ref": "v7.0.1",
+        "comment": "",
+        "sha": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "tag": "v7.0.1"
+      },
+      "expect": false
+    }
+  ]
+}
