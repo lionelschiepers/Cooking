@@ -1,6 +1,16 @@
 {
   "recipes": [
     {
+      "id": "tagliatelle-ragu-canard-confit",
+      "title": "Tagliatelle au Ragù de Canard Confit",
+      "type": "markdown",
+      "date": "2026/11/07",
+      "path": "recipes/tagliatelle-ragu-canard-confit/",
+      "image": "./recipes/tagliatelle-ragu-canard-confit/tagliatelle-ragu-canard-confit.webp",
+      "tags": ["Viande", "Pates"],
+      "description": "Tagliatelle au ragù de canard confit, accompagnées de roquette (HelloFresh)"
+    },
+    {
       "id": "lasagne-raviolis-oignons-caramelises",
       "title": "Lasagne de Raviolis aux Oignons Caramélisés",
       "type": "markdown",

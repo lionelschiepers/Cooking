@@ -209,6 +209,16 @@ node .agents/skills/import-foodbag/import-foodbag.js "https://www.foodbag.be/fr/
 
 Remove `--dry-run` to write the files. Run with `--help` for all options. Agents can use the `import-foodbag` skill (`.agents/skills/import-foodbag/SKILL.md`), which also covers checking the photo. The skill updates itself when an import reveals something new; after changing the script, run `node .agents/skills/import-foodbag/import-foodbag.js --check` to re-test the recipes in `references.json`.
 
+### 5. HelloFresh Recipes
+
+Import a recipe from [hellofresh.be](https://www.hellofresh.be) as a Markdown recipe (the servings HelloFresh gives, photo cropped so the plate is centered):
+
+```bash
+node .agents/skills/import-hellofresh/import-hellofresh.js "https://www.hellofresh.be/recipes/..." --tags Viande,Pates --dry-run
+```
+
+Remove `--dry-run` to write the files. Run with `--help` for all options. Agents can use the `import-hellofresh` skill (`.agents/skills/import-hellofresh/SKILL.md`), which covers checking the photo and the ingredient wording. After changing the script, run `node .agents/skills/import-hellofresh/import-hellofresh.js --check` to re-test the recipes in `references.json`.
+
 ## 🚢 Deployment
 
 This project is configured for automatic deployment to GitHub Pages via GitHub Actions.
