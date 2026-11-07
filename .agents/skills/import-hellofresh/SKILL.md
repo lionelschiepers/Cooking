@@ -38,13 +38,13 @@ Read **Findings** below before importing: it is what earlier imports learned.
 
 4. **Check the photo.** The home page shows each photo as a centered square.
    Open the square preview whose path the script prints (`carré : ...png`). The
-   whole plate must be visible and centered.
-   - The script crops a centred square of the shorter side: HelloFresh hero
-     photos are 3:2 landscape with the dish in the middle.
-   - Check that the square still shows the whole plate. If the dish is off
-     centre, crop the source photo by hand with `sharp` around the food, then
-     save it again as `recipes/<slug>/<slug>.webp` (max 1920 px, WebP quality
-     82).
+   meal must be centered, with even margins on both sides.
+   - The script crops a square of the shorter side, centered on the dish (the
+     largest saturated or dark area), not on the image.
+   - A plate can be wider than that square in a 3:2 photo: both rims are then
+     clipped. Check that the clipping is even and the meal centered; if not,
+     crop the source photo by hand with `sharp`, then save it again as
+     `recipes/<slug>/<slug>.webp` (max 1920 px, WebP quality 82).
    - `--force --no-crop` re-imports with the photo kept whole.
 
 5. Read `recipes/<slug>/recipe.md` once and fix anything odd (wording, units,
@@ -115,9 +115,8 @@ Never store API keys, tokens or other secrets in the skill.
   widest URL found in the page.
 - 2026-11-07: The Foodbag circle detector cropped this angled bowl too tightly:
   it found an off-centre inner circle and cut the right rim. HelloFresh hero
-  photos are 3:2 landscape with the dish centred, so this script crops a centred
-  square of the shorter side instead (3180x2120 → 2120x2120) and the square
-  preview shows the whole bowl.
+  photos are 3:2 landscape, so this script crops a square of the shorter side
+  instead (3180x2120 → 2120x2120).
 - 2026-11-07: Some steps are HTML lists and paragraphs (`<ul><li>`, `<p>`,
   `<strong>`, `<em>`, `&#39;`). `cleanText` flattens block tags to spaces, keeps
   bold/italic as Markdown and decodes numeric and French named entities, so a
@@ -156,6 +155,14 @@ Never store API keys, tokens or other secrets in the skill.
   of bold/italic pairs, separates a bold close from an italic open, and keeps
   the spaces outside the markers. The lentil-salad reference checks the fixed
   step.
+- 2026-11-07: The plate is centred but the meal is not: on the tagliatelle
+  photo the food sits right of the plate centre, so the image-centred crop left
+  an empty rim on the left and pushed the food to the right edge. The script now
+  centres the square on the dish, i.e. the largest connected area of saturated
+  or dark pixels (the food), and falls back to the image centre when no dish
+  stands out. The plate can still be wider than a square of the shorter side,
+  so both rims may be clipped; they are now clipped evenly. The tagliatelle
+  reference checks `cropShifted`.
 
 ## Options
 
@@ -166,7 +173,7 @@ Never store API keys, tokens or other secrets in the skill.
 | `--description <text>` | `<name>, <headline> (HelloFresh)` |
 | `--tags <a,b>` | guessed |
 | `--date <YYYY/MM/DD>` | today |
-| `--no-crop` | crop around the plate |
+| `--no-crop` | crop around the dish |
 | `--no-step-images` | download the instruction step photos |
 | `--force` | refuse to overwrite an existing recipe or import a dish twice |
 | `--dry-run` | write the files |
@@ -179,8 +186,8 @@ Never store API keys, tokens or other secrets in the skill.
   `## Ingrédients (2 personnes)` list (this heading turns the list into a
   checklist on the site), `## Préparation` (numbered steps, each followed by its
   step photo when available) and `## Lien` (the HelloFresh URL).
-- `recipes/<slug>/<slug>.webp`: the largest HelloFresh photo, cropped, at most
-  1920 px.
+- `recipes/<slug>/<slug>.webp`: the largest HelloFresh photo, cropped squarely
+  around the dish, at most 1920 px.
 - `recipes/<slug>/<slug>-etape-N.webp`: one WebP per instruction step photo
   (at most 1200 px, uncropped). Stale ones are removed on `--force`.
 - `recipes.json`: the entry, inserted by date (newest first) and formatted with

@@ -608,10 +608,82 @@ function today() {
 }
 
 /**
- * Crops a centred square of the shorter side. HelloFresh hero photos are 3:2
- * landscape with the dish in the middle, so this keeps the whole plate instead
- * of the Foodbag circle detector, which found an inner circle on an angled bowl
- * and cut the rim.
+ * Centre of the dish: the largest connected area of saturated or dark pixels.
+ * The plate is usually centred, but the food inside it is not always: a crop
+ * centred on the image then leaves an empty rim on one side and pushes the meal
+ * to the other edge. Falls back to null when no dish stands out.
+ */
+const SALIENT_SATURATION = 0.22;
+const SALIENT_LUMINANCE = 0.42;
+async function dishCenter(buffer, width, height) {
+  const sample = 320;
+  const { data, info } = await sharp(buffer)
+    .rotate()
+    .resize({ width: sample })
+    .removeAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const { width: sampleWidth, height: sampleHeight, channels } = info;
+  const mask = new Uint8Array(sampleWidth * sampleHeight);
+  for (let i = 0; i < mask.length; i++) {
+    const r = data[i * channels];
+    const g = data[i * channels + 1];
+    const b = data[i * channels + 2];
+    const saturation = (Math.max(r, g, b) - Math.min(r, g, b)) / 255;
+    const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+    if (saturation > SALIENT_SATURATION || luminance < SALIENT_LUMINANCE) {
+      mask[i] = 1;
+    }
+  }
+
+  const seen = new Uint8Array(mask.length);
+  let best = null;
+  for (let start = 0; start < mask.length; start++) {
+    if (!mask[start] || seen[start]) continue;
+    const stack = [start];
+    seen[start] = 1;
+    let minX = sampleWidth;
+    let maxX = 0;
+    let minY = sampleHeight;
+    let maxY = 0;
+    let count = 0;
+    while (stack.length) {
+      const pixel = stack.pop();
+      const x = pixel % sampleWidth;
+      const y = (pixel / sampleWidth) | 0;
+      count++;
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+      for (const next of [
+        pixel - 1,
+        pixel + 1,
+        pixel - sampleWidth,
+        pixel + sampleWidth,
+      ]) {
+        if (next < 0 || next >= mask.length) continue;
+        if (Math.abs((next % sampleWidth) - x) > 1) continue;
+        if (mask[next] && !seen[next]) {
+          seen[next] = 1;
+          stack.push(next);
+        }
+      }
+    }
+    if (!best || count > best.count) best = { minX, maxX, minY, maxY, count };
+  }
+  if (!best || best.count < mask.length * 0.01) return null;
+
+  return {
+    x: (((best.minX + best.maxX) / 2) * width) / sampleWidth,
+    y: (((best.minY + best.maxY) / 2) * height) / sampleHeight,
+  };
+}
+
+/**
+ * Crops a square of the shorter side, centred on the dish rather than on the
+ * image: HelloFresh hero photos are 3:2 landscape, but the meal is not always
+ * centred inside the plate.
  */
 async function preparePhoto(url, crop) {
   const buffer = await get(url, 'buffer');
@@ -625,13 +697,20 @@ async function preparePhoto(url, crop) {
   let note = 'photo gardée entière (--no-crop)';
   if (crop) {
     const side = Math.min(width, height);
-    area = {
-      left: Math.round((width - side) / 2),
-      top: Math.round((height - side) / 2),
-      width: side,
-      height: side,
+    const center = (await dishCenter(buffer, width, height)) ?? {
+      x: width / 2,
+      y: height / 2,
     };
-    note = `carré centré ${area.width}x${area.height} depuis (${area.left}, ${area.top})`;
+    const left = Math.max(
+      0,
+      Math.min(width - side, Math.round(center.x - side / 2)),
+    );
+    const top = Math.max(
+      0,
+      Math.min(height - side, Math.round(center.y - side / 2)),
+    );
+    area = { left, top, width: side, height: side };
+    note = `carré centré sur le plat ${side}x${side} depuis (${left}, ${top})`;
   }
 
   const webp = await sharp(buffer)
@@ -645,11 +724,17 @@ async function preparePhoto(url, crop) {
     })
     .webp({ quality: 82 })
     .toBuffer({ resolveWithObject: true });
+  const side = Math.min(width, height);
   return {
     webp: webp.data,
     size: [webp.info.width, webp.info.height],
     note,
     square: webp.info.width === webp.info.height,
+    area,
+    centered: {
+      left: Math.round((width - side) / 2),
+      top: Math.round((height - side) / 2),
+    },
   };
 }
 
@@ -1109,13 +1194,27 @@ async function runChecks() {
           );
         }
       }
-      if (ref.square !== undefined) {
+      if (ref.square !== undefined || ref.cropShifted !== undefined) {
         const photo = await preparePhoto(
           photoUrl(recipe.html, recipe.recipe),
           true,
         );
-        if (photo.square !== ref.square) {
+        if (ref.square !== undefined && photo.square !== ref.square) {
           problems.push(photo.square ? 'photo carrée' : 'photo non carrée');
+        }
+        if (ref.cropShifted !== undefined) {
+          const shifted =
+            Math.max(
+              Math.abs(photo.area.left - photo.centered.left),
+              Math.abs(photo.area.top - photo.centered.top),
+            ) > 10;
+          if (shifted !== ref.cropShifted) {
+            problems.push(
+              shifted
+                ? 'recadrage décalé sur le plat'
+                : 'recadrage centré sur l’image',
+            );
+          }
         }
       }
     } catch (error) {
