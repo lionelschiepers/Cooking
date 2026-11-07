@@ -67,5 +67,20 @@
     "absent": ["(voir photo)", "<ul>"],
     "tags": "",
     "square": true
+  },
+  {
+    "url": "https://www.hellofresh.be/recipes/extra-25-min-veggie-no-cheese-66deb60746f5f843647213ee?locale=fr-BE",
+    "why": "Aubergine au hoisin (2026): 'oignon nouveau' must not be read as veal, hoisin/asiatique guess the Asian tag, vegan alternatives in brackets, a frame-cut napkin must not pull the crop, 4 step photos",
+    "expect": [
+      "- 1 aubergine",
+      "- 1 bouquet d'oignon nouveau",
+      "- 50 gr sauce hoisin",
+      "- 2 cuillères à café de miel [ou alternative vegan]",
+      "## Préparation"
+    ],
+    "tags": "Asiatique",
+    "stepImages": 4,
+    "square": true,
+    "cropShifted": true
   }
 ]

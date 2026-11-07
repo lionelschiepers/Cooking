@@ -167,6 +167,15 @@ Never store API keys, tokens or other secrets in the skill.
   `penne-b-uf-...`) because NFD does not decompose it. It now transliterates
   `œ`→`oe`, `æ`→`ae` and `ß`→`ss`. The penne reference checks the generated
   slug.
+- 2026-11-07: The meat keyword `veau` matched `oignon nouveau`, so a
+  vegetarian aubergine recipe was guessed `Viande`. It now requires the word
+  `veau` alone. `hoisin` and `asiatique` were missing from the Asian keywords.
+  The aubergine reference checks the `Asiatique` guess.
+- 2026-11-07: A green napkin cut by the left edge joined the dish area, so the
+  bounding box reached the frame and the square sat 33 px too far left, clipping
+  the right rim. The detector now ignores 5% of the sample width on each side,
+  so props cut by the frame cannot pull the crop. The aubergine reference checks
+  `cropShifted`.
 
 ## Options
 

@@ -564,7 +564,7 @@ function slugify(text) {
 const FISH =
   /saumon|cabillaud|maquereau|thon|truite|merlu|\bcolin\b|dorade|poisson|crevette|scampi|moule|gambas|calamar|sardine|hareng|\bsole\b|\bbar\b|\blieu\b|églefin|haddock|tilapia|pangasius/;
 const MEAT =
-  /porc|b(œ|oe)uf|veau|agneau|canard|saucisse|haché|lard|jambon|poulet|dinde|chorizo|steak|pancetta|bacon|mignon|merguez|chipolata|volaille|salami|prosciutto|coppa|speck|gyros|kebab|boulette|viande/;
+  /porc|b(œ|oe)uf|\bveau\b|agneau|canard|saucisse|haché|lard|jambon|poulet|dinde|chorizo|steak|pancetta|bacon|mignon|merguez|chipolata|volaille|salami|prosciutto|coppa|speck|gyros|kebab|boulette|viande/;
 const PASTA =
   /pâtes|pates|spaghetti|tagliatelle|penne|orzo|linguine|lasagne|gnocchi|fusilli|rigatoni|farfalle|macaroni|fettuccine|ravioli|tortell[io]ni?s?|conchiglie/;
 const PASTA_NAMES = [
@@ -591,7 +591,7 @@ function pastaNames(text) {
   return PASTA_NAMES.filter((name) => lower.includes(name));
 }
 const ASIAN =
-  /nouilles|udon|ramen|wok|teriyaki|sriracha|gochujang|coréen|thaï|japonais|chinois|vietnamien|curry/;
+  /nouilles|udon|ramen|wok|teriyaki|sriracha|gochujang|coréen|thaï|japonais|chinois|vietnamien|curry|hoisin|asiatique/;
 
 function guessTags(text, ingredients = []) {
   const t = text.toLowerCase();
@@ -627,8 +627,13 @@ async function dishCenter(buffer, width, height) {
     .raw()
     .toBuffer({ resolveWithObject: true });
   const { width: sampleWidth, height: sampleHeight, channels } = info;
+  // Ignore a thin side band: a napkin or cutlery cut by the frame would
+  // otherwise extend the dish bounding box to the edge and pull the crop.
+  const edge = Math.max(4, Math.round(sampleWidth * 0.05));
   const mask = new Uint8Array(sampleWidth * sampleHeight);
   for (let i = 0; i < mask.length; i++) {
+    const x = i % sampleWidth;
+    if (x < edge || x >= sampleWidth - edge) continue;
     const r = data[i * channels];
     const g = data[i * channels + 1];
     const b = data[i * channels + 2];

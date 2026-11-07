@@ -1,6 +1,16 @@
 {
   "recipes": [
     {
+      "id": "aubergine-sauce-hoisin-salade-feves-soja-gomasio",
+      "title": "Aubergine en Sauce Hoisin et Salade de Fèves de Soja au Gomasio",
+      "type": "markdown",
+      "date": "2026/11/07",
+      "path": "recipes/aubergine-sauce-hoisin-salade-feves-soja-gomasio/",
+      "image": "./recipes/aubergine-sauce-hoisin-salade-feves-soja-gomasio/aubergine-sauce-hoisin-salade-feves-soja-gomasio.webp",
+      "tags": ["Asiatique", "Salade"],
+      "description": "Aubergine en sauce hoisin et salade de fèves de soja au gomasio, riz à l'ail, cacahuètes, coriandre et oignon nouveau (HelloFresh)"
+    },
+    {
       "id": "penne-boeuf-sauce-persillee-yaourt",
       "title": "Penne au Bœuf et Sauce Persillée au Yaourt",
       "type": "markdown",
