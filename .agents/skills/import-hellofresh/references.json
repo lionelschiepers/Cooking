@@ -82,5 +82,20 @@
     "stepImages": 4,
     "square": true,
     "cropShifted": true
+  },
+  {
+    "url": "https://www.hellofresh.be/recipes/w50-bold-flavours-swicy-abrikozenchutney-694916363e57376810f97880?locale=fr-BE",
+    "why": "Boulettes swicy (2026): empty emphasis nested in a tip, free-text ingredient without a quantity, subtitle ending in '!' must not get a second period, 6 step photos",
+    "expect": [
+      "- lait [végétal]",
+      "- sauce rouge épicée [de type harissa]",
+      "5. Écrasez les pommes de terre et la patate douce avec 1 noix de beurre, 1 filet de lait, puis incorporez-y les épices coréennes (voir conseil). Assaisonnez de sel et de poivre à votre goût. **Conseil :** *Pour encore plus de SWICY, ajoutez un peu de sauce rouge épicée (de type harissa) à votre convenance.*",
+      "EXPLOSION SWICY ! Gochujang, chutney d'abricot & épices BBQ, savourez l'étonnant duo sucré-piquant de ces boulettes & choux de BXL ! Prêt en 30 minutes.",
+      "## Préparation"
+    ],
+    "absent": ["*** **", "!. Prêt", "Lait [végétal]"],
+    "tags": "Viande,Asiatique",
+    "stepImages": 6,
+    "square": true
   }
 ]

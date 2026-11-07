@@ -1,6 +1,16 @@
 {
   "recipes": [
     {
+      "id": "boulettes-swicy-puree-patate-douce",
+      "title": "Explosion Swicy ! Gochujang, Chutney d'Abricot & Épices BBQ",
+      "type": "markdown",
+      "date": "2026/11/07",
+      "path": "recipes/boulettes-swicy-puree-patate-douce/",
+      "image": "./recipes/boulettes-swicy-puree-patate-douce/boulettes-swicy-puree-patate-douce.webp",
+      "tags": ["Viande", "Asiatique"],
+      "description": "EXPLOSION SWICY ! Gochujang, chutney d'abricot & épices BBQ, savourez l'étonnant duo sucré-piquant de ces boulettes & choux de BXL ! (HelloFresh)"
+    },
+    {
       "id": "aubergine-sauce-hoisin-salade-feves-soja-gomasio",
       "title": "Aubergine en Sauce Hoisin et Salade de Fèves de Soja au Gomasio",
       "type": "markdown",

@@ -176,6 +176,17 @@ Never store API keys, tokens or other secrets in the skill.
   the right rim. The detector now ignores 5% of the sample width on each side,
   so props cut by the frame cannot pull the crop. The aubergine reference checks
   `cropShifted`.
+- 2026-11-07: A tip nested an empty bold in an italic
+  (`<em><strong> </strong>Pour...`), which left `*** **` in the step. Empty
+  emphasis is now dropped before conversion, and `***` is split into `** *` even
+  when a space follows. The boulettes reference checks the fixed tip.
+- 2026-11-07: An ingredient without a quantity (`Lait [végétal]`) kept its
+  capital because its first word was read as the quantity. Free-text lines are
+  now lower-cased as a whole.
+- 2026-11-07: A headline ending in `!` produced `!.` in the intro, and the alt
+  text of an all-caps title started `eXPLOSION`. The intro no longer adds a
+  period after `.`/`!`/`?`, and the alt follows the title. For an all-caps H1,
+  pass `--title` to get a normal title.
 
 ## Options
 

@@ -172,6 +172,12 @@ function cleanText(text) {
   const withoutTags = String(text)
     .replace(/<\s*br\s*\/?\s*>/gi, ' ')
     .replace(/<\s*\/\s*(?:p|li|ul|ol|div|h[1-6])\s*>/gi, ' ')
+    // An empty emphasis nested in another one (`<em><strong> </strong>...`)
+    // used to leave a stray `*** **` in the Markdown.
+    .replace(
+      /<\s*(?:strong|b|em|i)\s*>\s*<\s*\/\s*(?:strong|b|em|i)\s*>/gi,
+      ' ',
+    )
     .replace(/<\s*(?:strong|b)\s*>/gi, '**')
     .replace(/<\s*\/\s*(?:strong|b)\s*>/gi, '**')
     .replace(/<\s*(?:em|i)\s*>/gi, '*')
@@ -181,7 +187,7 @@ function cleanText(text) {
     .trim();
   return decodeEntities(withoutTags)
     .replace(/\*\*([^*]+)\*\*/g, (_, inner) => `**${inner.trim()}**`)
-    .replace(/(?<=\S)\*\*\*(?=\S)/g, '** *')
+    .replace(/(?<=\S)\*\*\*(?=\s*\S)/g, '** *')
     .replace(
       /(?<!\*)\*(?!\*)([^*]+?)(?<!\*)\*(?!\*)/g,
       (_, inner) => `*${inner.trim()}*`,
@@ -477,7 +483,7 @@ function formatIngredient(line) {
 
   if (COUNT_UNITS.has(unit) || !unit) {
     if (!Number.isFinite(value))
-      return [quantity, name].filter(Boolean).join(' ');
+      return lowerFirst([quantity, name].filter(Boolean).join(' '));
     name = value < 2 ? singular(name) : plural(name);
     return [formatQuantity(quantity), name].filter(Boolean).join(' ');
   }
@@ -830,7 +836,8 @@ function buildMarkdown({
     .toLowerCase()
     .split(/\s*,\s*(?:et\s+)?|\s+et\s+/)
     .filter(Boolean);
-  const intro = [`${withSubtitle(name, subtitle)}.`];
+  const withTail = withSubtitle(name, subtitle);
+  const intro = [/[.!?]$/.test(withTail) ? withTail : `${withTail}.`];
   if (minutes) intro.push(`Prêt en ${minutes} minutes.`);
 
   const lines = [
@@ -840,7 +847,7 @@ function buildMarkdown({
     `keywords: ${AUTHORS}, cooking, recipe, ${keywords.join(', ')}, food, cuisine`,
     '---',
     '',
-    `![${lowerFirst(name)}](./${slug}.webp)`,
+    `![${lowerFirst(title || name)}](./${slug}.webp)`,
     '',
     intro.join(' '),
   ];
