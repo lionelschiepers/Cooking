@@ -47,6 +47,20 @@
     "square": true
   },
   {
+    "url": "https://www.hellofresh.be/recipes/cs-traybake-671119bae7611b708ed65f7a?locale=fr-BE",
+    "why": "Penne au bœuf (2024): œ ligature in the title, 4 step photos, bold/italic tip in a step",
+    "expect": [
+      "- 180 gr penne",
+      "- 200 gr bœuf haché aux épices orientales",
+      "## Préparation"
+    ],
+    "absent": ["<ul>", "<strong>", "&#39;"],
+    "tags": "Viande,Pates",
+    "slug": "penne-boeuf-sauce-persillee-yaourt",
+    "stepImages": 4,
+    "square": true
+  },
+  {
     "url": "https://www.hellofresh.be/recipes/mousse-au-chocolat-sirop-a-lorange-and-pointe-de-sel-6a9a8db271b095d5fbb00628?locale=fr-BE",
     "why": "Mousse au chocolat: HTML lists cleaned, (voir photo) removed, 'brin' unit, dessert gets no guessed tag",
     "expect": ["- 1 brin de romarin frais", "## Préparation"],

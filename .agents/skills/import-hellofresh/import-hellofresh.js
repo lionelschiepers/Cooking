@@ -550,6 +550,9 @@ function titleCase(text) {
 
 function slugify(text) {
   return text
+    .replace(/[œŒ]/g, 'oe')
+    .replace(/[æÆ]/g, 'ae')
+    .replace(/ß/g, 'ss')
     .normalize('NFD')
     .replace(/\p{M}/gu, '')
     .toLowerCase()
@@ -1185,6 +1188,10 @@ async function runChecks() {
           recipe.ingredients,
         ).join(',');
         if (tags !== ref.tags) problems.push(`tags devinés : ${tags}`);
+      }
+      if (ref.slug !== undefined) {
+        const slug = slugify(recipe.name);
+        if (slug !== ref.slug) problems.push(`slug : ${slug}`);
       }
       if (ref.stepImages !== undefined) {
         const found = recipe.stepImages.filter(Boolean).length;

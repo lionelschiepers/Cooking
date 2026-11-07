@@ -163,6 +163,10 @@ Never store API keys, tokens or other secrets in the skill.
   stands out. The plate can still be wider than a square of the shorter side,
   so both rims may be clipped; they are now clipped evenly. The tagliatelle
   reference checks `cropShifted`.
+- 2026-11-07: `slugify` dropped the `œ` ligature (`Penne au bœuf` became
+  `penne-b-uf-...`) because NFD does not decompose it. It now transliterates
+  `œ`→`oe`, `æ`→`ae` and `ß`→`ss`. The penne reference checks the generated
+  slug.
 
 ## Options
 

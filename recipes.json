@@ -1,6 +1,16 @@
 {
   "recipes": [
     {
+      "id": "penne-boeuf-sauce-persillee-yaourt",
+      "title": "Penne au Bœuf et Sauce Persillée au Yaourt",
+      "type": "markdown",
+      "date": "2026/11/07",
+      "path": "recipes/penne-boeuf-sauce-persillee-yaourt/",
+      "image": "./recipes/penne-boeuf-sauce-persillee-yaourt/penne-boeuf-sauce-persillee-yaourt.webp",
+      "tags": ["Viande", "Pates"],
+      "description": "Penne au bœuf et sauce persillée au yaourt, aubergine, Parmigiano Reggiano et épices du Moyen-Orient (HelloFresh)"
+    },
+    {
       "id": "salade-lentilles-chevre-cranberries",
       "title": "Fromage de Chèvre sur Salade de Lentilles et Vinaigrette aux Cranberries",
       "type": "markdown",
