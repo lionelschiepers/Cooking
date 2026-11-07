@@ -32,6 +32,20 @@
     "square": true
   },
   {
+    "url": "https://www.hellofresh.be/recipes/veggie-quick-25-min-lentils-potato-try-to-use-eid-hazelnuts-671b96baf9c856efe5000021?locale=fr-BE",
+    "why": "Salade de lentilles au chèvre (2024): bold and italic glued in the HTML, whitespace inside both markers, 4 step photos",
+    "expect": [
+      "- 1 paquet de lentilles",
+      "- 2 cuillères à soupe de vinaigre balsamique blanc",
+      "2. Coupez le reste de l'oignon en demi-rondelles. Dans le bol, mélangez le sucre avec la moitié du vinaigre balsamique blanc. Ajoutez-y l'oignon et 1 pincée de sel, puis mélangez bien. **Le saviez-vous ?** *L'oignon renferme des bienfaits souvent méconnus ! Il est en effet riche en fibres, vitamines B, mais aussi en antioxydants et vitamine C.*",
+      "## Préparation"
+    ],
+    "absent": ["***L'oignon", "vitamine C. *"],
+    "tags": "",
+    "stepImages": 4,
+    "square": true
+  },
+  {
     "url": "https://www.hellofresh.be/recipes/mousse-au-chocolat-sirop-a-lorange-and-pointe-de-sel-6a9a8db271b095d5fbb00628?locale=fr-BE",
     "why": "Mousse au chocolat: HTML lists cleaned, (voir photo) removed, 'brin' unit, dessert gets no guessed tag",
     "expect": ["- 1 brin de romarin frais", "## Préparation"],

@@ -150,6 +150,12 @@ Never store API keys, tokens or other secrets in the skill.
 - 2026-11-07: A first import failed with `fetch failed` while the same URLs
   loaded on retry. The script now retries a network failure twice (short
   backoff), and the error names the URL that could not be read.
+- 2026-11-07: A step can glue a bold and an italic (`</strong><em>`) and put a
+  space inside each marker (`... ? </strong>`, `... C.&nbsp;</em>`): the output
+  used to read `?** ** *` and end with `C. *`. `cleanText` now trims the inside
+  of bold/italic pairs, separates a bold close from an italic open, and keeps
+  the spaces outside the markers. The lentil-salad reference checks the fixed
+  step.
 
 ## Options
 

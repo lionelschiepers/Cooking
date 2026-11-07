@@ -180,7 +180,12 @@ function cleanText(text) {
     .replace(/\s+/g, ' ')
     .trim();
   return decodeEntities(withoutTags)
-    .replace(/\s+\*\*/g, '**')
+    .replace(/\*\*([^*]+)\*\*/g, (_, inner) => `**${inner.trim()}**`)
+    .replace(/(?<=\S)\*\*\*(?=\S)/g, '** *')
+    .replace(
+      /(?<!\*)\*(?!\*)([^*]+?)(?<!\*)\*(?!\*)/g,
+      (_, inner) => `*${inner.trim()}*`,
+    )
     .replace(/\s+/g, ' ')
     .trim();
 }
