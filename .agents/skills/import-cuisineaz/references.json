@@ -1,0 +1,43 @@
+[
+  {
+    "url": "https://www.cuisineaz.com/recettes/flan-au-caramel-fait-maison-facile-79642.aspx",
+    "why": "Ingrédients CuisineAZ : « 6 Œuf(s) » → « 6 œufs », « 250 g Sucre » → « 250 g de sucre », « Rhum » complété par l'étape en « 1 cuillère à soupe de rhum » ; typographie des étapes corrigée ; recadrage décalé à droite sur le flan",
+    "expect": [
+      "- 6 œufs",
+      "- 250 g de sucre",
+      "- 1 l de lait",
+      "- 1 cuillère à soupe de rhum",
+      "- 1 gousse de vanille",
+      "- 5 cl d'eau",
+      "1. Préchauffez le four à 180 °C (th. 6). Dans une casserole à feu doux, versez 5 cl d'eau puis 150 g de sucre. Laissez bouillir jusqu'à obtenir un caramel. Versez-le dans un moule ou des ramequins.",
+      "3. Dans un bol, fouettez les œufs avec les 100 g de sucre restant. Ajoutez le lait, puis 1 cuillère à soupe de rhum. Mélangez à nouveau. Versez la crème obtenue sur le caramel.",
+      "4. Dans un grand plat à four, versez de l'eau puis posez-y le moule ou les ramequins. Enfournez pendant 1 h pour une cuisson au bain-marie. À la fin de la cuisson, laissez refroidir. Servez.",
+      "- **Peut-on remplacer le rhum dans la recette ?** Oui, le rhum peut être omis ou remplacé par de l'extrait de vanille ou d'amande pour parfumer différemment le flan."
+    ],
+    "absent": ["Œuf(s)", "(s)", "180°C", "A la fin", "puis, posez"],
+    "tags": "Dessert",
+    "slug": "flan-caramel-fait-maison-facile",
+    "tips": 5,
+    "square": true,
+    "cropShifted": true
+  },
+  {
+    "url": "https://www.cuisineaz.com/recettes/flan-patissier-cyril-lignac-ultra-cremeux-et-vanille-122106.aspx",
+    "why": "Unité répétée dans l'ingrédient : « 1 gousse(s) Gousse(s) de vanille » doit donner « 1 gousse de vanille » et non « 1 gousse de gousse de vanille » ; « 1 Pâte brisée(s) » → « 1 pâte brisée »",
+    "expect": [
+      "- 1 pâte brisée",
+      "- 1 l de lait entier",
+      "- 6 oeufs",
+      "- 250 g de sucre blanc",
+      "- 80 g de maïzena",
+      "- 250 g de crème liquide",
+      "- 1 gousse de vanille"
+    ],
+    "absent": ["gousse de gousse", "(s)"],
+    "tags": "Dessert",
+    "slug": "flan-patissier-cyril-lignac-ultra-cremeux-vanille",
+    "tips": 5,
+    "square": true,
+    "cropShifted": true
+  }
+]

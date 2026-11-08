@@ -1,6 +1,16 @@
 {
   "recipes": [
     {
+      "id": "flan-caramel-maison",
+      "title": "Flan au Caramel Fait Maison Facile",
+      "type": "markdown",
+      "date": "2026/11/08",
+      "path": "recipes/flan-caramel-maison/",
+      "image": "./recipes/flan-caramel-maison/flan-caramel-maison.webp",
+      "tags": ["Dessert"],
+      "description": "Flan au caramel fait maison facile, à la vanille et au rhum, cuit au bain-marie (CuisineAZ)"
+    },
+    {
       "id": "boulettes-swicy-puree-patate-douce",
       "title": "Explosion Swicy ! Gochujang, Chutney d'Abricot & Épices BBQ",
       "type": "markdown",
