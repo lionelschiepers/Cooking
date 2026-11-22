@@ -43,7 +43,7 @@ Pourcentages boulangers : **60 % d’eau**, **2,4 % de sel** et **0,28 % de levu
 
 ## Garniture
 
-- **Crème** : crème fraîche épaisse (ou fromage blanc), muscade et poivre (facultatif).
+- **Crème** : crème fraîche épaisse, éventuellement complétée de **fromage frais** (fromage blanc) à hauteur de **1/3 maximum** : au-delà, la sauce devient trop liquide et détrempe la pâte. Muscade et poivre (facultatif).
 - **Oignons** : émincés finement.
 - **Lardons** : fumés, légèrement revenus à la poêle.
 
@@ -53,7 +53,7 @@ Une **salade de mâche**, assaisonnée d’une vinaigrette simple (huile neutre 
 
 ## Astuce
 
-- **Pour que la crème tienne**, ajouter de la **fécule de maïs** à la crème : environ **1 cuillère à café pour 200 g de crème**. Mélanger à froid avant d’étaler, la crème épaissit à la cuisson et ne détrempe pas la pâte.
+- **Pour que la crème tienne**, ajouter de la **fécule de maïs** à la crème : environ **1 cuillère à café pour 200 g de crème**, d’autant plus utile si la sauce contient du fromage frais. Mélanger à froid avant d’étaler, la crème épaissit à la cuisson et ne détrempe pas la pâte.
 - Étaler la pâte le plus finement possible : c’est ce qui donne le croustillant caractéristique de la flammekueche.
 - Ne pas trop charger la garniture, sinon la pâte ramollit.
 - Les pâtons se congèlent très bien après la division : les laisser décongeler au réfrigérateur avant de les étaler.
