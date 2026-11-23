@@ -1,0 +1,30 @@
+[
+  {
+    "url": "https://www.delicha.fr/huile-piquante-pizza-la-bonne-recette.html",
+    "why": "Ingrédients lus dans la liste HTML (le JSON-LD les met dans un seul bloc), parenthèses éditoriales retirées sauf « facultatif », étapes « Étape N : » transformées en phrases, conseils et conservation repris en astuces, « 60-70°C » corrigé, repos de 48 h ajouté à l'introduction, recadrage décalé à droite sur le bol",
+    "title": "Huile Piquante Pizza",
+    "expect": [
+      "Huile Piquante Pizza. Prêt en 20 minutes, puis 48 h d'infusion.",
+      "- 50 cl d’huile d’olive vierge extra",
+      "- 10 à 15 piments oiseaux séchés",
+      "- 2 cuillères à café de baies roses",
+      "- 1 gousse d’ail pressée (facultatif)",
+      "- quelques grains de poivre noir (facultatif)",
+      "- flocons de piment (facultatif)",
+      "2. **Chauffez l’huile en douceur.** Placez la casserole sur feu très doux. L’objectif n’est pas de faire cuire les ingrédients, mais de chauffer l’huile suffisamment pour que les arômes commencent à s’en échapper. Laissez chauffer pendant 5 à 10 minutes en surveillant attentivement. L’huile ne doit jamais bouillir ni fumer. Vous devez voir quelques petites bulles se former autour des herbes et des piments, signe que l’infusion commence. Si vous possédez un thermomètre de cuisine, maintenez la température autour de 60-70 °C maximum. Cette étape délicate permet aux saveurs de se diffuser sans brûler les aromates, ce qui donnerait une amertume désagréable.",
+      "- **Conservation :** Votre huile se conserve plusieurs mois (3 à 6 mois minimum) si vous respectez les conditions : récipient hermétique, endroit frais et sombre. Évitez le réfrigérateur qui figerait l’huile d’olive et ralentirait l’infusion. Un placard de cuisine éloigné des sources de chaleur convient parfaitement."
+    ],
+    "absent": [
+      "60-70°C",
+      "(la base de votre préparation)",
+      "ajustez selon votre tolérance",
+      "[object Object]"
+    ],
+    "tags": "Pizza,Sauce",
+    "slug": "huile-piquante-pizza",
+    "rest": "48 h d'infusion",
+    "tips": 6,
+    "square": true,
+    "cropShifted": true
+  }
+]

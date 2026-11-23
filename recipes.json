@@ -1,6 +1,26 @@
 {
   "recipes": [
     {
+      "id": "fondue-savoyarde",
+      "title": "Fondue Savoyarde",
+      "type": "markdown",
+      "date": "2026/11/22",
+      "path": "recipes/fondue-savoyarde/",
+      "image": "./recipes/fondue-savoyarde/fondue-savoyarde.webp",
+      "tags": ["Fromage"],
+      "description": "Fondue savoyarde traditionnelle au Comté, à l'Abondance et à l'Appenzeller, parfumée à l'ail, au kirsch et à la muscade (Les Secrets du Chef)"
+    },
+    {
+      "id": "huile-piquante-pizza",
+      "title": "Huile Piquante Pizza",
+      "type": "markdown",
+      "date": "2026/11/22",
+      "path": "recipes/huile-piquante-pizza/",
+      "image": "./recipes/huile-piquante-pizza/huile-piquante-pizza.webp",
+      "tags": ["Sauce"],
+      "description": "Huile piquante à l'huile d'olive, piments oiseaux, thym, laurier et baies roses, à laisser infuser 48 h (Delicha)"
+    },
+    {
       "id": "flan-caramel-maison",
       "title": "Flan au Caramel Fait Maison Facile",
       "type": "markdown",
